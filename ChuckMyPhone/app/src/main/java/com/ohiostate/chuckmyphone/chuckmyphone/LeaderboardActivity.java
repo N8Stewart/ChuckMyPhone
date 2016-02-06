@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -49,7 +51,7 @@ public class LeaderboardActivity extends AppCompatActivity
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
 
-        for (int i = 2; i < 20; i++) {
+        for (int i = 1; i < 20; i++) {
             addGenericEntryToLeaderboard(i, "Tim Taylor", (20-i));
         }
     }
@@ -138,7 +140,13 @@ public class LeaderboardActivity extends AppCompatActivity
         leaderboardRowLayout.addView(leaderboardName);
         leaderboardRowLayout.addView(leaderboardScore);
 
+        View dividerView = new View(this);
+        dividerView.setBackgroundColor(Color.GRAY);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 6);
+        dividerView.setLayoutParams(lp);
+
         LinearLayout leaderboardScrollViewRows = (LinearLayout) findViewById(R.id.leaderboardScrollViewRows);
         leaderboardScrollViewRows.addView(leaderboardRowLayout);
+        leaderboardScrollViewRows.addView(dividerView);
     }
 }
