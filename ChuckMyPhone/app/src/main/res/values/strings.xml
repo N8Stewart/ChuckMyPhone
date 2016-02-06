@@ -17,4 +17,5 @@
         <item>Drop</item>
     </string-array>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_personal_profile">PersonalProfileActivity</string>
 </resources>

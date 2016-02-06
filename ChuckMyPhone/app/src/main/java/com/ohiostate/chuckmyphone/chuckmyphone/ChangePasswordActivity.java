@@ -1,0 +1,16 @@
+package com.ohiostate.chuckmyphone.chuckmyphone;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class ChangePasswordActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_change_password);
+
+        //Set title at top of screen to "Change Password"
+        getSupportActionBar().setTitle("Change Password");
+    }
+}
