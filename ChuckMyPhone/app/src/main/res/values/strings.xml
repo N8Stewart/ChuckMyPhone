@@ -18,4 +18,5 @@
     </string-array>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_personal_profile">PersonalProfileActivity</string>
+    <string name="title_activity_new_user">NewUserActivity</string>
 </resources>
