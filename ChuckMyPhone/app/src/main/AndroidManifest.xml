@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ohiostate.chuckmyphone.chuckmyphone">
+<manifest package="com.ohiostate.chuckmyphone.chuckmyphone"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -20,31 +20,21 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ForgotPasswordActivity"></activity>
-        <activity android:name=".ChangePasswordActivity" />
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ForgotPasswordActivity"/>
+        <activity android:name=".ChangePasswordActivity"/>
         <activity
             android:name=".PersonalProfileActivity"
             android:label="@string/title_activity_personal_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".NewUserActivity"
             android:label="@string/title_activity_new_user"
             android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".CompeteSpinActivity"
-            android:label="@string/title_activity_compete_spin"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".CompeteDropActivity"
-            android:label="@string/title_activity_compete_drop"
-            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
