@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ohiostate.chuckmyphone.chuckmyphone">
+<manifest package="com.ohiostate.chuckmyphone.chuckmyphone"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -11,7 +11,7 @@
         <activity
             android:name=".CompeteChuckActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".LeaderboardActivity"
             android:label="@string/title_activity_leaderboard"
@@ -20,22 +20,32 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ForgotPasswordActivity"></activity>
-        <activity android:name=".ChangePasswordActivity" />
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ForgotPasswordActivity"/>
+        <activity android:name=".ChangePasswordActivity"/>
         <activity
             android:name=".PersonalProfileActivity"
             android:label="@string/title_activity_personal_profile"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".NewUserActivity"
             android:label="@string/title_activity_new_user"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 
