@@ -120,20 +120,24 @@ public class LeaderboardActivity extends AppCompatActivity
 
         LinearLayout leaderboardRowLayout = new LinearLayout(this);
         leaderboardRowLayout.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,3);
+        leaderboardRowLayout.setLayoutParams(LLParams);
 
         TextView leaderboardRank = new TextView(this);
         leaderboardRank.setText(String.valueOf(rank));
-        leaderboardRank.setWidth((int) (62 * scale + 0.5f));
+        leaderboardRank.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        //leaderboardRank.setWidth((int) (62 * scale + 0.5f));
         leaderboardRank.setTextAppearance(this, android.R.style.TextAppearance_Large);
 
         TextView leaderboardName = new TextView(this);
         leaderboardName.setText(name);
-        leaderboardName.setWidth((int) (169 * scale + 0.5f));
+        leaderboardName.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        //leaderboardName.setWidth((int) (169 * scale + 0.5f));
         leaderboardName.setTextAppearance(this, android.R.style.TextAppearance_Large);
 
         TextView leaderboardScore = new TextView(this);
         leaderboardScore.setText(String.valueOf(score) + " mph");
+        leaderboardScore.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
         leaderboardScore.setTextAppearance(this, android.R.style.TextAppearance_Large);
 
         leaderboardRowLayout.addView(leaderboardRank);

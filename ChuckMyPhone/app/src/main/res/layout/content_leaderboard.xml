@@ -29,6 +29,50 @@
         </LinearLayout>
     </ScrollView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/textView26"
+        android:background="@color/colorPrimary" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16"
+            android:id="@+id/textView23"
+            style="@android:style/TextAppearance.DeviceDefault.Large"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tim Taylor (My best)"
+            android:id="@+id/textView24"
+            style="@android:style/TextAppearance.DeviceDefault.Large"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView25"
+            android:text="4 mph"
+            style="@android:style/TextAppearance.DeviceDefault.Large"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:id="@+id/textView27"
+        android:background="@color/colorPrimary" />
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
