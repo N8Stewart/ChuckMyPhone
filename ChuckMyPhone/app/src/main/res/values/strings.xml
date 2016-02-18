@@ -23,4 +23,6 @@
     <string name="title_activity_about">AboutActivity</string>
     <string name="title_activity_compete_spin">CompeteSpinActivity</string>
     <string name="title_activity_compete_drop">CompeteDropActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
 </resources>
