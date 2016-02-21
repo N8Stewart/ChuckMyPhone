@@ -13,9 +13,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD
 import android.widget.ImageButton;
 import android.hardware.SensorEventListener;
 import android.widget.TextView;
+=======
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+>>>>>>> origin/master
 
 public class CompeteChuckActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
@@ -32,6 +37,10 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
     TextView currentSpeedTextView;
     ImageButton playButton;
 
+    private String[] mMenuTitles;
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +56,11 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mMenuTitles = getResources().getStringArray(R.array.menu_array);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
 
         //Set title at top of screen to "Chuck My Phone"
         getSupportActionBar().setTitle("Chuck My Phone");
