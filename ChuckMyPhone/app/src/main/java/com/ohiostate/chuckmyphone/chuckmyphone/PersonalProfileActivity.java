@@ -1,9 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,10 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class PersonalProfileActivity extends AppCompatActivity
@@ -40,7 +35,7 @@ public class PersonalProfileActivity extends AppCompatActivity
 
 
         for (int i = 0; i < 10;  i++) {
-            addTrophy("trophy name");
+            addBadge("trophy name");
         }
 
         //TODO: make this say the person's name instead
@@ -105,20 +100,20 @@ public class PersonalProfileActivity extends AppCompatActivity
         return true;
     }
 
-    public void addTrophy(String text) {
+    public void addBadge(String text) {
         LinearLayout horzLayout = (LinearLayout) findViewById(R.id.PersonalProfileTrophyHorzLayout);
 
         LinearLayout podLayout = new LinearLayout(this);
         podLayout.setOrientation(LinearLayout.VERTICAL);
 
-        ImageView trophyImageView = new ImageView(this);
-        trophyImageView.setImageResource(R.drawable.trophy_icon128x128);
+        ImageView badgeImageView = new ImageView(this);
+        badgeImageView.setImageResource(R.drawable.badge_locked);
 
-        TextView trophyNameTextView = new TextView(this);
-        trophyNameTextView.setText("        "+text);
+        TextView badgeNameTextView = new TextView(this);
+        badgeNameTextView.setText("        " + text);
 
-        podLayout.addView(trophyImageView);
-        podLayout.addView(trophyNameTextView);
+        podLayout.addView(badgeImageView);
+        podLayout.addView(badgeNameTextView);
 
         horzLayout.addView(podLayout);
     }
