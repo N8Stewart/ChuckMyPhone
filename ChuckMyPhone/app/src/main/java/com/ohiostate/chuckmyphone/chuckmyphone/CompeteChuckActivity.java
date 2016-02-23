@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.hardware.SensorEventListener;
 import android.widget.TextView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class CompeteChuckActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
@@ -200,9 +199,9 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
                 if (userHasSensor) {
                     isRecording = !isRecording;
                     if (isRecording) {
-                        playButton.setImageResource(R.drawable.stop_icon_transparent);
+                        playButton.setImageResource(R.drawable.compete_stop);
                     } else {
-                        playButton.setImageResource(R.drawable.start_icon_transparent);
+                        playButton.setImageResource(R.drawable.compete_play);
                     }
                     Thread mythread = new Thread(updateViewRunnable);
                     mythread.start();
@@ -234,7 +233,7 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    playButton.setImageResource(R.drawable.start_icon_transparent);
+                    playButton.setImageResource(R.drawable.compete_play);
                 }
             });
         }

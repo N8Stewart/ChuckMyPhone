@@ -185,9 +185,9 @@ public class CompeteSpinActivity extends AppCompatActivity implements Navigation
                 if (userHasSensor) {
                     isRecording = !isRecording;
                     if (isRecording) {
-                        playButton.setImageResource(R.drawable.stop_icon_transparent);
+                        playButton.setImageResource(R.drawable.compete_stop);
                     } else {
-                        playButton.setImageResource(R.drawable.start_icon_transparent);
+                        playButton.setImageResource(R.drawable.compete_play);
                     }
                     Thread mythread = new Thread(updateViewRunnable);
                     mythread.start();
@@ -219,7 +219,7 @@ public class CompeteSpinActivity extends AppCompatActivity implements Navigation
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    playButton.setImageResource(R.drawable.start_icon_transparent);
+                    playButton.setImageResource(R.drawable.compete_play);
                 }
             });
         }

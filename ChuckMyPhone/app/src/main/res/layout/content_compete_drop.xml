@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/CompeteDropActivityPlayButton"
-            android:src="@drawable/start_icon_transparent"
+            android:src="@drawable/compete_play"
             android:layout_above="@+id/CompeteDropActivityYourBestTextBox"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="52dp"
