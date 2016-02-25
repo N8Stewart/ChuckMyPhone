@@ -14,18 +14,20 @@
 
     <item android:title="@string/title_menu_competitions">
         <menu>
-            <item
-                android:id="@+id/nav_chuck"
-                android:icon="@drawable/ic_menu_slideshow"
-                android:title="@string/action_chuck"/>
-            <item
-                android:id="@+id/nav_drop"
-                android:icon="@drawable/ic_menu_slideshow"
-                android:title="@string/action_drop"/>
-            <item
-                android:id="@+id/nav_spin"
-                android:icon="@drawable/ic_menu_slideshow"
-                android:title="@string/action_spin"/>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_chuck"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="@string/action_chuck"/>
+                <item
+                    android:id="@+id/nav_drop"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="@string/action_drop"/>
+                <item
+                    android:id="@+id/nav_spin"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="@string/action_spin"/>
+            </group>
         </menu>
     </item>
 </menu>

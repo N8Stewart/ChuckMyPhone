@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_compete_chuck"
+        app:headerLayout="@layout/nav_header_hamburger_menu"
         app:menu="@menu/hamburger_menu" />
 
 </android.support.v4.widget.DrawerLayout>

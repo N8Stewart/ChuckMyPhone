@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -33,7 +34,6 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
     TextView currentSpeedTextView;
     ImageButton playButton;
 
-    private String[] mMenuTitles;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -116,7 +116,19 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.action_change_password) {
+            Intent intent = new Intent(this, ChangePasswordActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.action_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
+            finish();
+        } else if (id == R.id.action_logout) {
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
