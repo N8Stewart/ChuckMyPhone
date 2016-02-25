@@ -20,6 +20,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_personal_profile"
-        app:menu="@menu/activity_personal_profile_drawer" />
+        app:menu="@menu/hamburger_menu" />
 
 </android.support.v4.widget.DrawerLayout>

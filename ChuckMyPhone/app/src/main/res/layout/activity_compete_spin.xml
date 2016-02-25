@@ -20,6 +20,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_compete_spin"
-        app:menu="@menu/activity_compete_spin_drawer" />
+        app:menu="@menu/hamburger_menu" />
 
 </android.support.v4.widget.DrawerLayout>

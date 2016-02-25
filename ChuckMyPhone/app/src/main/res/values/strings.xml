@@ -25,4 +25,13 @@
     <string name="title_activity_compete_drop">CompeteDropActivity</string>
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_tutorial">TutorialActivity</string>
+    <string name="action_change_password">Change password</string>
+    <string name="action_about">About</string>
+    <string name="action_logout">Log out</string>
+    <string name="title_menu_competitions">Competitions</string>
+    <string name="action_drop">Drop your phone</string>
+    <string name="action_spin">Spin your phone</string>
+    <string name="action_chuck">Chuck your phone</string>
+    <string name="action_leaderboards">Leaderboards</string>
+    <string name="action_profile">Profile</string>
 </resources>
