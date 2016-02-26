@@ -3,9 +3,9 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,10 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageButton;
-import android.hardware.SensorEventListener;
-import android.widget.TextView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class CompeteChuckActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
 
@@ -56,7 +56,6 @@ public class CompeteChuckActivity extends AppCompatActivity implements Navigatio
         //mMenuTitles = getResources().getStringArray(R.array.menu_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
 
         //Set title at top of screen to "Chuck My Phone"
         getSupportActionBar().setTitle("Chuck My Phone");
