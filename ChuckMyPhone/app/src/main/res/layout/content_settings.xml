@@ -10,8 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ohiostate.chuckmyphone.chuckmyphone.SettingsActivity"
-    tools:showIn="@layout/app_bar_settings">
+    tools:context="com.ohiostate.chuckmyphone.chuckmyphone.SettingsFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -24,12 +23,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/settingsActivityImperialSystemButton"
             android:checked="true"
-            android:text="Imperial System"/>
+            android:text="@string/imperial_system"/>
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Metric System"
+            android:text="@string/metric_system"
             android:layout_marginBottom="20dp"
             android:id="@+id/settingsActivityMetricSystemButton"
             android:checked="false"/>
@@ -37,14 +36,14 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sound enabled?"
+            android:text="@string/sound_enabled"
             android:id="@+id/settingsActivitySoundEnabledCheckbox"
             android:checked="true"/>
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Background notifications"
+            android:text="@string/background_notifications"
             android:id="@+id/settingsActivityBackgroundNotificationCheckbox"
             android:checked="true"/>
 

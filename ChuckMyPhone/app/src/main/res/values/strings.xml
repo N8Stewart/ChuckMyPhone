@@ -34,4 +34,12 @@
     <string name="action_chuck">Chuck your phone</string>
     <string name="action_leaderboards">Leaderboards</string>
     <string name="action_profile">Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sound_enabled">Sound enabled?</string>
+    <string name="metric_system">Metric System</string>
+    <string name="imperial_system">Imperial System</string>
+    <string name="background_notifications">Background notifications</string>
+    <string name="title_activity_main_activity">MainActivity</string>
 </resources>

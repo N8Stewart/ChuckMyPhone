@@ -9,8 +9,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ohiostate.chuckmyphone.chuckmyphone.CompeteDropActivity"
-    tools:showIn="@layout/app_bar_compete_drop">
+    tools:context=".CompeteDropFragment">
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

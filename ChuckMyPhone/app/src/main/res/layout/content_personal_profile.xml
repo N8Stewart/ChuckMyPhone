@@ -10,8 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ohiostate.chuckmyphone.chuckmyphone.PersonalProfileActivity"
-    tools:showIn="@layout/app_bar_personal_profile">
+    tools:context=".PersonalProfileFragment">
 
     <LinearLayout
         android:orientation="vertical"
