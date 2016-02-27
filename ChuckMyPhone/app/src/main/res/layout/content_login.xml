@@ -23,47 +23,42 @@
         <ImageView
             android:layout_width="175dp"
             android:layout_height="175dp"
-            android:id="@+id/imageView2"
+            android:id="@+id/loginActivityAppIconImageView"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/loginActivityUsernameEditText"
             android:autoText="false"
             android:editable="true"
             android:enabled="true"
-            android:hint="Username" />
+            android:hint="@string/username" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText2"
-            android:hint="Password" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText3"
-            android:visibility="invisible" />
+            android:id="@+id/loginActivityPasswordEditText"
+            android:hint="@string/password" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Login"
-            android:id="@+id/loginActivityLoginButton" />
+            android:text="@string/login"
+            android:id="@+id/loginActivityLoginButton"
+            android:layout_marginTop="20dp"/>
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="New User?"
+            android:text="@string/new_user"
             android:id="@+id/loginActivityNewUserButton" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Connect With Facebook"
+            android:text="@string/connect_with_fb"
             android:id="@+id/loginActivityConnectWithFacebookButton" />
 
         <TextView
@@ -91,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/loginActivityForgotPasswordButton"
-                android:text="Forgot Password?"
+                android:text="@string/forgot_password"
                 android:singleLine="true"
                 android:linksClickable="true" />
         </LinearLayout>

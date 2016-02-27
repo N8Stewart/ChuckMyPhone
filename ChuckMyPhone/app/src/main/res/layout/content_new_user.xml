@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign up"
-                android:id="@+id/button3"
+                android:id="@+id/button_sign_up"
                 android:layout_weight="4"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                android:id="@+id/button4"
+                android:id="@+id/button_cancel_sign_up"
                 android:layout_weight="4"/>
         </LinearLayout>
 
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Connect with Facebook"
-            android:id="@+id/button2" />
+            android:id="@+id/button_connect_with_fb" />
 
     </LinearLayout>
 </RelativeLayout>

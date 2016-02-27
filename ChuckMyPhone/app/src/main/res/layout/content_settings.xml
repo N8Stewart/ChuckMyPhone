@@ -21,7 +21,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/settingsActivityImperialSystemButton"
+            android:id="@+id/settingsFragmentImperialSystemButton"
             android:checked="true"
             android:text="@string/imperial_system"/>
 
@@ -30,22 +30,29 @@
             android:layout_height="wrap_content"
             android:text="@string/metric_system"
             android:layout_marginBottom="20dp"
-            android:id="@+id/settingsActivityMetricSystemButton"
+            android:id="@+id/settingsFragmentMetricSystemButton"
             android:checked="false"/>
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sound_enabled"
-            android:id="@+id/settingsActivitySoundEnabledCheckbox"
+            android:id="@+id/settingsFragmentSoundEnabledCheckbox"
             android:checked="true"/>
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/background_notifications"
-            android:id="@+id/settingsActivityBackgroundNotificationCheckbox"
+            android:id="@+id/settingsFragmentBackgroundNotificationCheckbox"
             android:checked="true"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/settingsFragmentSaveButton"
+            android:background="@android:drawable/ic_menu_save"
+            android:layout_gravity="bottom|end"/>
 
     </LinearLayout>
 
