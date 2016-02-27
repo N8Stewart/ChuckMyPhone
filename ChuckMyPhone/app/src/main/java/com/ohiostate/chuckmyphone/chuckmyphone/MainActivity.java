@@ -108,13 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = SettingsFragment.class;
                 getSupportActionBar().setTitle("Settings");
                 break;
-            case R.id.action_logout:
+            default:
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
-                break;
-            default:
-                fragmentClass = SettingsFragment.class;
-                getSupportActionBar().setTitle("Settings");
+                finish();
         }
 
         try {
