@@ -16,9 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        CompeteChuckFragment.OnFragmentInteractionListener,
-        CompeteSpinFragment.OnFragmentInteractionListener,
-        CompeteDropFragment.OnFragmentInteractionListener,
+        CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
         PersonalProfileFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,

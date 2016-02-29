@@ -46,7 +46,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/CompeteDropActivityPlayButton"
+            android:id="@+id/CompeteDropActivityCompeteButton"
             android:src="@drawable/compete_play"
             android:layout_above="@+id/CompeteDropActivityYourBestTextBox"
             android:layout_centerHorizontal="true"
