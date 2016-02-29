@@ -44,7 +44,7 @@ public class CompeteSpinFragment extends Fragment implements SensorEventListener
 
     TextView yourBestTextView;
     TextView currentSpeedTextView;
-    ImageButton playButton;
+    ImageButton competeButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -171,20 +171,20 @@ public class CompeteSpinFragment extends Fragment implements SensorEventListener
     public void initializeViews(View view) {
         currentSpeedTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityCurrentSpeedTextView);
         yourBestTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityYourBestTextBox);
-        playButton = (ImageButton) view.findViewById(R.id.CompeteSpinActivityPlayButton);
+        competeButton = (ImageButton) view.findViewById(R.id.CompeteSpinActivityPlayButton);
 
         if (!userHasSensor) {
             yourBestTextView.setText("Your phone does not have the necessary sensors for this activity");
         }
 
-        playButton.setOnClickListener(new View.OnClickListener() {
+        competeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (userHasSensor) {
                     isRecording = !isRecording;
                     if (isRecording) {
-                        playButton.setImageResource(R.drawable.compete_stop);
+                        competeButton.setImageResource(R.drawable.compete_stop);
                     } else {
-                        playButton.setImageResource(R.drawable.compete_play);
+                        competeButton.setImageResource(R.drawable.compete_play);
                     }
                     Thread mythread = new Thread(updateViewRunnable);
                     mythread.start();
@@ -204,7 +204,7 @@ public class CompeteSpinFragment extends Fragment implements SensorEventListener
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        currentSpeedTextView.setText("" + rotationSpeed + " m/s");
+                        currentSpeedTextView.setText(rotationSpeed + " m/s");
                         yourBestTextView.setText("Your best: " + maxSpeed + " m/s");
                     }
                 });
@@ -216,7 +216,7 @@ public class CompeteSpinFragment extends Fragment implements SensorEventListener
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    playButton.setImageResource(R.drawable.compete_play);
+                    competeButton.setImageResource(R.drawable.compete_play);
                 }
             });
         }

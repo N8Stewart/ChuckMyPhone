@@ -40,7 +40,7 @@ public class CompeteDropFragment extends Fragment implements SensorEventListener
 
     TextView yourBestTextView;
     TextView currentSpeedTextView;
-    ImageButton playButton;
+    ImageButton competeButton;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -175,20 +175,20 @@ public class CompeteDropFragment extends Fragment implements SensorEventListener
     public void initializeViews(View view) {
         currentSpeedTextView = (TextView) view.findViewById(R.id.CompeteDropActivityCurrentSpeedTextView);
         yourBestTextView = (TextView) view.findViewById(R.id.CompeteDropActivityYourBestTextBox);
-        playButton = (ImageButton) view.findViewById(R.id.CompeteDropActivityPlayButton);
+        competeButton = (ImageButton) view.findViewById(R.id.CompeteDropActivityPlayButton);
 
         if (!userHasSensor) {
             yourBestTextView.setText("Your phone does not have the necessary sensors for this activity");
         }
 
-        playButton.setOnClickListener(new View.OnClickListener() {
+        competeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (userHasSensor) {
                     isRecording = !isRecording;
                     if (isRecording) {
-                        playButton.setImageResource(R.drawable.compete_stop);
+                        competeButton.setImageResource(R.drawable.compete_stop);
                     } else {
-                        playButton.setImageResource(R.drawable.compete_play);
+                        competeButton.setImageResource(R.drawable.compete_play);
                     }
                     Thread mythread = new Thread(updateViewRunnable);
                     mythread.start();
@@ -208,7 +208,7 @@ public class CompeteDropFragment extends Fragment implements SensorEventListener
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        currentSpeedTextView.setText("" + speed + " m/s");
+                        currentSpeedTextView.setText(speed + " m/s");
                         yourBestTextView.setText("Your best: " + maxSpeed + " m/s");
                     }
                 });
@@ -220,7 +220,7 @@ public class CompeteDropFragment extends Fragment implements SensorEventListener
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    playButton.setImageResource(R.drawable.compete_play);
+                    competeButton.setImageResource(R.drawable.compete_play);
                 }
             });
         }
