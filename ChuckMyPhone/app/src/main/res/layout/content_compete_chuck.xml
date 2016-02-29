@@ -23,20 +23,21 @@
             <ProgressBar
                 android:id="@+id/progressBarToday"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="250dp"
-                android:layout_height="273dp"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_centerInParent="true"
                 android:layout_centerHorizontal="true"
                 android:indeterminate="false"
-                android:max="48"
-                android:progress="45"
-                android:progressDrawable="@drawable/circular_progress_bar" />
+                android:max="50"
+                android:progress="48"
+                android:progressDrawable="@drawable/circular_progress_bar"
+                android:layout_marginBottom="25dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="0 Mi"
+                android:text="0 m/s"
                 android:id="@+id/CompeteChuckActivityCurrentSpeedTextView"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true" />
@@ -49,7 +50,7 @@
             android:src="@drawable/compete_play"
             android:layout_above="@+id/CompeteChuckActivityYourBestTextBox"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="52dp"
+            android:layout_marginBottom="25dp"
             android:background="@android:color/transparent"
             android:layout_gravity="center"/>
 
@@ -57,11 +58,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Your Best: 10 m"
+            android:text="Your Best: 10 m/s"
             android:id="@+id/CompeteChuckActivityYourBestTextBox"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="50dp"
             android:layout_gravity="center"/>
 
     </LinearLayout>
