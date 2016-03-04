@@ -1,0 +1,8 @@
+# Ignore the .idea directory since everyone's will be different
+.idea/
+*.iml
+
+# Ignore all temporary and swap files
+*.DS_Store
+*.swp
+
