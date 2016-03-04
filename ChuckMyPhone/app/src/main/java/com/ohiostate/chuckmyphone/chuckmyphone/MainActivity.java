@@ -1,6 +1,5 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -23,12 +23,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SettingsFragment.OnFragmentInteractionListener,
         ChangePasswordFragment.OnFragmentInteractionListener {
 
+    private final String TAG = this.getClass().getSimpleName();
+
     private DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Log.d(TAG, "onCreate() called");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,17 +58,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause() called");
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop() called");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.d(TAG, "onResume() called");
     }
 
     @Override

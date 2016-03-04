@@ -7,6 +7,7 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -18,12 +19,13 @@ import android.widget.TextView;
  * to handle interaction events.
  */
 public abstract class CompeteFragment extends Fragment implements SensorEventListener {
+
+    protected final String TAG = this.getClass().getSimpleName();
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     protected static final String ARG_PARAM1 = "param1";
     protected static final String ARG_PARAM2 = "param2";
-
-    protected String TAG = this.getClass().getSimpleName();
 
     SensorManager sensManager;
     Sensor linearAccelerometer;
@@ -49,6 +51,9 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "onCreate() called");
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -114,12 +119,14 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause() called");
         sensManager.unregisterListener(this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop() called");
         sensManager.unregisterListener(this);
     }
 
