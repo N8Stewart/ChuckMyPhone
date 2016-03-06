@@ -175,8 +175,8 @@ public class CompeteDropFragment extends CompeteFragment {
     Runnable updateViewSubRunnableScore = new Runnable() {
         @Override
         public void run() {
-            currentScoreTextView.setText(acceleration + " m/s^2");
-            yourBestScoreTextView.setText("Longest Fall: " + maxTimeFalling + " ms");
+            currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+            yourBestScoreTextView.setText(String.format("Longest Fall: %.3f ms", maxTimeFalling));
         }
     };
 }

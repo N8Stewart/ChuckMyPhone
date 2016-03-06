@@ -148,8 +148,8 @@ public class CompeteSpinFragment extends CompeteFragment{
     Runnable updateViewSubRunnableScore = new Runnable() {
         @Override
         public void run() {
-            currentScoreTextView.setText(rotationSpeed + " m/s");
-            yourBestScoreTextView.setText("Your best: " + maxSpeed + " m/s");
+            currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
+            yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", maxSpeed));
         }
     };
 }

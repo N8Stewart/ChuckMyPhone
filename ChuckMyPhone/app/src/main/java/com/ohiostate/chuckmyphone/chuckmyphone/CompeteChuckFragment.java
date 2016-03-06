@@ -148,8 +148,8 @@ public class CompeteChuckFragment extends CompeteFragment{
     Runnable updateViewSubRunnableScore = new Runnable() {
         @Override
         public void run() {
-            currentScoreTextView.setText(speed + " m/s");
-            yourBestScoreTextView.setText("Your best: " + maxSpeed + " m/s");
+            currentScoreTextView.setText(String.format("%.3f m/s", speed));
+            yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", maxSpeed));
         }
     };
 }
