@@ -5,6 +5,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +70,7 @@ public class CompeteDropFragment extends CompeteFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume() called");
 
         //make the sensor start listening again
         initializeSensors();
@@ -177,5 +179,4 @@ public class CompeteDropFragment extends CompeteFragment {
             yourBestScoreTextView.setText("Longest Fall: " + maxTimeFalling + " ms");
         }
     };
-
 }

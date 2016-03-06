@@ -69,7 +69,7 @@ public class CompeteChuckFragment extends CompeteFragment{
     @Override
     public void onResume() {
         super.onResume();
-
+        Log.d(TAG, "onResume() called");
         //make the sensor start listening again
         initializeSensors();
     }
