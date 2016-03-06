@@ -7,8 +7,10 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -26,15 +28,19 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected String TAG = this.getClass().getSimpleName();
 
     SensorManager sensManager;
-    Sensor linearAccelerometer;
 
     protected boolean userHasSensor;
     protected boolean isRecording;
     protected long lastUpdate;
 
-    TextView yourBestTextView;
-    TextView currentSpeedTextView;
+    protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
+    protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
+
+    TextView yourBestScoreTextView;
+    TextView currentScoreTextView;
     ImageButton competeButton;
+
+    Thread updateViewRunnableThread;
 
     // TODO: Rename and change types of parameters
     protected String mParam1;
@@ -53,6 +59,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
 
         isRecording = false;
         lastUpdate = 0;
@@ -102,15 +110,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     }
 
-    public void initializeSensors() {
-        //set up sensor overhead
-        sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
-        linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
-        //make the sensor start listening, don't want this here later
-        userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
     @Override
     public void onPause() {
         super.onPause();
@@ -123,4 +122,35 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         sensManager.unregisterListener(this);
     }
 
+    public void displayMissingSensorToast() {
+        Context context = getActivity().getApplicationContext();
+        Toast toast = Toast.makeText(context, "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    public void setButtonImage() {
+        if (isRecording) {
+            competeButton.setImageResource(R.drawable.compete_stop);
+        } else {
+            competeButton.setImageResource(R.drawable.compete_play);
+        }
+    }
+
+    View.OnClickListener buttonListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            if (userHasSensor) {
+                isRecording = !isRecording;
+                setButtonImage();
+
+                updateViewRunnableThread.start();
+            }
+        }
+    };
+
+    protected Runnable updateViewSubRunnableImage = new Runnable() {
+        @Override
+        public void run() {
+            competeButton.setImageResource(R.drawable.compete_play);
+        }
+    };
 }

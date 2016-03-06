@@ -21,8 +21,18 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class CompeteDropFragment extends CompeteFragment {
-    private float speed;
-    private float maxSpeed;
+    private final float FALLING_MIN_ACCELERATION = 8.5f;
+    private final float FALLING_MAX_ACCELERATION = 11.5f;
+
+    private float acceleration;
+    private float timeFalling;
+    private float maxTimeFalling;
+    private boolean isFalling;
+
+    private long fallingStartTime;
+    private long fallingEndTime;
+
+    Sensor linearAccelerometer;
 
     public CompeteDropFragment() {
         // Required empty public constructor
@@ -50,17 +60,25 @@ public class CompeteDropFragment extends CompeteFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        maxSpeed = 0;
-        speed = 0;
+        timeFalling = 0;
+        maxTimeFalling = 0;
+        acceleration = 0;
+        isFalling = false;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onResume() {
+        super.onResume();
+
+        //make the sensor start listening again
+        initializeSensors();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.content_compete_drop, container, false);
 
-        initializeSensors();
         initializeViews(view);
 
         return view;
@@ -68,23 +86,44 @@ public class CompeteDropFragment extends CompeteFragment {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
+        //need to reinstantiate this at least once between each button press so a thread isn't run
+        //while it is already running. This is a convenient spot that happens at least once
+        //between button presses. May need to put in a delay if performance suffers (note, thread isn't run until later)
+        updateViewRunnableThread = new Thread(updateViewRunnable);
 
-        if (isRecording && mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+        Sensor sensor = event.sensor;
+
+        if (isRecording && sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
             float ax = event.values[0];
             float ay = event.values[1];
             float az = event.values[2];
 
-            long currTime = System.currentTimeMillis();
+            long curTime = System.currentTimeMillis();
 
-            if ((currTime - lastUpdate) > 10) {
-                //long dt = (currTime - lastUpdate);
-                lastUpdate = currTime;
+            if ((curTime - lastUpdate) > 10) {
+                //long dt = (curTime - lastUpdate);
+                lastUpdate = curTime;
 
-                //not actually speed, but that is hard to derive
-                speed = Math.abs(ay);
-                if (speed > maxSpeed) {
-                    maxSpeed = speed;
+                acceleration = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+
+                //if phone starts falling
+                if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
+                    fallingStartTime = System.currentTimeMillis();
+                    isFalling = true;
+                }
+
+                //TODO
+                //Need a way to ensure that the user does not just wave their phones around?
+
+                //if phone stops falling
+                if (isFalling && (acceleration < FALLING_MIN_ACCELERATION || acceleration > FALLING_MAX_ACCELERATION)) {
+                    fallingEndTime = System.currentTimeMillis();
+                    timeFalling = (fallingEndTime-fallingStartTime);
+                    isFalling = false;
+                }
+
+                if (timeFalling > maxTimeFalling) {
+                    maxTimeFalling = timeFalling;
                 }
             }
         }
@@ -97,67 +136,46 @@ public class CompeteDropFragment extends CompeteFragment {
 
         //make the sensor start listening
         userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+
+        if (!userHasSensor) {
+            displayMissingSensorToast();
+        }
     }
 
     public void initializeViews(View view) {
-        currentSpeedTextView = (TextView) view.findViewById(R.id.CompeteDropActivityCurrentSpeedTextView);
-        yourBestTextView = (TextView) view.findViewById(R.id.CompeteDropActivityYourBestTextBox);
+        currentScoreTextView = (TextView) view.findViewById(R.id.CompeteDropActivityCurrentSpeedTextView);
+        yourBestScoreTextView = (TextView) view.findViewById(R.id.CompeteDropActivityYourBestTextBox);
         competeButton = (ImageButton) view.findViewById(R.id.CompeteDropActivityCompeteButton);
 
-        if (!userHasSensor) {
-            yourBestTextView.setText("Your phone does not have the necessary sensors for this activity");
-        }
-
-        competeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (userHasSensor) {
-                    isRecording = !isRecording;
-                    if (isRecording) {
-                        competeButton.setImageResource(R.drawable.compete_stop);
-                    } else {
-                        competeButton.setImageResource(R.drawable.compete_play);
-                    }
-                    Thread mythread = new Thread(updateViewRunnable);
-                    mythread.start();
-                }
-            }
-        });
+        competeButton.setOnClickListener(buttonListener);
     }
 
     //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
     Runnable updateViewRunnable = new Runnable() {
         public void run() {
-            int count = 1;
-            while (isRecording && count < 50000) {
-                count++;
-
-                //This code updates the UI, needs to be separate because on the original thread can touch the views
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        currentSpeedTextView.setText(speed + " m/s");
-                        yourBestTextView.setText("Your best: " + maxSpeed + " m/s");
-                    }
-                });
+            long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
+            long timeNow = System.currentTimeMillis();
+            while (isRecording && (timeNow < timeUntilEnd)) {
+                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
+                    //This code updates the UI, needs to be separate because on the original thread can touch the views
+                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+                }
+                timeNow = System.currentTimeMillis();
             }
 
             //once the loop is done, stop recording and switch the image back to the play button
             isRecording = false;
             //This code updates the UI, needs to be separate because on the original thread can touch the views
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    competeButton.setImageResource(R.drawable.compete_play);
-                }
-            });
+            getActivity().runOnUiThread(updateViewSubRunnableImage);
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    Runnable updateViewSubRunnableScore = new Runnable() {
+        @Override
+        public void run() {
+            currentScoreTextView.setText(acceleration + " m/s^2");
+            yourBestScoreTextView.setText("Longest Fall: " + maxTimeFalling + " ms");
+        }
+    };
 
-        //make the sensor start listening again
-        userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
 }

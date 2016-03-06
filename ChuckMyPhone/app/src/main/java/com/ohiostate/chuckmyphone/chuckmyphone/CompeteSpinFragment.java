@@ -56,18 +56,29 @@ public class CompeteSpinFragment extends CompeteFragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_compete_spin, container, false);
 
-        initializeSensors();
         initializeViews(view);
 
         return view;
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        //make the sensor start listening again
+        initializeSensors();
+    }
+
+    @Override
     public void onSensorChanged(SensorEvent event) {
+        //need to reinstantiate this at least once between each button press so a thread isn't run
+        //while it is already running. This is a convenient spot that happens at least once
+        //between button presses. May need to put in a delay if performance suffers (note, thread isn't run until later)
+        updateViewRunnableThread = new Thread(updateViewRunnable);
+
         Sensor mySensor = event.sensor;
 
         //update speeds
@@ -98,67 +109,46 @@ public class CompeteSpinFragment extends CompeteFragment{
 
         //make the sensor start listening, don't want this here later
         userHasSensor = sensManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+
+        if (!userHasSensor) {
+            displayMissingSensorToast();
+        }
     }
 
     public void initializeViews(View view) {
-        currentSpeedTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityCurrentSpeedTextView);
-        yourBestTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityYourBestTextBox);
+        currentScoreTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityCurrentSpeedTextView);
+        yourBestScoreTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityYourBestTextBox);
         competeButton = (ImageButton) view.findViewById(R.id.CompeteSpinActivityCompeteButton);
 
-        if (!userHasSensor) {
-            yourBestTextView.setText("Your phone does not have the necessary sensors for this activity");
-        }
-
-        competeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (userHasSensor) {
-                    isRecording = !isRecording;
-                    if (isRecording) {
-                        competeButton.setImageResource(R.drawable.compete_stop);
-                    } else {
-                        competeButton.setImageResource(R.drawable.compete_play);
-                    }
-                    Thread mythread = new Thread(updateViewRunnable);
-                    mythread.start();
-                }
-            }
-        });
+        competeButton.setOnClickListener(buttonListener);
     }
 
     //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
     Runnable updateViewRunnable = new Runnable() {
         public void run() {
-            int count = 1;
-            while (isRecording && count < 50000) {
-                count++;
-
-                //This code updates the UI, needs to be separate because on the original thread can touch the views
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        currentSpeedTextView.setText(rotationSpeed + " m/s");
-                        yourBestTextView.setText("Your best: " + maxSpeed + " m/s");
-                    }
-                });
+            long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
+            long timeNow = System.currentTimeMillis();
+            while (isRecording && (timeNow < timeUntilEnd)) {
+                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
+                    //This code updates the UI, needs to be separate because on the original thread can touch the views
+                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+                }
+                timeNow = System.currentTimeMillis();
             }
 
             //once the loop is done, stop recording and switch the image back to the play button
             isRecording = false;
             //This code updates the UI, needs to be separate because on the original thread can touch the views
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    competeButton.setImageResource(R.drawable.compete_play);
-                }
-            });
+            getActivity().runOnUiThread(updateViewSubRunnableImage);
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    Runnable updateViewSubRunnableScore = new Runnable() {
+        @Override
+        public void run() {
+            currentScoreTextView.setText(rotationSpeed + " m/s");
+            yourBestScoreTextView.setText("Your best: " + maxSpeed + " m/s");
+        }
+    };
 
-        //make the sensor start listening again
-        userHasSensor = sensManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
-    }
 }
