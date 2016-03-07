@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -35,9 +34,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     Sensor linearAccelerometer;
 
-    public CompeteDropFragment() {
-        // Required empty public constructor
-    }
+    public CompeteDropFragment() {}
 
     /**
      * Use this factory method to create a new instance of

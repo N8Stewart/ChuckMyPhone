@@ -21,7 +21,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText passwordEditText;
     private EditText usernameEditText;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.login_facebook_button:
                 intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.login_login_button:
                 intent = new Intent(getApplication(), MainActivity.class);
@@ -89,7 +89,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             default:
                 intent = new Intent(getApplication(), NewUserActivity.class);
                 startActivity(intent);
-                finish();
                 break;
         }
     }

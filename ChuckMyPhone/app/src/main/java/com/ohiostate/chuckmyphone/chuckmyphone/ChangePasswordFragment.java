@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,9 +41,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private EditText newPasswordEdiText;
     private EditText newPasswordConfirmationEdiText;
 
-    public ChangePasswordFragment() {
-        // Required empty public constructor
-    }
+    public ChangePasswordFragment() {}
 
     /**
      * Use this factory method to create a new instance of

@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 /**
  * A simple {@link Fragment} abstract subclass.
  * Activities that contain this fragment must implement the
@@ -52,9 +51,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     protected OnFragmentInteractionListener mListener;
 
-    public CompeteFragment() {
-        // Required empty public constructor
-    }
+    public CompeteFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,8 +63,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
 
         isRecording = false;
         lastUpdate = 0;

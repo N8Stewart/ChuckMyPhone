@@ -14,7 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -43,9 +42,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     private Spinner distanceSpinner;
     private Spinner competitionSpinner;
 
-    public LeaderboardsFragment() {
-        // Required empty public constructor
-    }
+    public LeaderboardsFragment() {}
 
     /**
      * Use this factory method to create a new instance of

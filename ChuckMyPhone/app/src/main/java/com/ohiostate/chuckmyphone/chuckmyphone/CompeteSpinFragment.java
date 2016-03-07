@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -26,9 +25,7 @@ public class CompeteSpinFragment extends CompeteFragment{
     private float maxSpeed;
     Sensor gyroscope;
 
-    public CompeteSpinFragment() {
-        // Required empty public constructor
-    }
+    public CompeteSpinFragment() {}
 
     /**
      * Use this factory method to create a new instance of

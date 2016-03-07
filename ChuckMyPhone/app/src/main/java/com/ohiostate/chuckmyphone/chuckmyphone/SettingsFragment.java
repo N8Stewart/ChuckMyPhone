@@ -42,9 +42,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private CheckBox soundEnabledCheckbox;
     private CheckBox backgroundNotificationsCheckbox;
 
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
+    public SettingsFragment() {}
 
     /**
      * Use this factory method to create a new instance of

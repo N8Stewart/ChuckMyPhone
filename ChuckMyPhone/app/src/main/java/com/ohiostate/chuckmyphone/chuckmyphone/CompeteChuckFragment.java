@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -27,9 +26,7 @@ public class CompeteChuckFragment extends CompeteFragment{
 
     Sensor linearAccelerometer;
 
-    public CompeteChuckFragment() {
-        // Required empty public constructor
-    }
+    public CompeteChuckFragment() {}
 
     /**
      * Use this factory method to create a new instance of
