@@ -7,14 +7,23 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
-public class NewUserActivity extends AppCompatActivity {
+public class NewUserActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    Button button_cancel;
-    Button button_fb;
-    Button button_sign_up;
+    private Button cancelButton;
+    private Button fbButton;
+    private Button signUpButton;
+
+    private EditText usernameEditText;
+    private EditText passwordEditText;
+    private EditText passwordConfirmationEditText;
+    private EditText emailEditText;
+
+    private CheckBox termsOfServiceCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,34 +37,21 @@ public class NewUserActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("New User");
 
-        button_cancel = (Button) findViewById(R.id.new_user_cancel_button);
-        button_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        cancelButton = (Button) findViewById(R.id.new_user_cancel_button);
+        cancelButton.setOnClickListener(this);
 
-        button_sign_up = (Button) findViewById(R.id.new_user_sign_up_button);
-        button_sign_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        signUpButton = (Button) findViewById(R.id.new_user_sign_up_button);
+        signUpButton.setOnClickListener(this);
 
-        button_fb = (Button) findViewById(R.id.new_user_facebook_button);
-        button_fb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        fbButton = (Button) findViewById(R.id.new_user_facebook_button);
+        fbButton.setOnClickListener(this);
 
+        usernameEditText = (EditText) findViewById(R.id.new_user_username_edit_text);
+        passwordEditText = (EditText) findViewById(R.id.new_user_password_edit_text);
+        passwordConfirmationEditText = (EditText) findViewById(R.id.new_user_password_confirmation_edit_text);
+        emailEditText = (EditText) findViewById(R.id.new_user_email_edit_text);
+
+        termsOfServiceCheckBox = (CheckBox) findViewById(R.id.new_user_terms_of_service_checkbox);
     }
 
     @Override
@@ -76,4 +72,24 @@ public class NewUserActivity extends AppCompatActivity {
         Log.d(TAG, "onResume() called");
     }
 
+    @Override
+    public void onClick(View v) {
+        Intent intent;
+
+        switch(v.getId()){
+            case R.id.new_user_facebook_button:
+                intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.new_user_sign_up_button:
+                intent = new Intent(getApplication(), MainActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            default:
+                finish();
+                break;
+        }
+    }
 }

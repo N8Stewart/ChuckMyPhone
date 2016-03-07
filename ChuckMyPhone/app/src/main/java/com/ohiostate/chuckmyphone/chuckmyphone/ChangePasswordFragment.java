@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 /**
@@ -18,7 +21,7 @@ import android.view.ViewGroup;
  * Use the {@link ChangePasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChangePasswordFragment extends Fragment {
+public class ChangePasswordFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -32,6 +35,13 @@ public class ChangePasswordFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    // views
+    private Button confirmButton;
+    private Button cancelButton;
+    private EditText oldPasswordEditText;
+    private EditText newPasswordEdiText;
+    private EditText newPasswordConfirmationEdiText;
 
     public ChangePasswordFragment() {
         // Required empty public constructor
@@ -71,6 +81,16 @@ public class ChangePasswordFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_change_password, container, false);
+
+        oldPasswordEditText = (EditText) view.findViewById(R.id.change_password_old_password_edit_text);
+        newPasswordEdiText = (EditText) view.findViewById(R.id.new_user_password_edit_text);
+        newPasswordConfirmationEdiText = (EditText) view.findViewById(R.id.new_user_password_confirmation_edit_text);
+
+        confirmButton = (Button) view.findViewById(R.id.change_password_confirm_button);
+        confirmButton.setOnClickListener(this);
+        cancelButton = (Button) view.findViewById(R.id.change_password_cancel_button);
+        cancelButton.setOnClickListener(this);
+
         return view;
     }
 
@@ -96,6 +116,18 @@ public class ChangePasswordFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.change_password_confirm_button:
+                // update password and show dialog to confirm
+                break;
+            default:
+                // go to previous fragment
+                break;
+        }
     }
 
     /**

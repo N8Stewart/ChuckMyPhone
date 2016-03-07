@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
 
 
 /**
@@ -19,7 +21,7 @@ import android.widget.Button;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -32,9 +34,13 @@ public class SettingsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    Button button_save;
-
     private OnFragmentInteractionListener mListener;
+
+    private Button saveButton;
+    private RadioButton metricSystemButton;
+    private RadioButton imperialSystemButton;
+    private CheckBox soundEnabledCheckbox;
+    private CheckBox backgroundNotificationsCheckbox;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -75,7 +81,18 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_settings, container, false);
 
-        button_save = (Button) view.findViewById(R.id.settings_save_button);
+        saveButton = (Button) view.findViewById(R.id.settings_save_button);
+        saveButton.setOnClickListener(this);
+
+        metricSystemButton = (RadioButton) view.findViewById(R.id.settings_metric_system_button);
+        metricSystemButton.setOnClickListener(this);
+        imperialSystemButton = (RadioButton) view.findViewById(R.id.settings_imperial_system_button);
+        imperialSystemButton.setOnClickListener(this);
+
+        backgroundNotificationsCheckbox = (CheckBox) view.findViewById(R.id.settings_background_notification_checkbox);
+        backgroundNotificationsCheckbox.setOnClickListener(this);
+        soundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_sound_enabled_checkbox);
+        soundEnabledCheckbox.setOnClickListener(this);
         
         return view;
     }
@@ -102,6 +119,27 @@ public class SettingsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.settings_background_notification_checkbox:
+                // set value
+                break;
+            case R.id.settings_sound_enabled_checkbox:
+                // set value
+                break;
+            case R.id.settings_imperial_system_button:
+                // set value and change other radio button
+                break;
+            case R.id.settings_metric_system_button:
+                // set value and change other radio button
+                break;
+            default:
+                //save settings
+                break;
+        }
     }
 
     /**

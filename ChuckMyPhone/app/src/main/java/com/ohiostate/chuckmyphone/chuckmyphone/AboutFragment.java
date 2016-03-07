@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -19,7 +22,7 @@ import android.view.ViewGroup;
  * Use the {@link AboutFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutFragment extends Fragment {
+public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -33,6 +36,9 @@ public class AboutFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    // Views
+    private TextView termsOfService;
 
     public AboutFragment() {
         // Required empty public constructor
@@ -71,6 +77,9 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_about, container, false);
 
+        termsOfService = (TextView) view.findViewById(R.id.about_terms_of_service_textview);
+        termsOfService.setOnClickListener(this);
+
         return view;
     }
 
@@ -96,6 +105,11 @@ public class AboutFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        // open webview or dialog to terms of service
     }
 
     /**

@@ -23,7 +23,7 @@ import android.widget.TextView;
  * Use the {@link LeaderboardsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LeaderboardsFragment extends Fragment {
+public class LeaderboardsFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -37,6 +37,11 @@ public class LeaderboardsFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    // views
+
+    private Spinner distanceSpinner;
+    private Spinner competitionSpinner;
 
     public LeaderboardsFragment() {
         // Required empty public constructor
@@ -77,15 +82,15 @@ public class LeaderboardsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_leaderboards, container, false);
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.leaderboards_competition_filter_dropdown);
+        competitionSpinner = (Spinner) view.findViewById(R.id.leaderboards_competition_filter_dropdown);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Competition_spinner_labels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
+        competitionSpinner.setAdapter(adapter);
 
-        Spinner spinner2 = (Spinner) view.findViewById(R.id.leaderboards_distance_filter_dropdown);
+        distanceSpinner = (Spinner) view.findViewById(R.id.leaderboards_distance_filter_dropdown);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.Radius_spinner_labels, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
+        distanceSpinner.setAdapter(adapter2);
 
         for (int i = 1; i < 20; i++) {
             addGenericEntryToLeaderboard(i, "Tim Taylor", (20-i), view);
@@ -115,6 +120,18 @@ public class LeaderboardsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.leaderboards_competition_filter_dropdown:
+                // change competition filter and update leaderboards
+                break;
+            default:
+                // change distance filter and update leaderboards
+                break;
+        }
     }
 
     /**
