@@ -58,7 +58,7 @@ public class CompeteSpinFragment extends CompeteFragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_compete_spin, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         initializeViews(view);
 
@@ -118,9 +118,9 @@ public class CompeteSpinFragment extends CompeteFragment{
     }
 
     public void initializeViews(View view) {
-        currentScoreTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityCurrentSpeedTextView);
-        yourBestScoreTextView = (TextView) view.findViewById(R.id.CompeteSpinActivityYourBestTextBox);
-        competeButton = (ImageButton) view.findViewById(R.id.CompeteSpinActivityCompeteButton);
+        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
+        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
+        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
 
         competeButton.setOnClickListener(buttonListener);
     }

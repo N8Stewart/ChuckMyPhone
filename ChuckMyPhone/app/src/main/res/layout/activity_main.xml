@@ -20,7 +20,7 @@
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/activity_main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
@@ -29,18 +29,18 @@
         </android.support.design.widget.AppBarLayout>
 
         <FrameLayout
-            android:id="@+id/frame_content"
+            android:id="@+id/activity_main_fragment_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/activity_main_nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_hamburger_menu"
-        app:menu="@menu/hamburger_menu" />
+        app:headerLayout="@layout/menu_hamburger_nav_header"
+        app:menu="@menu/menu_hamburger" />
 
 </android.support.v4.widget.DrawerLayout>

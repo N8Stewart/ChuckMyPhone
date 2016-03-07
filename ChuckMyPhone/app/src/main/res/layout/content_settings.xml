@@ -13,6 +13,7 @@
     tools:context="com.ohiostate.chuckmyphone.chuckmyphone.SettingsFragment">
 
     <LinearLayout
+        android:id="@+id/settings_linear_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,7 +22,7 @@
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/settingsFragmentImperialSystemButton"
+            android:id="@+id/settings_imperial_system_button"
             android:checked="true"
             android:text="@string/imperial_system"/>
 
@@ -30,27 +31,27 @@
             android:layout_height="wrap_content"
             android:text="@string/metric_system"
             android:layout_marginBottom="20dp"
-            android:id="@+id/settingsFragmentMetricSystemButton"
+            android:id="@+id/settings_metric_system_button"
             android:checked="false"/>
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sound_enabled"
-            android:id="@+id/settingsFragmentSoundEnabledCheckbox"
+            android:id="@+id/settings_sound_enabled_checkbox"
             android:checked="true"/>
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/background_notifications"
-            android:id="@+id/settingsFragmentBackgroundNotificationCheckbox"
+            android:id="@+id/settings_background_notification_checkbox"
             android:checked="true"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/settingsFragmentSaveButton"
+            android:id="@+id/settings_save_button"
             android:background="@android:drawable/ic_menu_save"
             android:layout_gravity="bottom|end"/>
 

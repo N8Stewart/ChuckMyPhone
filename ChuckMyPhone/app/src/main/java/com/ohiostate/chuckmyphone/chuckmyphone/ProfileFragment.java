@@ -16,12 +16,12 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PersonalProfileFragment.OnFragmentInteractionListener} interface
+ * {@link ProfileFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PersonalProfileFragment#newInstance} factory method to
+ * Use the {@link ProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PersonalProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -36,7 +36,7 @@ public class PersonalProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public PersonalProfileFragment() {
+    public ProfileFragment() {
         // Required empty public constructor
     }
 
@@ -46,11 +46,11 @@ public class PersonalProfileFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment PersonalProfileFragment.
+     * @return A new instance of fragment ProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static PersonalProfileFragment newInstance(String param1, String param2) {
-        PersonalProfileFragment fragment = new PersonalProfileFragment();
+    public static ProfileFragment newInstance(String param1, String param2) {
+        ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,7 +73,7 @@ public class PersonalProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_personal_profile, container, false);
+        View view = inflater.inflate(R.layout.content_profile, container, false);
         for (int i = 0; i < 10;  i++) {
             addBadge("trophy name", view);
         }
@@ -121,7 +121,7 @@ public class PersonalProfileFragment extends Fragment {
     }
 
     public void addBadge(String text, View view) {
-        LinearLayout horzLayout = (LinearLayout) view.findViewById(R.id.PersonalProfileTrophyHorzLayout);
+        LinearLayout horzLayout = (LinearLayout) view.findViewById(R.id.profile_trophies_linear_layout);
 
         LinearLayout podLayout = new LinearLayout(getActivity());
         podLayout.setOrientation(LinearLayout.VERTICAL);

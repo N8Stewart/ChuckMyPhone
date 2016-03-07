@@ -16,7 +16,8 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:id="@+id/new_user_linear_layout">
 
         <TextView
             android:layout_width="135dp"
@@ -27,35 +28,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/textView5"
             android:visibility="invisible" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText5"
+            android:id="@+id/new_user_username_edit_text"
             android:hint="Username" />
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText6"
+            android:id="@+id/new_user_password_edit_text"
             android:hint="Password" />
 
         <EditText
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText7"
-            android:hint="Password Again" />
+            android:id="@+id/new_user_password_confirmation_edit_text"
+            android:hint="Password Confirmation" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText8"
+            android:id="@+id/new_user_email_edit_text"
             android:hint="Email" />
 
         <LinearLayout
+            android:id="@+id/new_user_sign_buttons_linear_layout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -65,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sign up"
-                android:id="@+id/button_sign_up"
+                android:id="@+id/new_user_sign_up_button"
                 android:layout_weight="4"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancel"
-                android:id="@+id/button_cancel_sign_up"
+                android:id="@+id/new_user_cancel_button"
                 android:layout_weight="4"/>
         </LinearLayout>
 
@@ -89,7 +90,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="I have read and agree to the terms of service"
-            android:id="@+id/checkBox"
+            android:id="@+id/new_user_terms_of_service_checkbox"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.31" />
 
@@ -97,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Connect with Facebook"
-            android:id="@+id/button_connect_with_fb" />
+            android:id="@+id/new_user_facebook_button" />
 
     </LinearLayout>
 </RelativeLayout>

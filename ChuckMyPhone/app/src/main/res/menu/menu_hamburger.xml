@@ -3,11 +3,11 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_profile"
+            android:id="@+id/menu_hamburger_item_profile"
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/action_profile"/>
         <item
-            android:id="@+id/nav_leaderboards"
+            android:id="@+id/menu_hamburger_item_leaderboards"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/action_leaderboards"/>
     </group>
@@ -16,15 +16,15 @@
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/nav_chuck"
+                    android:id="@+id/menu_hamburger_item_chuck"
                     android:icon="@drawable/ic_menu_slideshow"
                     android:title="@string/action_chuck"/>
                 <item
-                    android:id="@+id/nav_drop"
+                    android:id="@+id/menu_hamburger_item_drop"
                     android:icon="@drawable/ic_menu_slideshow"
                     android:title="@string/action_drop"/>
                 <item
-                    android:id="@+id/nav_spin"
+                    android:id="@+id/menu_hamburger_item_spin"
                     android:icon="@drawable/ic_menu_slideshow"
                     android:title="@string/action_spin"/>
             </group>

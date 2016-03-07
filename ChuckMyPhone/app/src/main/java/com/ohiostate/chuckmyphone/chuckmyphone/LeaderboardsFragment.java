@@ -77,12 +77,12 @@ public class LeaderboardsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_leaderboards, container, false);
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
+        Spinner spinner = (Spinner) view.findViewById(R.id.leaderboards_competition_filter_dropdown);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Competition_spinner_labels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        Spinner spinner2 = (Spinner) view.findViewById(R.id.spinner2);
+        Spinner spinner2 = (Spinner) view.findViewById(R.id.leaderboards_distance_filter_dropdown);
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.Radius_spinner_labels, android.R.layout.simple_spinner_item);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
@@ -135,7 +135,7 @@ public class LeaderboardsFragment extends Fragment {
     public void addGenericEntryToLeaderboard(int rank, String name, int score, View view) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
-        LinearLayout leaderboardRow = (LinearLayout) view.findViewById(R.id.leaderboardScrollViewRows);
+        LinearLayout leaderboardRow = (LinearLayout) view.findViewById(R.id.leaderboards_row_record_linear_layout);
 
         LinearLayout leaderboardRowLayout = new LinearLayout(getActivity());
         leaderboardRowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -168,7 +168,7 @@ public class LeaderboardsFragment extends Fragment {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 6);
         dividerView.setLayoutParams(lp);
 
-        LinearLayout leaderboardScrollViewRows = (LinearLayout) view.findViewById(R.id.leaderboardScrollViewRows);
+        LinearLayout leaderboardScrollViewRows = (LinearLayout) view.findViewById(R.id.leaderboards_row_record_linear_layout);
         leaderboardScrollViewRows.addView(leaderboardRowLayout);
         leaderboardScrollViewRows.addView(dividerView);
     }

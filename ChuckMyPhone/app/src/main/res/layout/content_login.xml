@@ -18,19 +18,20 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp">
+        android:layout_marginTop="5dp"
+        android:id="@+id/login_linear_layout">
 
         <ImageView
             android:layout_width="175dp"
             android:layout_height="175dp"
-            android:id="@+id/loginActivityAppIconImageView"
+            android:id="@+id/login_app_icon_image_view"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/loginActivityUsernameEditText"
+            android:id="@+id/login_username_edit_text"
             android:autoText="false"
             android:editable="true"
             android:enabled="true"
@@ -39,27 +40,27 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/loginActivityPasswordEditText"
+            android:id="@+id/login_password_edit_text"
             android:hint="@string/password" />
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"
-            android:id="@+id/loginActivityLoginButton"
+            android:id="@+id/login_login_button"
             android:layout_marginTop="20dp"/>
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/new_user"
-            android:id="@+id/loginActivityNewUserButton" />
+            android:id="@+id/login_new_user_button" />
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/connect_with_fb"
-            android:id="@+id/loginActivityConnectWithFacebookButton" />
+            android:id="@+id/login_facebook_button" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -72,7 +73,8 @@
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:weightSum="1">
+            android:weightSum="1"
+            android:id="@+id/login_bottom_linear_layout">
 
             <EditText
                 android:layout_width="wrap_content"
@@ -85,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/loginActivityForgotPasswordButton"
+                android:id="@+id/login_forgot_password_textview"
                 android:text="@string/forgot_password"
                 android:singleLine="true"
                 android:linksClickable="true" />

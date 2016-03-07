@@ -17,13 +17,13 @@
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="322dp"
-        android:id="@+id/leaderboardScrollView" >
+        android:id="@+id/leaderboards_table_records_scroll_view" >
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/leaderboardScrollViewRows">
+            android:id="@+id/leaderboards_row_record_linear_layout">
 
         </LinearLayout>
     </ScrollView>
@@ -39,13 +39,14 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3">
+        android:weightSum="3"
+        android:id="@+id/leaderboards_user_record_linear_layout">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="16"
-            android:id="@+id/textView23"
+            android:id="@+id/leaderboards_user_position_textview"
             style="@android:style/TextAppearance.DeviceDefault.Large"
             android:layout_weight="1"/>
 
@@ -53,14 +54,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tim Taylor (My best)"
-            android:id="@+id/textView24"
+            android:id="@+id/leaderboards_user_username_textview"
             style="@android:style/TextAppearance.DeviceDefault.Large"
             android:layout_weight="1"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView25"
+            android:id="@+id/leaderboards_user_record_textview"
             android:text="4 mph"
             style="@android:style/TextAppearance.DeviceDefault.Large"
             android:layout_weight="1"/>
@@ -76,19 +77,21 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:id="@+id/leaderboards_fiters_linear_layout">
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
+            android:id="@+id/leaderboards_competition_filter_dropdown"
             android:spinnerMode="dropdown"
             android:layout_weight="0.63" />
 
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner2" />
+            android:id="@+id/leaderboards_distance_filter_dropdown"
+            android:spinnerMode="dropdown"/>
     </LinearLayout>
 
 </LinearLayout>

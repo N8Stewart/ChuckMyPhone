@@ -25,10 +25,10 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate() called");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
         setSupportActionBar(toolbar);
 
-        button_new_user = (Button) findViewById(R.id.loginActivityNewUserButton);
+        button_new_user = (Button) findViewById(R.id.login_new_user_button);
         button_new_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        button_forgot_password = (TextView) findViewById(R.id.loginActivityForgotPasswordButton);
+        button_forgot_password = (TextView) findViewById(R.id.login_forgot_password_textview);
         button_forgot_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        button_login = (Button) findViewById(R.id.loginActivityLoginButton);
+        button_login = (Button) findViewById(R.id.login_login_button);
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        button_fb = (Button) findViewById(R.id.loginActivityConnectWithFacebookButton);
+        button_fb = (Button) findViewById(R.id.login_facebook_button);
         button_fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

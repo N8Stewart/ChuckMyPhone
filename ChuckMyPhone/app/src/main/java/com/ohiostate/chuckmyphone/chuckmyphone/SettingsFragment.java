@@ -75,7 +75,7 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_settings, container, false);
 
-        button_save = (Button) view.findViewById(R.id.settingsFragmentSaveButton);
+        button_save = (Button) view.findViewById(R.id.settings_save_button);
         
         return view;
     }

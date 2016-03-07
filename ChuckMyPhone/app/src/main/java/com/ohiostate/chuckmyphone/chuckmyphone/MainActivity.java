@@ -18,7 +18,7 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
-        PersonalProfileFragment.OnFragmentInteractionListener,
+        ProfileFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
         ChangePasswordFragment.OnFragmentInteractionListener {
@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Log.d(TAG, "onCreate() called");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -43,13 +43,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_content, new CompeteChuckFragment()).commit();
-        navigationView.setCheckedItem(R.id.nav_chuck);
+        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment()).commit();
+        navigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
 
         getSupportActionBar().setTitle("Chuck My Phone");
 
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.dot_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
         return true;
     }
 
@@ -102,15 +102,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Class fragmentClass = null;
 
         switch(id) {
-            case R.id.action_about:
+            case R.id.menu_dot_item_about:
                 fragmentClass = AboutFragment.class;
                 getSupportActionBar().setTitle("About");
                 break;
-            case R.id.action_change_password:
+            case R.id.menu_dot_item_change_password:
                 fragmentClass = ChangePasswordFragment.class;
                 getSupportActionBar().setTitle("Change Password");
                 break;
-            case R.id.action_settings:
+            case R.id.menu_dot_item_settings:
                 fragmentClass = SettingsFragment.class;
                 getSupportActionBar().setTitle("Settings");
                 break;
@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_content, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, fragment).commit();
 
         return super.onOptionsItemSelected(item);
     }
@@ -144,19 +144,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Class fragmentClass = null;
 
         switch(id) {
-            case R.id.nav_profile:
-                fragmentClass = PersonalProfileFragment.class;
+            case R.id.menu_hamburger_item_profile:
+                fragmentClass = ProfileFragment.class;
                 getSupportActionBar().setTitle("Profile");
                 break;
-            case R.id.nav_leaderboards:
+            case R.id.menu_hamburger_item_leaderboards:
                 fragmentClass = LeaderboardsFragment.class;
                 getSupportActionBar().setTitle("Leaderboards");
                 break;
-            case R.id.nav_drop:
+            case R.id.menu_hamburger_item_drop:
                 fragmentClass = CompeteDropFragment.class;
                 getSupportActionBar().setTitle("Drop My Phone");
                 break;
-            case R.id.nav_spin:
+            case R.id.menu_hamburger_item_spin:
                 fragmentClass = CompeteSpinFragment.class;
                 getSupportActionBar().setTitle("Spin My Phone");
                 break;
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_content, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, fragment).commit();
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;

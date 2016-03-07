@@ -10,9 +10,10 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".PersonalProfileFragment">
+    tools:context=".ProfileFragment">
 
     <LinearLayout
+        android:id="@+id/profile_linear_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,6 +22,7 @@
         android:weightSum="3">
 
         <LinearLayout
+            android:id="@+id/profile_records_linear_layout"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="173dp"
@@ -31,14 +33,15 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:id="@+id/profile_fastest_thrown_linear_layout">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fastest Thrown"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/textView13" />
+                    android:id="@+id/profile_fastest_thrown_title_textview" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -52,21 +55,22 @@
                     android:layout_height="wrap_content"
                     android:text="10 m/s"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/textView14" />
+                    android:id="@+id/profile_fastest_thrown_record_textview" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:id="@+id/profile_most_spins_linear_layout">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Most       Spins"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/textView15" />
+                    android:id="@+id/profile_most_spins_title_textview" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -80,21 +84,22 @@
                     android:layout_height="wrap_content"
                     android:text="10 spins"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/textView16" />
+                    android:id="@+id/profile_most_spins_record_textview" />
             </LinearLayout>
 
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:id="@+id/profile_furthest_drop_linear_layout">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Furthest Dropped"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/textView17" />
+                    android:id="@+id/profile_furthest_drop_title_textview" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -108,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:text="10 meters"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/textView18" />
+                    android:id="@+id/profile_furthest_drop_record_textview" />
             </LinearLayout>
         </LinearLayout>
 
@@ -117,20 +122,20 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Your Trophies"
-            android:id="@+id/textView22"
+            android:id="@+id/profile_trophies_title_textview"
             android:layout_weight="0.22" />
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/horizontalScrollView" >
+            android:id="@+id/profile_trophies_horizontal_scroll_view" >
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:id="@+id/PersonalProfileTrophyHorzLayout">
+                android:id="@+id/profile_trophies_linear_layout">
 
             </LinearLayout>
         </HorizontalScrollView>

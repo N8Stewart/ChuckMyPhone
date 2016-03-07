@@ -78,8 +78,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.content_compete_drop, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         initializeViews(view);
 
@@ -145,9 +144,9 @@ public class CompeteDropFragment extends CompeteFragment {
     }
 
     public void initializeViews(View view) {
-        currentScoreTextView = (TextView) view.findViewById(R.id.CompeteDropActivityCurrentSpeedTextView);
-        yourBestScoreTextView = (TextView) view.findViewById(R.id.CompeteDropActivityYourBestTextBox);
-        competeButton = (ImageButton) view.findViewById(R.id.CompeteDropActivityCompeteButton);
+        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
+        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
+        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
 
         competeButton.setOnClickListener(buttonListener);
     }

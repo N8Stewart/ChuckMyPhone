@@ -23,12 +23,12 @@ public class NewUserActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate() called");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_new_user_toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setTitle("New User");
 
-        button_cancel = (Button) findViewById(R.id.button_cancel_sign_up);
+        button_cancel = (Button) findViewById(R.id.new_user_cancel_button);
         button_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,7 +36,7 @@ public class NewUserActivity extends AppCompatActivity {
             }
         });
 
-        button_sign_up = (Button) findViewById(R.id.button_sign_up);
+        button_sign_up = (Button) findViewById(R.id.new_user_sign_up_button);
         button_sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,7 +46,7 @@ public class NewUserActivity extends AppCompatActivity {
             }
         });
 
-        button_fb = (Button) findViewById(R.id.button_connect_with_fb);
+        button_fb = (Button) findViewById(R.id.new_user_facebook_button);
         button_fb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

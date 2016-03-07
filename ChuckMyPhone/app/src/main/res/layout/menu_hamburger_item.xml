@@ -4,7 +4,7 @@
                 android:layout_height="48dp">
 
     <TextView
-        android:id="@+id/menu_item"
+        android:id="@+id/menu_hamburger_item"
         android:textColor="#ffffff"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"/>

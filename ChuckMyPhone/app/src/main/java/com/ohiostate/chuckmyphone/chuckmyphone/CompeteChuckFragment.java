@@ -59,7 +59,7 @@ public class CompeteChuckFragment extends CompeteFragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_compete_chuck, container, false);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         initializeViews(view);
 
@@ -118,9 +118,9 @@ public class CompeteChuckFragment extends CompeteFragment{
     }
 
     public void initializeViews(View view) {
-        currentScoreTextView = (TextView) view.findViewById(R.id.CompeteChuckActivityCurrentSpeedTextView);
-        yourBestScoreTextView = (TextView) view.findViewById(R.id.CompeteChuckActivityYourBestTextBox);
-        competeButton = (ImageButton) view.findViewById(R.id.CompeteChuckActivityCompeteButton);
+        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
+        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
+        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
 
         competeButton.setOnClickListener(buttonListener);
     }

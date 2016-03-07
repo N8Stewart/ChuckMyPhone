@@ -21,7 +21,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Forgot Password");
 
-        button_cancel = (Button) findViewById(R.id.forgotPasswordActivityCancelButton);
+        button_cancel = (Button) findViewById(R.id.activity_forgot_password_cancel_button);
         button_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,7 +29,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
 
-        button_reset = (Button) findViewById(R.id.button_reset);
+        button_reset = (Button) findViewById(R.id.activity_forgot_password_reset_button);
         button_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

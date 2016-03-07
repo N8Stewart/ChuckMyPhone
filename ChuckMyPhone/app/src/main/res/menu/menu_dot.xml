@@ -3,22 +3,22 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_change_password"
+        android:id="@+id/menu_dot_item_change_password"
         android:title="@string/action_change_password"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/menu_dot_item_settings"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_about"
+        android:id="@+id/menu_dot_item_about"
         android:title="@string/action_about"
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/action_logout"
+        android:id="@+id/menu_dot_item_logout"
         android:title="@string/action_logout"
         app:showAsAction="never"/>
 </menu>
