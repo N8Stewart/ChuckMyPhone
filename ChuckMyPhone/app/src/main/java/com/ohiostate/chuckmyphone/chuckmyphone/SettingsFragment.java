@@ -135,16 +135,28 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
                 break;
             case R.id.settings_imperial_system_button:
-
+                if(metricSystemButton.isChecked()){
+                    metricSystemButton.setChecked(false);
+                    imperialSystemButton.setChecked(true);
+                }
                 break;
             case R.id.settings_metric_system_button:
-
+                if(imperialSystemButton.isChecked()){
+                    metricSystemButton.setChecked(true);
+                    imperialSystemButton.setChecked(false);
+                }
                 break;
             default:
-                //save settings
+                saveSettings();
                 break;
         }
 
+    }
+
+    private void saveSettings(){
+        mSharedPreferencesHelper.setNotificationsEnabled(backgroundNotificationsCheckbox.isChecked());
+        mSharedPreferencesHelper.setImperialSystem(imperialSystemButton.isChecked());
+        mSharedPreferencesHelper.setSoundEnabled(soundEnabledCheckbox.isChecked());
     }
 
     private void loadSettings(){

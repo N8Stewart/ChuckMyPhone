@@ -41,6 +41,8 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private EditText newPasswordEdiText;
     private EditText newPasswordConfirmationEdiText;
 
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+
     public ChangePasswordFragment() {}
 
     /**
@@ -71,6 +73,8 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity());
     }
 
     @Override
@@ -118,7 +122,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.change_password_confirm_button:
-                // update password and show dialog to confirm
+                mSharedPreferencesHelper.setPassword(newPasswordConfirmationEdiText.getText().toString());
                 break;
             default:
                 // go to previous fragment

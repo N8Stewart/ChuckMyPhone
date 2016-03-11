@@ -105,6 +105,9 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
             sharedPreferencesHelper.setUsername(usernameEditText.getText().toString());
             sharedPreferencesHelper.setPassword(passwordEditText.getText().toString());
             sharedPreferencesHelper.setBadges("0000000000");
+            sharedPreferencesHelper.setBestDrop("0");
+            sharedPreferencesHelper.setBestSpin("0");
+            sharedPreferencesHelper.setBestChuck("0");
             sharedPreferencesHelper.setNotificationsEnabled(true);
             sharedPreferencesHelper.setSoundEnabled(false);
             sharedPreferencesHelper.setImperialSystem(true);
