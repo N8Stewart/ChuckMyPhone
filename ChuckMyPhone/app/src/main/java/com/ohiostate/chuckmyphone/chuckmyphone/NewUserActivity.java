@@ -1,6 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private EditText emailEditText;
 
     private CheckBox termsOfServiceCheckBox;
+
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         emailEditText = (EditText) findViewById(R.id.new_user_email_edit_text);
 
         termsOfServiceCheckBox = (CheckBox) findViewById(R.id.new_user_terms_of_service_checkbox);
+
     }
 
     @Override
@@ -80,16 +84,32 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.new_user_facebook_button:
                 intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
+                createUserData();
                 finish();
                 break;
             case R.id.new_user_sign_up_button:
                 intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
+                createUserData();
                 finish();
                 break;
             default:
                 finish();
                 break;
+        }
+    }
+
+    private void createUserData(){
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        if(!sharedPreferencesHelper.hasSharedData()) {
+            sharedPreferencesHelper.setUsername(usernameEditText.getText().toString());
+            sharedPreferencesHelper.setPassword(passwordEditText.getText().toString());
+            sharedPreferencesHelper.setBadges("0000000000");
+            sharedPreferencesHelper.setNotificationsEnabled(true);
+            sharedPreferencesHelper.setSoundEnabled(false);
+            sharedPreferencesHelper.setImperialSystem(true);
+        } else {
+            // already have account
         }
     }
 }

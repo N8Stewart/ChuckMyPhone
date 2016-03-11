@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final String TAG = this.getClass().getSimpleName();
 
     private DrawerLayout mDrawerLayout;
+    private SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportActionBar().setTitle("Chuck My Phone");
 
+        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
     }
 
     @Override
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.menu_hamburger_item_profile:
                 fragmentClass = ProfileFragment.class;
-                getSupportActionBar().setTitle("Profile");
+                getSupportActionBar().setTitle(mSharedPreferencesHelper.getUsername());
                 break;
             case R.id.menu_hamburger_item_leaderboards:
                 fragmentClass = LeaderboardsFragment.class;

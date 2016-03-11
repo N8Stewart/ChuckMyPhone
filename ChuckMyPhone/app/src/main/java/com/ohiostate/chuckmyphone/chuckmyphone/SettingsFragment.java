@@ -42,6 +42,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private CheckBox soundEnabledCheckbox;
     private CheckBox backgroundNotificationsCheckbox;
 
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+
     public SettingsFragment() {}
 
     /**
@@ -72,6 +74,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity());
     }
 
     @Override
@@ -91,6 +95,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         backgroundNotificationsCheckbox.setOnClickListener(this);
         soundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_sound_enabled_checkbox);
         soundEnabledCheckbox.setOnClickListener(this);
+
+        loadSettings();
         
         return view;
     }
@@ -123,21 +129,29 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.settings_background_notification_checkbox:
-                // set value
+
                 break;
             case R.id.settings_sound_enabled_checkbox:
-                // set value
+
                 break;
             case R.id.settings_imperial_system_button:
-                // set value and change other radio button
+
                 break;
             case R.id.settings_metric_system_button:
-                // set value and change other radio button
+
                 break;
             default:
                 //save settings
                 break;
         }
+
+    }
+
+    private void loadSettings(){
+        backgroundNotificationsCheckbox.setChecked(mSharedPreferencesHelper.getNotificationsEnabled());
+        soundEnabledCheckbox.setChecked(mSharedPreferencesHelper.getSoundEnabled());
+        imperialSystemButton.setChecked(mSharedPreferencesHelper.getImperialSystem());
+        metricSystemButton.setChecked(!mSharedPreferencesHelper.getImperialSystem());
     }
 
     /**

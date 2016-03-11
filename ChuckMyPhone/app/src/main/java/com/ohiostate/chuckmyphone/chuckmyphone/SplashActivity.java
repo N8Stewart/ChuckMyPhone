@@ -12,6 +12,8 @@ public class SplashActivity extends AppCompatActivity {
 
     private static int SPLASH_TIME = 2000;
 
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,10 +21,14 @@ public class SplashActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate() called");
 
+        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent;
+                if(mSharedPreferencesHelper.hasSharedData()) intent = new Intent(SplashActivity.this, MainActivity.class);
+                else intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             }
