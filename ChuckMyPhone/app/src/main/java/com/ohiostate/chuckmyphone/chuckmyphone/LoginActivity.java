@@ -44,7 +44,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Login");
 
+        initializeViews();
+    }
+
+    //connect all views to view instances
+    public void initializeViews() {
         newUserButton = (Button) findViewById(R.id.login_new_user_button);
         newUserButton.setOnClickListener(this);
 
@@ -59,8 +65,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         passwordEditText = (EditText) findViewById(R.id.login_password_edit_text);
         emailEditText = (EditText) findViewById(R.id.login_email_edit_text);
-
-        getSupportActionBar().setTitle("Login");
     }
 
     @Override
@@ -120,28 +124,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return loginSuccessful;
     }
 
-    public static void onSuccessfulLogin(LoginActivity activity, String email, String password) {
-        Toast.makeText(activity.getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
+    //called by firebase when login is successfully performed. Don't call from anywhere else
+    protected void onSuccessfulLogin(String email, String password) {
+        Toast.makeText(this.getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
 
         //Deal with Shared Preferences user data
-        if(!sharedPreferencesHelper.hasSharedData()) {
-            //TODO get saved data from Firebase for badge, score info
-            sharedPreferencesHelper.setEmail(email);
-            sharedPreferencesHelper.setPassword(password);
-            sharedPreferencesHelper.setBadges("0000000000");
-            sharedPreferencesHelper.setBestDrop("0");
-            sharedPreferencesHelper.setBestSpin("0");
-            sharedPreferencesHelper.setBestChuck("0");
-            sharedPreferencesHelper.setNotificationsEnabled(true);
-            sharedPreferencesHelper.setSoundEnabled(false);
-            sharedPreferencesHelper.setImperialSystem(true);
-        }
+        //if(!sharedPreferencesHelper.hasSharedData()) {
+            setSharedPreferencesData(email, password);
+        //}
 
-        activity.startActivity(new Intent(activity.getApplication(), MainActivity.class));
+        this.startActivity(new Intent(this.getApplication(), MainActivity.class));
     }
 
-    public static void onUnsuccessfulLogin(LoginActivity activity, String error) {
-        Toast.makeText(activity.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
+    //called by firebase when login is not successfully performed. Don't call from anywhere else
+    protected void onUnsuccessfulLogin(String error) {
+        Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
     }
 
+    private void setSharedPreferencesData(String email, String password) {
+        //TODO get saved data from Firebase for badge, score info
+        sharedPreferencesHelper.setEmail(email);
+        sharedPreferencesHelper.setPassword(password);
+        sharedPreferencesHelper.setBadges("0000000000");
+        sharedPreferencesHelper.setBestDrop("0");
+        sharedPreferencesHelper.setBestSpin("0");
+        sharedPreferencesHelper.setBestChuck("0");
+        sharedPreferencesHelper.setNotificationsEnabled(true);
+        sharedPreferencesHelper.setSoundEnabled(false);
+        sharedPreferencesHelper.setImperialSystem(true);
+    }
 }

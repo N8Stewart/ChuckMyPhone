@@ -2,6 +2,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 /**
  * Created by Tim on 3/13/2016.
+ * Used as a singleton to store important run time data such as high scores, settings, and userID. Interfaces with Firebase helper for gathering data from firebase and interfaces with compete fragments for
+ * getting high scores and setting high scores through firebase
  */
 public class CurrentUser {
     private static CurrentUser ourInstance = new CurrentUser();
@@ -24,6 +26,7 @@ public class CurrentUser {
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
 
+    //load userID, high scores
     public void loadUserMetaData(String userId, String provider) {
         this.userId = userId;
         this.provider = provider;
@@ -40,15 +43,6 @@ public class CurrentUser {
     }
 
     public void loadUserScoreData() {
-        //CompeteChuckFragment competeChuck = new CompeteChuckFragment();
-        //competeChuck.receiveBestScore(FirebaseHelper.getInstance().getBestChuckScore());
-
-        //CompeteDropFragment competeDrop = new CompeteDropFragment();
-        //competeDrop.receiveBestScore(FirebaseHelper.getInstance().getBestDropScore());
-
-        //CompeteSpinFragment competeSpin = new CompeteSpinFragment();
-        //competeSpin.receiveBestScore(FirebaseHelper.getInstance().getBestSpinScore());
-
         chuckScore = FirebaseHelper.getInstance().getBestChuckScore();
         spinScore = FirebaseHelper.getInstance().getBestSpinScore();
         dropScore =  FirebaseHelper.getInstance().getBestDropScore();
@@ -58,16 +52,19 @@ public class CurrentUser {
         isLoaded = false;
     }
 
+    //updates high score in firebase
     public void updateChuckScore(double score) {
         chuckScore = score;
         FirebaseHelper.getInstance().updateBestChuckScore(truncateDouble(score));
     }
 
+    //updates high score in firebase
     public void updateDropScore(double score) {
         dropScore = score;
         FirebaseHelper.getInstance().updateBestDropScore(truncateDouble(score));
     }
 
+    //updates high score in firebase
     public void updateSpinScore(double score) {
         spinScore = score;
         FirebaseHelper.getInstance().updateBestSpinScore(truncateDouble(score));
@@ -101,6 +98,7 @@ public class CurrentUser {
         return dropScore;
     }
 
+    //helper function. Used so firebase only saves up to three decimal places. May save size of total data saved
     private double truncateDouble(double score) {
         return Math.floor(score * 1000) / 1000;
     }

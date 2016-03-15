@@ -93,23 +93,22 @@ public class FirebaseHelper {
 
     private Firebase myFirebaseRef;
 
+    //firebase initializer, must be called before any other firebase logic is
     public void create() {
         myFirebaseRef = new Firebase("https://amber-inferno-6835.firebaseio.com/");
-
         myFirebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("DATA CHANGEEEEEEEEEEE                        " + snapshot.getValue());
+                System.out.println("@@@@@@ DATA CHANGE @@@@@@" + snapshot.getValue());
                 dataSnapshot = snapshot;
 
-                //if users data has appeared
+                //if users data has appeared then get their score from it
                 String userID = CurrentUser.getInstance().getUserId();
                 if (userID != null){
                         if(dataSnapshot.child("users").hasChild(userID)) {
                             CurrentUser.getInstance().loadUserScoreData();
                         }
                 }
-
             }
 
             @Override
@@ -131,21 +130,24 @@ public class FirebaseHelper {
     }
 
     Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
+        //Event driven: called when user creation succeeds
         @Override
         public void onSuccess(Map<String, Object> result) {
             System.out.println("Successfully created user account with uid: " + result.get("uid"));
-            NewUserActivity.accountWasCreated(newUserActivity);
+            newUserActivity.accountWasCreated();
         }
 
+        //Event driven: called when user creation fails
         @Override
         public void onError(FirebaseError firebaseError) {
             System.out.println("Error on user creation: " + firebaseError.toString());
-            NewUserActivity.accountWasNotCreated(firebaseError.getMessage(), newUserActivity);
+            newUserActivity.accountWasNotCreated(firebaseError.getMessage());
         }
     };
 
    Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
-        @Override
+       //Event driven: called when user login succeeds
+       @Override
         public void onAuthenticated(AuthData authData) {
             if (!dataSnapshot.hasChild("users/"+authData.getUid())) {
                 //create the record and insert it into Firebase
@@ -156,14 +158,15 @@ public class FirebaseHelper {
             }
             System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
             CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
-            LoginActivity.onSuccessfulLogin(loginActivity, loginEmail, loginPassword);
+            loginActivity.onSuccessfulLogin(loginEmail, loginPassword);
         }
 
-        @Override
+       //Event driven: called when user login fails
+       @Override
         public void onAuthenticationError(FirebaseError firebaseError) {
             // there was an error
             System.out.println("Error logging into Firebase: "+ firebaseError.toString());
-            LoginActivity.onUnsuccessfulLogin(loginActivity, firebaseError.getMessage());
+            loginActivity.onUnsuccessfulLogin(firebaseError.getMessage());
         }
     };
 

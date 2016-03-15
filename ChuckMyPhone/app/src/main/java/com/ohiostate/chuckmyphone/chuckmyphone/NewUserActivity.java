@@ -38,8 +38,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     private CheckBox termsOfServiceCheckBox;
 
-    private SharedPreferences mSharedPreferences;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +48,13 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_new_user_toolbar);
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setTitle("New User");
 
+        initializeViews();
+    }
+
+    //connect all views to view instances
+    private void initializeViews() {
         cancelButton = (Button) findViewById(R.id.new_user_cancel_button);
         cancelButton.setOnClickListener(this);
 
@@ -68,7 +70,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         emailEditText = (EditText) findViewById(R.id.new_user_email_edit_text);
 
         termsOfServiceCheckBox = (CheckBox) findViewById(R.id.new_user_terms_of_service_checkbox);
-
     }
 
     @Override
@@ -91,43 +92,53 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        Intent intent;
-
         switch (v.getId()) {
             case R.id.new_user_facebook_button:
-                intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                createUserData();
-                finish();
-                break;
-            case R.id.new_user_sign_up_button:
-                if (necessaryFieldsAreFull()) {
-                    if (passwordEditText.getText().toString().equals(passwordConfirmationEditText.getText().toString())) {
-                        if (termsOfServiceCheckBox.isChecked()) {
-                            createUserData();
-                        } else {
-                            Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(this.getApplicationContext(), "Your passwords don't match, please re-enter them both", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(this.getApplicationContext(), "You need to fill out all four fields", Toast.LENGTH_LONG).show();
-                }
+                //Facebook login logic goes here
 
                 break;
-            default: // cancel button case
+            case R.id.new_user_sign_up_button:
+                if (isReadyToCreateAccount()) {
+                    //Account creation works asynchronously
+                    //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
+                    createUserData();
+                }
+                break;
+            case R.id.new_user_cancel_button:
                 startActivity(new Intent(getApplication(), LoginActivity.class));
                 finish();
+                break;
+            default:
                 break;
         }
     }
 
+    //ensures user has all necessary fields filled, that the passwords match, and that the terms of service box is checked
+    private boolean isReadyToCreateAccount() {
+        boolean isReady = false;
+        if (necessaryFieldsAreFull()) {
+            if (passwordEditText.getText().toString().equals(passwordConfirmationEditText.getText().toString())) {
+                if (termsOfServiceCheckBox.isChecked()) {
+                    isReady = true;
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this.getApplicationContext(), "Your passwords don't match, please re-enter them both", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this.getApplicationContext(), "You need to fill out all four fields", Toast.LENGTH_LONG).show();
+        }
+        return isReady;
+    }
+
+    //call firebase to create the user data (works asynchronously)
     private void createUserData() {
         //Deal with Firebase user creation
         firebaseHelper.createUserWithoutFacebook(emailEditText.getText().toString(), passwordEditText.getText().toString(), this);
     }
 
+    //checks if all 4 user input fields have at least 1 character entered
     private boolean necessaryFieldsAreFull() {
         boolean fieldsAreFull = !(usernameEditText.getText().toString().equals(""));
         fieldsAreFull = fieldsAreFull && !(passwordEditText.getText().toString().equals(""));
@@ -136,16 +147,19 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         return fieldsAreFull;
     }
 
-    //called by Firebase helper when an account is successfully created
-    public static void accountWasCreated(NewUserActivity activity) {
+    //called by Firebase helper when an account is successfully created. Don't call from anywhere else
+    protected void accountWasCreated() {
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        sharedPreferencesHelper.clearSharedData();
+
         //account was created successfully, navigate back to login page
-        Toast.makeText(activity.getApplicationContext(), "Account was successfully created, try logging in!", Toast.LENGTH_LONG).show();
-        activity.startActivity(new Intent(activity.getApplication(), LoginActivity.class));
+        Toast.makeText(this.getApplicationContext(), "Account was successfully created, try logging in!", Toast.LENGTH_LONG).show();
+        this.startActivity(new Intent(this.getApplication(), LoginActivity.class));
     }
 
-    //called by Firebase helper when an account is not successfully created
-    public static void accountWasNotCreated(String error, NewUserActivity activity) {
-        Toast.makeText(activity.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
+    //called by Firebase helper when an account is not successfully created. Don't call from anywhere else
+    protected void accountWasNotCreated(String error) {
+        Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
     }
 
 }
