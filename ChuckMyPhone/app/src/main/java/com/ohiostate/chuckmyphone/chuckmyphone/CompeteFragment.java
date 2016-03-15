@@ -45,6 +45,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     Thread updateViewRunnableThread;
 
+    protected CurrentUser currentUser;
+
     // TODO: Rename and change types of parameters
     protected String mParam1;
     protected String mParam2;
@@ -57,7 +59,9 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "onCreate() called");
+        currentUser = CurrentUser.getInstance();
+
+                Log.d(TAG, "onCreate() called");
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -131,12 +135,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         super.onStop();
         Log.d(TAG, "onStop() called");
         sensManager.unregisterListener(this);
-    }
-
-    public void displayMissingSensorToast() {
-        Context context = getActivity().getApplicationContext();
-        Toast toast = Toast.makeText(context, "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG);
-        toast.show();
     }
 
     public void setButtonImage() {

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,7 +23,8 @@ import android.widget.TextView;
  */
 public class CompeteChuckFragment extends CompeteFragment{
     private double speed; //Speed is in meters per second
-    private double maxSpeed;
+
+    private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
 
     Sensor linearAccelerometer;
 
@@ -50,7 +52,6 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        maxSpeed = 0;
         speed = 0;
     }
 
@@ -94,8 +95,10 @@ public class CompeteChuckFragment extends CompeteFragment{
 
                 //not actually speed, but that is hard to derive
                 speed = Math.sqrt(ax * ax + ay * ay + az * az);
-                if (speed > maxSpeed) {
-                    maxSpeed = speed;
+
+                //if new high score
+                if (speed > currentUser.getChuckScore()) {
+                    currentUser.updateChuckScore(speed);
                 }
             }
         }
@@ -110,7 +113,7 @@ public class CompeteChuckFragment extends CompeteFragment{
         userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
         if (!userHasSensor) {
-            displayMissingSensorToast();
+            Toast.makeText(getActivity().getApplicationContext(), "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -119,12 +122,21 @@ public class CompeteChuckFragment extends CompeteFragment{
         yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
         competeButton = (ImageButton) view.findViewById(R.id.compete_button);
 
+        currentScoreTextView.setText(String.format("%.3f m/s", speed));
+        yourBestScoreTextView.setText(TUTORIAL_TEXT);
+
         competeButton.setOnClickListener(buttonListener);
     }
 
     //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
     Runnable updateViewRunnable = new Runnable() {
         public void run() {
+
+            if (CurrentUser.getInstance().getTutorialMessagesEnabled()) {
+                Thread showTutorialMessageThread = new Thread(showTutorialToastRunnable);
+                getActivity().runOnUiThread(showTutorialMessageThread);
+            }
+
             long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
             long timeNow = System.currentTimeMillis();
             while (isRecording && (timeNow < timeUntilEnd)) {
@@ -146,7 +158,18 @@ public class CompeteChuckFragment extends CompeteFragment{
         @Override
         public void run() {
             currentScoreTextView.setText(String.format("%.3f m/s", speed));
-            yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", maxSpeed));
+            if (currentUser.getChuckScore() == 0.0) {
+                yourBestScoreTextView.setText(TUTORIAL_TEXT);
+            } else{
+                yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getChuckScore()));
+            }
+        }
+    };
+
+    Runnable showTutorialToastRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Toast.makeText(getActivity().getApplicationContext(), "Chuck your phone now! \n(disable this message in settings menu)", Toast.LENGTH_LONG).show();
         }
     };
 }

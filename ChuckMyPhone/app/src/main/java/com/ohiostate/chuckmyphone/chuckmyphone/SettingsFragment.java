@@ -41,6 +41,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private RadioButton imperialSystemButton;
     private CheckBox soundEnabledCheckbox;
     private CheckBox backgroundNotificationsCheckbox;
+    private CheckBox tutorialMessagesEnabledCheckbox;
 
     private SharedPreferencesHelper mSharedPreferencesHelper;
 
@@ -95,6 +96,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         backgroundNotificationsCheckbox.setOnClickListener(this);
         soundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_sound_enabled_checkbox);
         soundEnabledCheckbox.setOnClickListener(this);
+        tutorialMessagesEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_tutorial_messages_checkbox);
+        tutorialMessagesEnabledCheckbox.setOnClickListener(this);
 
         loadSettings();
         
@@ -146,6 +149,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     imperialSystemButton.setChecked(false);
                 }
                 break;
+            case R.id.settings_tutorial_messages_checkbox:
+                CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
             default:
                 saveSettings();
                 break;

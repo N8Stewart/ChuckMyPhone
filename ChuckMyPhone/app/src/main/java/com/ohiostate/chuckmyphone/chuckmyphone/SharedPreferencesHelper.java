@@ -26,6 +26,10 @@ public class SharedPreferencesHelper {
         sharedData.edit().putBoolean(key, value).commit();
     }
 
+    public void setEmail(String email){
+        setStringValue("email", email);
+    }
+
     public void setUsername(String username){
         setStringValue("username", username);
     }
@@ -106,8 +110,12 @@ public class SharedPreferencesHelper {
         return getBooleanValue("system", true);
     }
 
+    public String getEmail() {
+        return getStringValue("email");
+    }
+
     protected boolean hasSharedData(){
-        return sharedData.contains("username");
+        return sharedData.contains("email");
     }
 
     protected boolean clearSharedData(){

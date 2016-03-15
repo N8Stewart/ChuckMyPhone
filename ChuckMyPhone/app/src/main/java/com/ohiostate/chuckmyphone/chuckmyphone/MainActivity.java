@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.firebase.client.Firebase;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
@@ -115,7 +117,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 fragmentClass = SettingsFragment.class;
                 getSupportActionBar().setTitle("Settings");
                 break;
-            default:
+            default: // logout button
+                //wipe shared preferences so it doesn't auto login on this account anymore
+                SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
+                sharedPreferencesHelper.clearSharedData();
+
+                //go back to login screen
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
                 finish();

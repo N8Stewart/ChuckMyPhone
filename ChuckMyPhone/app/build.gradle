@@ -4,6 +4,12 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
     defaultConfig {
         applicationId "com.ohiostate.chuckmyphone.chuckmyphone"
         minSdkVersion 15
@@ -25,4 +31,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:23.2.0'
     compile 'com.android.support:support-v4:23.2.0'
+    compile 'com.firebase:firebase-client-android:2.5.2+'
 }

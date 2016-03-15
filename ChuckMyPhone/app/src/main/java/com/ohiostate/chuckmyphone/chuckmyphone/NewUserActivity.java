@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,10 +11,21 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class NewUserActivity extends AppCompatActivity implements View.OnClickListener {
+import com.firebase.client.FirebaseError;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.concurrent.Semaphore;
+
+
+
+public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
     private final String TAG = this.getClass().getSimpleName();
+
+    FirebaseHelper firebaseHelper;
 
     private Button cancelButton;
     private Button fbButton;
@@ -33,6 +45,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
 
+        firebaseHelper = FirebaseHelper.getInstance();
         Log.d(TAG, "onCreate() called");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_new_user_toolbar);
@@ -80,7 +93,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         Intent intent;
 
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.new_user_facebook_button:
                 intent = new Intent(getApplication(), MainActivity.class);
                 startActivity(intent);
@@ -88,31 +101,51 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.new_user_sign_up_button:
-                intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                createUserData();
-                finish();
+                if (necessaryFieldsAreFull()) {
+                    if (passwordEditText.getText().toString().equals(passwordConfirmationEditText.getText().toString())) {
+                        if (termsOfServiceCheckBox.isChecked()) {
+                            createUserData();
+                        } else {
+                            Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(this.getApplicationContext(), "Your passwords don't match, please re-enter them both", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "You need to fill out all four fields", Toast.LENGTH_LONG).show();
+                }
+
                 break;
-            default:
+            default: // cancel button case
+                startActivity(new Intent(getApplication(), LoginActivity.class));
                 finish();
                 break;
         }
     }
 
-    private void createUserData(){
-        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
-        if(!sharedPreferencesHelper.hasSharedData()) {
-            sharedPreferencesHelper.setUsername(usernameEditText.getText().toString());
-            sharedPreferencesHelper.setPassword(passwordEditText.getText().toString());
-            sharedPreferencesHelper.setBadges("0000000000");
-            sharedPreferencesHelper.setBestDrop("0");
-            sharedPreferencesHelper.setBestSpin("0");
-            sharedPreferencesHelper.setBestChuck("0");
-            sharedPreferencesHelper.setNotificationsEnabled(true);
-            sharedPreferencesHelper.setSoundEnabled(false);
-            sharedPreferencesHelper.setImperialSystem(true);
-        } else {
-            // already have account
-        }
+    private void createUserData() {
+        //Deal with Firebase user creation
+        firebaseHelper.createUserWithoutFacebook(emailEditText.getText().toString(), passwordEditText.getText().toString(), this);
     }
+
+    private boolean necessaryFieldsAreFull() {
+        boolean fieldsAreFull = !(usernameEditText.getText().toString().equals(""));
+        fieldsAreFull = fieldsAreFull && !(passwordEditText.getText().toString().equals(""));
+        fieldsAreFull = fieldsAreFull && !(passwordConfirmationEditText.toString().equals(""));
+        fieldsAreFull = fieldsAreFull && !(emailEditText.getText().toString().equals(""));
+        return fieldsAreFull;
+    }
+
+    //called by Firebase helper when an account is successfully created
+    public static void accountWasCreated(NewUserActivity activity) {
+        //account was created successfully, navigate back to login page
+        Toast.makeText(activity.getApplicationContext(), "Account was successfully created, try logging in!", Toast.LENGTH_LONG).show();
+        activity.startActivity(new Intent(activity.getApplication(), LoginActivity.class));
+    }
+
+    //called by Firebase helper when an account is not successfully created
+    public static void accountWasNotCreated(String error, NewUserActivity activity) {
+        Toast.makeText(activity.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
+    }
+
 }

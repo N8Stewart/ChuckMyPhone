@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.firebase.client.Firebase;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -17,9 +20,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button newUserButton;
     private Button loginButton;
     private Button fbButton;
+
     private TextView forgotPasswordTextView;
+
     private EditText passwordEditText;
-    private EditText usernameEditText;
+    private EditText emailEditText;
+
+    private static SharedPreferencesHelper sharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         Log.d(TAG, "onCreate() called");
+
+        sharedPreferencesHelper = new SharedPreferencesHelper(this);
+
+        if (sharedPreferencesHelper.hasSharedData()) {
+            //user has login credentials saved, skip this and login for them
+            attemptLogin(sharedPreferencesHelper.getEmail(), sharedPreferencesHelper.getPassword());
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
         setSupportActionBar(toolbar);
@@ -44,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         fbButton.setOnClickListener(this);
 
         passwordEditText = (EditText) findViewById(R.id.login_password_edit_text);
-        usernameEditText = (EditText) findViewById(R.id.login_username_edit_text);
+        emailEditText = (EditText) findViewById(R.id.login_email_edit_text);
 
         getSupportActionBar().setTitle("Login");
     }
@@ -78,18 +92,56 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.login_login_button:
-                intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                finish();
+                attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case R.id.login_forgot_password_textview:
                 intent = new Intent(getApplication(), ForgotPasswordActivity.class);
                 startActivity(intent);
                 break;
-            default:
+            default: //new user button case
                 intent = new Intent(getApplication(), NewUserActivity.class);
                 startActivity(intent);
                 break;
         }
     }
+
+    public boolean attemptLogin(String email, String password) {
+        boolean loginSuccessful = false;
+        if (!email.equals("")) {
+            if (!password.equals("")) {
+                Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
+                FirebaseHelper.getInstance().loginWithoutFacebook(email, password, this);
+            } else {
+                Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Please enter your username", Toast.LENGTH_LONG).show();
+        }
+        return loginSuccessful;
+    }
+
+    public static void onSuccessfulLogin(LoginActivity activity, String email, String password) {
+        Toast.makeText(activity.getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
+
+        //Deal with Shared Preferences user data
+        if(!sharedPreferencesHelper.hasSharedData()) {
+            //TODO get saved data from Firebase for badge, score info
+            sharedPreferencesHelper.setEmail(email);
+            sharedPreferencesHelper.setPassword(password);
+            sharedPreferencesHelper.setBadges("0000000000");
+            sharedPreferencesHelper.setBestDrop("0");
+            sharedPreferencesHelper.setBestSpin("0");
+            sharedPreferencesHelper.setBestChuck("0");
+            sharedPreferencesHelper.setNotificationsEnabled(true);
+            sharedPreferencesHelper.setSoundEnabled(false);
+            sharedPreferencesHelper.setImperialSystem(true);
+        }
+
+        activity.startActivity(new Intent(activity.getApplication(), MainActivity.class));
+    }
+
+    public static void onUnsuccessfulLogin(LoginActivity activity, String error) {
+        Toast.makeText(activity.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
+    }
+
 }

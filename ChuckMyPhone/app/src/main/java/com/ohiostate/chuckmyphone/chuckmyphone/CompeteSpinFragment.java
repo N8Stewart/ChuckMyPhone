@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,9 +22,10 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class CompeteSpinFragment extends CompeteFragment{
-    private float rotationSpeed;
-    private float maxSpeed;
+    private double rotationSpeed;
     Sensor gyroscope;
+
+    private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
 
     public CompeteSpinFragment() {}
 
@@ -49,7 +51,8 @@ public class CompeteSpinFragment extends CompeteFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        maxSpeed = 0;
+        //max rotation speed is set when the scores are grabbed, no need to initialize here
+        //maxRotationSpeed = 0;
         rotationSpeed = 0;
     }
 
@@ -94,8 +97,8 @@ public class CompeteSpinFragment extends CompeteFragment{
 
                 //not actually rotationSpeed, but that is hard to derive
                 rotationSpeed = Math.abs(ax) + Math.abs(ay) + Math.abs(az);
-                if (rotationSpeed > maxSpeed) {
-                    maxSpeed = rotationSpeed;
+                if (rotationSpeed > currentUser.getSpinScore()) {
+                    currentUser.updateSpinScore(rotationSpeed);
                 }
             }
         }
@@ -110,7 +113,7 @@ public class CompeteSpinFragment extends CompeteFragment{
         userHasSensor = sensManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
 
         if (!userHasSensor) {
-            displayMissingSensorToast();
+            Toast.makeText(getActivity().getApplicationContext(), "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -118,6 +121,9 @@ public class CompeteSpinFragment extends CompeteFragment{
         currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
         yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
         competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+
+        currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
+        yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         competeButton.setOnClickListener(buttonListener);
     }
@@ -146,7 +152,11 @@ public class CompeteSpinFragment extends CompeteFragment{
         @Override
         public void run() {
             currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
-            yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", maxSpeed));
+            if (currentUser.getSpinScore() == 0.0) {
+                yourBestScoreTextView.setText(TUTORIAL_TEXT);
+            } else{
+                yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getSpinScore()));
+            }
         }
     };
 }

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,9 +25,10 @@ public class CompeteDropFragment extends CompeteFragment {
     private final float FALLING_MIN_ACCELERATION = 8.5f;
     private final float FALLING_MAX_ACCELERATION = 11.5f;
 
-    private float acceleration;
-    private float timeFalling;
-    private float maxTimeFalling;
+    private final String TUTORIAL_TEXT = "Click the arrow to begin, then drop your phone!";
+
+    private double acceleration;
+    private double timeFalling;
     private boolean isFalling;
 
     private long fallingStartTime;
@@ -59,9 +61,11 @@ public class CompeteDropFragment extends CompeteFragment {
         super.onCreate(savedInstanceState);
 
         timeFalling = 0;
-        maxTimeFalling = 0;
         acceleration = 0;
         isFalling = false;
+
+        //max falling speed is set when the scores are grabbed, no need to initialize here
+        //maxTimeFalling = 0;
     }
 
     @Override
@@ -120,8 +124,9 @@ public class CompeteDropFragment extends CompeteFragment {
                     isFalling = false;
                 }
 
-                if (timeFalling > maxTimeFalling) {
-                    maxTimeFalling = timeFalling;
+                //if new high score
+                if (timeFalling > currentUser.getDropScore()) {
+                    currentUser.updateDropScore(timeFalling);
                 }
             }
         }
@@ -136,7 +141,7 @@ public class CompeteDropFragment extends CompeteFragment {
         userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 
         if (!userHasSensor) {
-            displayMissingSensorToast();
+            Toast.makeText(getActivity().getApplicationContext(), "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -144,6 +149,9 @@ public class CompeteDropFragment extends CompeteFragment {
         currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
         yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
         competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+
+        currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+        yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         competeButton.setOnClickListener(buttonListener);
     }
@@ -172,7 +180,11 @@ public class CompeteDropFragment extends CompeteFragment {
         @Override
         public void run() {
             currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
-            yourBestScoreTextView.setText(String.format("Longest Fall: %.3f ms", maxTimeFalling));
+            if (currentUser.getDropScore() == 0.0) {
+                yourBestScoreTextView.setText(TUTORIAL_TEXT);
+            } else{
+                yourBestScoreTextView.setText(String.format("Longest Fall: %.3f ms", currentUser.getDropScore()));
+            }
         }
     };
 }
