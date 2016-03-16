@@ -55,19 +55,19 @@ public class CurrentUser {
     //updates high score in firebase
     public void updateChuckScore(double score) {
         chuckScore = score;
-        FirebaseHelper.getInstance().updateBestChuckScore(truncateDouble(score));
+        FirebaseHelper.getInstance().updateBestChuckScore(truncateDouble(score), 0.0, 0.0);
     }
 
     //updates high score in firebase
     public void updateDropScore(double score) {
         dropScore = score;
-        FirebaseHelper.getInstance().updateBestDropScore(truncateDouble(score));
+        FirebaseHelper.getInstance().updateBestDropScore(truncateDouble(score), 0.0, 0.0);
     }
 
     //updates high score in firebase
     public void updateSpinScore(double score) {
         spinScore = score;
-        FirebaseHelper.getInstance().updateBestSpinScore(truncateDouble(score));
+        FirebaseHelper.getInstance().updateBestSpinScore(truncateDouble(score), 0.0, 0.0);
     }
 
     public void updateTutorialMessagesEnabled(boolean value) {

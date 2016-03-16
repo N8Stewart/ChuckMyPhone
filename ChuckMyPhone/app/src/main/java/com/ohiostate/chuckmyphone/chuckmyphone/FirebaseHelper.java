@@ -201,19 +201,46 @@ public class FirebaseHelper {
     }
 
     //SETTING METHODS FOR SAVING SCORES
-    protected void updateBestChuckScore(double score) {
+    protected void updateBestChuckScore(double score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         myFirebaseRef.child("users/" + userID + "/bestChuckRecord/score").setValue(score);
+
+        addChuckScoreToLeaderboard(score, latitude, longitude);
     }
 
-    protected void updateBestSpinScore(double score) {
+    protected void updateBestSpinScore(double score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         myFirebaseRef.child("users/" + userID + "/bestSpinRecord/score").setValue(score);
+
+        addSpinScoreToLeaderboard(score, latitude, longitude);
     }
 
-    protected void updateBestDropScore(double score) {
+    protected void updateBestDropScore(double score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         myFirebaseRef.child("users/" + userID + "/bestDropRecord/score").setValue(score);
+
+        addDropScoreToLeaderboard(score, latitude, longitude);
+    }
+
+    //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
+    protected void addChuckScoreToLeaderboard(double score, double latitude, double longitude) {
+        String userID = CurrentUser.getInstance().getUserId();
+        //priority set as inverse of the score, should order entries automatically
+        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK), 999999999-score);
+    }
+
+    //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
+    protected void addSpinScoreToLeaderboard(double score, double latitude, double longitude) {
+        String userID = CurrentUser.getInstance().getUserId();
+        //priority set as inverse of the score, should order entries automatically
+        myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.SPIN), 999999999-score);
+    }
+
+    //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
+    protected void addDropScoreToLeaderboard(double score, double latitude, double longitude) {
+        String userID = CurrentUser.getInstance().getUserId();
+        //priority set as inverse of the score, should order entries automatically
+        myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.DROP), 999999999-score);
     }
 }
 
