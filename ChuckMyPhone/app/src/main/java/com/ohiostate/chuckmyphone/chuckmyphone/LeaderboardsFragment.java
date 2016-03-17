@@ -9,10 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,6 +44,10 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
     private Spinner distanceSpinner;
     private Spinner competitionSpinner;
+
+    private ArrayList<FirebaseHelper.CompeteRecord> chuckRecords;
+    private ArrayList<FirebaseHelper.CompeteRecord> spinRecords;
+    private ArrayList<FirebaseHelper.CompeteRecord> dropRecords;
 
     public LeaderboardsFragment() {}
 
@@ -79,6 +86,19 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_leaderboards, container, false);
 
+        initializeViews(view);
+
+        chuckRecords = CurrentUser.getInstance().getChuckLeaderboard();
+        spinRecords = CurrentUser.getInstance().getSpinLeaderboard();
+        dropRecords = CurrentUser.getInstance().getDropLeaderboard();
+
+        for (int i = 0; i < chuckRecords.size(); i++) {
+            addEntryToLeaderboard(i+1, "Tim Taylor", chuckRecords.get(i).score, view, "m/s^2");
+        }
+        return view;
+    }
+
+    public void initializeViews(View view) {
         competitionSpinner = (Spinner) view.findViewById(R.id.leaderboards_competition_filter_dropdown);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Competition_spinner_labels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -89,10 +109,36 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         distanceSpinner.setAdapter(adapter2);
 
-        for (int i = 1; i < 20; i++) {
-            addGenericEntryToLeaderboard(i, "Tim Taylor", (20-i), view);
-        }
-        return view;
+        //needs a final declaration to be used in listener
+        final View v = view;
+        competitionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //clear leaderboard entries to make room for new entries
+                LinearLayout leaderboardRow = (LinearLayout) v.findViewById(R.id.leaderboards_row_record_linear_layout);
+                leaderboardRow.removeAllViews();
+
+                String competitionOption = parentView.getItemAtPosition(position).toString();
+                if (competitionOption.equals("Chuck")) {
+                    for (int i = 0; i < chuckRecords.size(); i++) {
+                        addEntryToLeaderboard(i+1, chuckRecords.get(i).username, chuckRecords.get(i).score, v, "m/s^2");
+                    }
+                } else if (competitionOption.equals("Drop")) {
+                    for (int i = 0; i < dropRecords.size(); i++) {
+                        addEntryToLeaderboard(i+1, dropRecords.get(i).username, dropRecords.get(i).score, v, "ms");
+                    }
+                } else { // "Spin"
+                    for (int i = 0; i < spinRecords.size(); i++) {
+                        addEntryToLeaderboard(i+1, spinRecords.get(i).username, spinRecords.get(i).score, v, "m/s^2");
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -146,7 +192,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         void onFragmentInteraction(Uri uri);
     }
 
-    public void addGenericEntryToLeaderboard(int rank, String name, int score, View view) {
+    public void addEntryToLeaderboard(int rank, String name, double score, View view, String units) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
         LinearLayout leaderboardRow = (LinearLayout) view.findViewById(R.id.leaderboards_row_record_linear_layout);
@@ -169,7 +215,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         leaderboardName.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
         TextView leaderboardScore = new TextView(getActivity());
-        leaderboardScore.setText(String.valueOf(score) + " mph");
+        leaderboardScore.setText(String.valueOf(score) + " " + units);
         leaderboardScore.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
         leaderboardScore.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 

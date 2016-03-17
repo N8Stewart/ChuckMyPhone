@@ -132,7 +132,7 @@ public class CompeteChuckFragment extends CompeteFragment{
     Runnable updateViewRunnable = new Runnable() {
         public void run() {
 
-            if (CurrentUser.getInstance().getTutorialMessagesEnabled()) {
+            if (CurrentUser.getInstance().getTutorialMessagesEnabled() && isRecording) {
                 Thread showTutorialMessageThread = new Thread(showTutorialToastRunnable);
                 getActivity().runOnUiThread(showTutorialMessageThread);
             }

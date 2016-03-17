@@ -121,4 +121,17 @@ public class SharedPreferencesHelper {
     protected boolean clearSharedData(){
         return sharedData.edit().clear().commit();
     }
+
+    public void setSharedPreferencesData(String email, String password) {
+        //TODO get saved data from Firebase for badge, score info
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setBadges("0000000000");
+        this.setBestDrop("0");
+        this.setBestSpin("0");
+        this.setBestChuck("0");
+        this.setNotificationsEnabled(true);
+        this.setSoundEnabled(false);
+        this.setImperialSystem(true);
+    }
 }

@@ -135,7 +135,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     //call firebase to create the user data (works asynchronously)
     private void createUserData() {
         //Deal with Firebase user creation
-        firebaseHelper.createUserWithoutFacebook(emailEditText.getText().toString(), passwordEditText.getText().toString(), this);
+        firebaseHelper.createUserWithoutFacebook(emailEditText.getText().toString(), passwordEditText.getText().toString(), usernameEditText.getText().toString(), this);
     }
 
     //checks if all 4 user input fields have at least 1 character entered
@@ -149,11 +149,13 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
     protected void accountWasCreated() {
+        //update shared preferences
         SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
         sharedPreferencesHelper.clearSharedData();
+        sharedPreferencesHelper.setSharedPreferencesData(emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString());
 
         //account was created successfully, navigate back to login page
-        Toast.makeText(this.getApplicationContext(), "Account was successfully created, try logging in!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), "Account was successfully created, logging in now!", Toast.LENGTH_SHORT).show();
         this.startActivity(new Intent(this.getApplication(), LoginActivity.class));
     }
 

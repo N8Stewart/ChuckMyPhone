@@ -6,8 +6,11 @@ import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -43,29 +46,22 @@ public class FirebaseHelper {
         public CompeteRecord bestChuckRecord;
         public CompeteRecord bestDropRecord;
         public CompeteRecord bestSpinRecord;
+        public String username;
 
         //TODO get users location here
 
-        public User() {
+        public User(String username) {
             this.badgeStatusMap = new HashMap<String, Object>();
             this.badgeEarnedOnMap = new HashMap<String, Object>();
+            this.username = username;
 
             //Add all badges here with no earned date
             badgeStatusMap.put("badge1", "false");
             badgeEarnedOnMap.put("badge1", "1/1/2016");
 
-            bestChuckRecord = new CompeteRecord(competitionType.CHUCK);
-            bestSpinRecord = new CompeteRecord(competitionType.SPIN);
-            bestDropRecord = new CompeteRecord(competitionType.DROP);
-        }
-
-        public User(Map<String, Object> badgeStatusMap, Map<String, Object> badgeEarnedOnMap) {
-            this.badgeStatusMap = badgeStatusMap;
-            this.badgeEarnedOnMap = badgeEarnedOnMap;
-
-            bestChuckRecord = new CompeteRecord(competitionType.CHUCK);
-            bestSpinRecord = new CompeteRecord(competitionType.SPIN);
-            bestDropRecord = new CompeteRecord(competitionType.DROP);
+            bestChuckRecord = new CompeteRecord(competitionType.CHUCK, username);
+            bestSpinRecord = new CompeteRecord(competitionType.SPIN, username);
+            bestDropRecord = new CompeteRecord(competitionType.DROP, username);
         }
     }
 
@@ -74,20 +70,22 @@ public class FirebaseHelper {
         public double longitude;
         public double latitude;
         public competitionType competition;
+        public String username;
 
-
-        public CompeteRecord(competitionType competition) {
+        public CompeteRecord(competitionType competition, String username) {
             this.score = 0.0;
             this.longitude = 0.0;
             this.latitude = 0.0;
             this.competition = competition;
+            this.username = username;
         }
 
-        public CompeteRecord(double score, double longitude, double latitude, competitionType competition) {
+        public CompeteRecord(double score, double longitude, double latitude, competitionType competition, String username) {
             this.score = score;
             this.longitude = longitude;
             this.latitude = latitude;
             this.competition = competition;
+            this.username = username;
         }
     }
 
@@ -109,6 +107,9 @@ public class FirebaseHelper {
                             CurrentUser.getInstance().loadUserScoreData();
                         }
                 }
+
+                updateLeaderboard();
+
             }
 
             @Override
@@ -117,8 +118,9 @@ public class FirebaseHelper {
         });
     }
 
-    public void createUserWithoutFacebook(String email, String password, NewUserActivity activity) {
+    public void createUserWithoutFacebook(String email, String password, String username, NewUserActivity activity) {
         newUserActivity = activity;
+        CurrentUser.getInstance().assignUsername(username);
         myFirebaseRef.createUser(email, password, userCreationHandler);
     }
 
@@ -152,7 +154,7 @@ public class FirebaseHelper {
             if (!dataSnapshot.hasChild("users/"+authData.getUid())) {
                 //create the record and insert it into Firebase
                 Firebase newUserRef = myFirebaseRef.child("users/"+authData.getUid());
-                newUserRef.setValue(new User());
+                newUserRef.setValue(new User(getUsername(authData.getUid())));
             } else {
                 System.out.println("User logged into existing account, no data was changed");
             }
@@ -170,7 +172,15 @@ public class FirebaseHelper {
         }
     };
 
-    //ACCESSOR METHODS FOR GETTING SCORES
+    //ACCESSOR METHODS FOR GETTING DATA
+
+    public String getUsername(String userID) {
+        if (dataSnapshot.hasChild("users/"+userID)) {
+            return dataSnapshot.child("users/"+userID+"/username").getValue().toString();
+        }
+
+        return ""; //user doesn't exist
+    }
 
     //Need user to be logged in before this may be called
     protected double getBestSpinScore() {
@@ -226,22 +236,94 @@ public class FirebaseHelper {
     protected void addChuckScoreToLeaderboard(double score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK), 999999999-score);
+        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, CurrentUser.getInstance().getUsername()), 999999999-score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     protected void addSpinScoreToLeaderboard(double score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.SPIN), 999999999-score);
+        myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.SPIN, CurrentUser.getInstance().getUsername()), 999999999-score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     protected void addDropScoreToLeaderboard(double score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.DROP), 999999999-score);
+        myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.DROP, CurrentUser.getInstance().getUsername()), 999999999-score);
     }
+
+    protected void updateLeaderboard() {
+        ArrayList<CompeteRecord> chuckLeaderboardGlobal = new ArrayList<CompeteRecord>();
+        ArrayList<CompeteRecord> spinLeaderboardGlobal = new ArrayList<CompeteRecord>();
+        ArrayList<CompeteRecord> dropLeaderboardGlobal = new ArrayList<CompeteRecord>();
+
+        //may be possible to query up until the users entry, but that can wait until later
+        //Query queryRef = myFirebaseRef.orderByPriority().endAt(??);
+
+        Query top100Chuck = myFirebaseRef.child("ChuckScores").orderByPriority().limitToLast(100);
+        Query top100Spin = myFirebaseRef.child("SpinScores").orderByPriority().limitToLast(100);
+        Query top100Drop = myFirebaseRef.child("DropScores").orderByPriority().limitToLast(100);
+
+        //take one look at the data, pass it to the current user, and then throw it away
+        top100Chuck.addListenerForSingleValueEvent(chuckLeaderboardValueEventListener);
+        top100Spin.addListenerForSingleValueEvent(spinLeaderboardValueEventListener);
+        top100Drop.addListenerForSingleValueEvent(dropLeaderboardValueEventListener);
+    }
+
+    ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot querySnapshot) {
+            ArrayList<CompeteRecord> chuckRecords = new ArrayList<CompeteRecord>();
+            for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
+                double score = (double) subSnapshot.child("score").getValue();
+                String username = (String) subSnapshot.child("username").getValue();
+                chuckRecords.add(new CompeteRecord(score, 0.0, 0.0, competitionType.CHUCK,username));
+            }
+
+            CurrentUser.getInstance().updateChuckLeaderboard(chuckRecords);
+        }
+
+        @Override
+        public void onCancelled(FirebaseError error) {
+        }
+    };
+
+    ValueEventListener spinLeaderboardValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot querySnapshot) {
+            ArrayList<CompeteRecord> spinRecords = new ArrayList<CompeteRecord>();
+            for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
+                double score = (double) subSnapshot.child("score").getValue();
+                String username = (String) subSnapshot.child("username").getValue();
+                spinRecords.add(new CompeteRecord(score, 0.0, 0.0, competitionType.SPIN, username));
+            }
+
+            CurrentUser.getInstance().updateSpinLeaderboard(spinRecords);
+        }
+
+        @Override
+        public void onCancelled(FirebaseError error) {
+        }
+    };
+
+    ValueEventListener dropLeaderboardValueEventListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot querySnapshot) {
+            ArrayList<CompeteRecord> dropRecords = new ArrayList<CompeteRecord>();
+            for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
+                double score = (double) subSnapshot.child("score").getValue();
+                String username = (String) subSnapshot.child("username").getValue();
+                dropRecords.add(new CompeteRecord(score, 0.0, 0.0, competitionType.DROP, username));
+            }
+
+            CurrentUser.getInstance().updateDropLeaderboard(dropRecords);
+        }
+
+        @Override
+        public void onCancelled(FirebaseError error) {
+        }
+    };
 }
 
 

@@ -126,12 +126,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     protected void onSuccessfulLogin(String email, String password) {
-        Toast.makeText(this.getApplicationContext(), "Login Successful", Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
 
-        //Deal with Shared Preferences user data
-        //if(!sharedPreferencesHelper.hasSharedData()) {
-            setSharedPreferencesData(email, password);
-        //}
+        sharedPreferencesHelper.setSharedPreferencesData(email, password);
 
         this.startActivity(new Intent(this.getApplication(), MainActivity.class));
     }
@@ -139,18 +136,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //called by firebase when login is not successfully performed. Don't call from anywhere else
     protected void onUnsuccessfulLogin(String error) {
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
-    }
-
-    private void setSharedPreferencesData(String email, String password) {
-        //TODO get saved data from Firebase for badge, score info
-        sharedPreferencesHelper.setEmail(email);
-        sharedPreferencesHelper.setPassword(password);
-        sharedPreferencesHelper.setBadges("0000000000");
-        sharedPreferencesHelper.setBestDrop("0");
-        sharedPreferencesHelper.setBestSpin("0");
-        sharedPreferencesHelper.setBestChuck("0");
-        sharedPreferencesHelper.setNotificationsEnabled(true);
-        sharedPreferencesHelper.setSoundEnabled(false);
-        sharedPreferencesHelper.setImperialSystem(true);
     }
 }
