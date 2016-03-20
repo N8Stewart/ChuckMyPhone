@@ -118,45 +118,40 @@ public class CompeteSpinFragment extends CompeteFragment{
     }
 
     public void initializeViews(View view) {
-        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
-        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
-        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+        super.initializeViews(view);
 
         currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
-        competeButton.setOnClickListener(buttonListener);
-    }
-
-    //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
-    Runnable updateViewRunnable = new Runnable() {
-        public void run() {
-            long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
-            long timeNow = System.currentTimeMillis();
-            while (isRecording && (timeNow < timeUntilEnd)) {
-                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
-                    //This code updates the UI, needs to be separate because on the original thread can touch the views
-                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+        updateViewRunnable = new Runnable() {
+            public void run() {
+                long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
+                long timeNow = System.currentTimeMillis();
+                while (isRecording && (timeNow < timeUntilEnd)) {
+                    if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
+                        //This code updates the UI, needs to be separate because on the original thread can touch the views
+                        getActivity().runOnUiThread(updateViewSubRunnableScore);
+                    }
+                    timeNow = System.currentTimeMillis();
                 }
-                timeNow = System.currentTimeMillis();
-            }
 
-            //once the loop is done, stop recording and switch the image back to the play button
-            isRecording = false;
-            //This code updates the UI, needs to be separate because on the original thread can touch the views
-            getActivity().runOnUiThread(updateViewSubRunnableImage);
-        }
-    };
-
-    Runnable updateViewSubRunnableScore = new Runnable() {
-        @Override
-        public void run() {
-            currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
-            if (currentUser.getSpinScore() == 0.0) {
-                yourBestScoreTextView.setText(TUTORIAL_TEXT);
-            } else{
-                yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getSpinScore()));
+                //once the loop is done, stop recording and switch the image back to the play button
+                isRecording = false;
+                //This code updates the UI, needs to be separate because on the original thread can touch the views
+                getActivity().runOnUiThread(updateViewSubRunnableImage);
             }
-        }
-    };
+        };
+
+        updateViewSubRunnableScore = new Runnable() {
+            @Override
+            public void run() {
+                currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
+                if (currentUser.getSpinScore() == 0.0) {
+                    yourBestScoreTextView.setText(TUTORIAL_TEXT);
+                } else{
+                    yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getSpinScore()));
+                }
+            }
+        };
+    }
 }

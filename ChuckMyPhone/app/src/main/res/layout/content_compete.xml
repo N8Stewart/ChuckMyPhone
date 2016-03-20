@@ -30,8 +30,8 @@
                 android:layout_centerInParent="true"
                 android:layout_centerHorizontal="true"
                 android:indeterminate="false"
-                android:max="50"
-                android:progress="48"
+                android:max="@integer/progress_bar_max"
+                android:progress="@integer/progress_bar_default"
                 android:progressDrawable="@drawable/circular_progress_bar"
                 android:layout_marginBottom="25dp" />
 
