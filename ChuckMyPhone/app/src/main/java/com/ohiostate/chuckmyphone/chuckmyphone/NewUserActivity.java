@@ -25,7 +25,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     private final String TAG = this.getClass().getSimpleName();
 
-    FirebaseHelper firebaseHelper;
+    private FirebaseHelper firebaseHelper;
 
     private Button cancelButton;
     private Button fbButton;

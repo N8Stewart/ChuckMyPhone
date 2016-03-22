@@ -154,12 +154,13 @@ public class FirebaseHelper {
             if (!dataSnapshot.hasChild("users/"+authData.getUid())) {
                 //create the record and insert it into Firebase
                 Firebase newUserRef = myFirebaseRef.child("users/"+authData.getUid());
-                newUserRef.setValue(new User(getUsername(authData.getUid())));
+                newUserRef.setValue(new User(CurrentUser.getInstance().getUsername()));
             } else {
                 System.out.println("User logged into existing account, no data was changed");
             }
             System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
             CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
+            CurrentUser.getInstance().assignUsername(getUsername(authData.getUid()));
             loginActivity.onSuccessfulLogin(loginEmail, loginPassword);
         }
 
@@ -178,7 +179,6 @@ public class FirebaseHelper {
         if (dataSnapshot.hasChild("users/"+userID)) {
             return dataSnapshot.child("users/"+userID+"/username").getValue().toString();
         }
-
         return ""; //user doesn't exist
     }
 
