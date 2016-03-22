@@ -84,9 +84,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_settings, container, false);
 
-        saveButton = (Button) view.findViewById(R.id.settings_save_button);
-        saveButton.setOnClickListener(this);
+        initializeViews(view);
 
+        loadSettings();
+        
+        return view;
+    }
+
+    private void initializeViews(View view) {
         metricSystemButton = (RadioButton) view.findViewById(R.id.settings_metric_system_button);
         metricSystemButton.setOnClickListener(this);
         imperialSystemButton = (RadioButton) view.findViewById(R.id.settings_imperial_system_button);
@@ -98,10 +103,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         soundEnabledCheckbox.setOnClickListener(this);
         tutorialMessagesEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_tutorial_messages_checkbox);
         tutorialMessagesEnabledCheckbox.setOnClickListener(this);
-
-        loadSettings();
-        
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -132,36 +133,34 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.settings_background_notification_checkbox:
-
+                mSharedPreferencesHelper.setNotificationsEnabled(backgroundNotificationsCheckbox.isChecked());
                 break;
             case R.id.settings_sound_enabled_checkbox:
-
+                mSharedPreferencesHelper.setSoundEnabled(soundEnabledCheckbox.isChecked());
                 break;
             case R.id.settings_imperial_system_button:
-                if(metricSystemButton.isChecked()){
-                    metricSystemButton.setChecked(false);
-                    imperialSystemButton.setChecked(true);
-                }
+                toggleUnitButtons(false);
                 break;
             case R.id.settings_metric_system_button:
-                if(imperialSystemButton.isChecked()){
-                    metricSystemButton.setChecked(true);
-                    imperialSystemButton.setChecked(false);
-                }
+                toggleUnitButtons(true);
                 break;
             case R.id.settings_tutorial_messages_checkbox:
                 CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
             default:
-                saveSettings();
                 break;
         }
-
     }
 
-    private void saveSettings(){
-        mSharedPreferencesHelper.setNotificationsEnabled(backgroundNotificationsCheckbox.isChecked());
+    private void toggleUnitButtons(boolean metric){
+        if(imperialSystemButton.isChecked()) {
+            metricSystemButton.setChecked(metric);
+            imperialSystemButton.setChecked(!metric);
+            saveUnitSystem();
+        }
+    }
+
+    private void saveUnitSystem() {
         mSharedPreferencesHelper.setImperialSystem(imperialSystemButton.isChecked());
-        mSharedPreferencesHelper.setSoundEnabled(soundEnabledCheckbox.isChecked());
     }
 
     private void loadSettings(){

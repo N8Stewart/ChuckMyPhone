@@ -11,7 +11,6 @@ public class SharedPreferencesHelper {
     private static final String PREFS_USER = "com.ohiostate.chuckmyphone.chuckmyphone.PREFS_USER";
     private static final String MSG_KEY = "The user does not have this key";
 
-
     private SharedPreferences sharedData;
 
     public SharedPreferencesHelper(Context context){
@@ -56,6 +55,10 @@ public class SharedPreferencesHelper {
 
     public void setSoundEnabled(boolean value){
         setBooleanValue("sound", value);
+    }
+
+    public void setTutorialMessages(boolean tutorialMessages) {
+        setBooleanValue("tutorial", tutorialMessages);
     }
 
     public void setNotificationsEnabled(boolean value){
@@ -114,6 +117,10 @@ public class SharedPreferencesHelper {
         return getStringValue("email");
     }
 
+    public void getTutorialMessages() {
+        getBooleanValue("tutorial", false);
+    }
+
     protected boolean hasSharedData(){
         return sharedData.contains("email");
     }
@@ -133,5 +140,6 @@ public class SharedPreferencesHelper {
         this.setNotificationsEnabled(true);
         this.setSoundEnabled(false);
         this.setImperialSystem(true);
+        this.setTutorialMessages(true);
     }
 }

@@ -82,6 +82,12 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_change_password, container, false);
 
+        initializeViews(view);
+
+        return view;
+    }
+
+    private void initializeViews(View view){
         oldPasswordEditText = (EditText) view.findViewById(R.id.change_password_old_password_edit_text);
         newPasswordEdiText = (EditText) view.findViewById(R.id.new_user_password_edit_text);
         newPasswordConfirmationEdiText = (EditText) view.findViewById(R.id.new_user_password_confirmation_edit_text);
@@ -90,8 +96,6 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         confirmButton.setOnClickListener(this);
         cancelButton = (Button) view.findViewById(R.id.change_password_cancel_button);
         cancelButton.setOnClickListener(this);
-
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

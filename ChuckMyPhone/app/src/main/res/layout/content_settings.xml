@@ -52,17 +52,9 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Display Tutorial Messages"
+            android:text="@string/tutorial"
             android:id="@+id/settings_tutorial_messages_checkbox"
             android:checked="true" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/settings_save_button"
-            android:background="@android:drawable/ic_menu_save"
-            android:layout_gravity="bottom|end"
-            android:layout_weight="0.12" />
 
     </LinearLayout>
 
