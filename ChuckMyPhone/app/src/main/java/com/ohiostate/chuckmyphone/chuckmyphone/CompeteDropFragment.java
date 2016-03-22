@@ -28,7 +28,6 @@ public class CompeteDropFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then drop your phone!";
 
     private double acceleration;
-    private double timeFalling;
     private boolean isFalling;
 
     private long fallingStartTime;
@@ -60,7 +59,7 @@ public class CompeteDropFragment extends CompeteFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        timeFalling = 0;
+        score = 0;
         acceleration = 0;
         isFalling = false;
 
@@ -106,7 +105,7 @@ public class CompeteDropFragment extends CompeteFragment {
                 //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                acceleration = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+                acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling
                 if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
@@ -120,13 +119,13 @@ public class CompeteDropFragment extends CompeteFragment {
                 //if phone stops falling
                 if (isFalling && (acceleration < FALLING_MIN_ACCELERATION || acceleration > FALLING_MAX_ACCELERATION)) {
                     fallingEndTime = System.currentTimeMillis();
-                    timeFalling = (fallingEndTime-fallingStartTime);
+                    score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
                 }
 
                 //if new high score
-                if (timeFalling > currentUser.getDropScore()) {
-                    currentUser.updateDropScore(timeFalling);
+                if (score > currentUser.getDropScore()) {
+                    currentUser.updateDropScore(score);
                 }
             }
         }
@@ -146,45 +145,40 @@ public class CompeteDropFragment extends CompeteFragment {
     }
 
     public void initializeViews(View view) {
-        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
-        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
-        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+        super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
-        competeButton.setOnClickListener(buttonListener);
-    }
-
-    //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
-    Runnable updateViewRunnable = new Runnable() {
-        public void run() {
-            long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
-            long timeNow = System.currentTimeMillis();
-            while (isRecording && (timeNow < timeUntilEnd)) {
-                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
-                    //This code updates the UI, needs to be separate because on the original thread can touch the views
-                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+        updateViewRunnable = new Runnable() {
+            public void run() {
+                long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
+                long timeNow = System.currentTimeMillis();
+                while (isRecording && (timeNow < timeUntilEnd)) {
+                    if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
+                        //This code updates the UI, needs to be separate because on the original thread can touch the views
+                        getActivity().runOnUiThread(updateViewSubRunnableScore);
+                    }
+                    timeNow = System.currentTimeMillis();
                 }
-                timeNow = System.currentTimeMillis();
-            }
 
-            //once the loop is done, stop recording and switch the image back to the play button
-            isRecording = false;
-            //This code updates the UI, needs to be separate because on the original thread can touch the views
-            getActivity().runOnUiThread(updateViewSubRunnableImage);
-        }
-    };
-
-    Runnable updateViewSubRunnableScore = new Runnable() {
-        @Override
-        public void run() {
-            currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
-            if (currentUser.getDropScore() == 0.0) {
-                yourBestScoreTextView.setText(TUTORIAL_TEXT);
-            } else{
-                yourBestScoreTextView.setText(String.format("Longest Fall: %.3f ms", currentUser.getDropScore()));
+                //once the loop is done, stop recording and switch the image back to the play button
+                isRecording = false;
+                //This code updates the UI, needs to be separate because on the original thread can touch the views
+                getActivity().runOnUiThread(updateViewSubRunnableImage);
             }
-        }
-    };
+        };
+
+        updateViewSubRunnableScore = new Runnable() {
+            @Override
+            public void run() {
+                currentScoreTextView.setText(String.format("%d", score));
+                if (currentUser.getDropScore() == 0.0) {
+                    yourBestScoreTextView.setText(TUTORIAL_TEXT);
+                } else{
+                    yourBestScoreTextView.setText(String.format("Longest Fall: %d", currentUser.getDropScore()));
+                }
+            }
+        };
+    }
 }

@@ -30,8 +30,8 @@
                 android:layout_centerInParent="true"
                 android:layout_centerHorizontal="true"
                 android:indeterminate="false"
-                android:max="50"
-                android:progress="48"
+                android:max="@integer/progress_bar_max"
+                android:progress="@integer/progress_bar_default"
                 android:progressDrawable="@drawable/circular_progress_bar"
                 android:layout_marginBottom="25dp" />
 
@@ -39,7 +39,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="0 m/s"
+                android:text="0"
+                android:textSize="30dp"
                 android:id="@+id/compete_measure_textview"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true" />
@@ -60,7 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Your Best: 10 m/s"
+            android:text="Your Best: "
             android:id="@+id/compete_best_score_textview"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"

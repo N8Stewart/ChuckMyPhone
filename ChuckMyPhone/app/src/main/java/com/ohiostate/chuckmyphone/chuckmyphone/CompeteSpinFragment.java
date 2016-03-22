@@ -22,7 +22,6 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class CompeteSpinFragment extends CompeteFragment{
-    private double rotationSpeed;
     Sensor gyroscope;
 
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
@@ -53,7 +52,7 @@ public class CompeteSpinFragment extends CompeteFragment{
 
         //max rotation speed is set when the scores are grabbed, no need to initialize here
         //maxRotationSpeed = 0;
-        rotationSpeed = 0;
+        score = 0;
     }
 
     @Override
@@ -95,10 +94,9 @@ public class CompeteSpinFragment extends CompeteFragment{
                 long dt = (currTime - lastUpdate);
                 lastUpdate = currTime;
 
-                //not actually rotationSpeed, but that is hard to derive
-                rotationSpeed = Math.abs(ax) + Math.abs(ay) + Math.abs(az);
-                if (rotationSpeed > currentUser.getSpinScore()) {
-                    currentUser.updateSpinScore(rotationSpeed);
+                score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
+                if (score > currentUser.getSpinScore()) {
+                    currentUser.updateSpinScore(score);
                 }
             }
         }
@@ -118,45 +116,40 @@ public class CompeteSpinFragment extends CompeteFragment{
     }
 
     public void initializeViews(View view) {
-        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
-        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
-        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+        super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
-        competeButton.setOnClickListener(buttonListener);
-    }
-
-    //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
-    Runnable updateViewRunnable = new Runnable() {
-        public void run() {
-            long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
-            long timeNow = System.currentTimeMillis();
-            while (isRecording && (timeNow < timeUntilEnd)) {
-                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
-                    //This code updates the UI, needs to be separate because on the original thread can touch the views
-                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+        updateViewRunnable = new Runnable() {
+            public void run() {
+                long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
+                long timeNow = System.currentTimeMillis();
+                while (isRecording && (timeNow < timeUntilEnd)) {
+                    if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
+                        //This code updates the UI, needs to be separate because on the original thread can touch the views
+                        getActivity().runOnUiThread(updateViewSubRunnableScore);
+                    }
+                    timeNow = System.currentTimeMillis();
                 }
-                timeNow = System.currentTimeMillis();
-            }
 
-            //once the loop is done, stop recording and switch the image back to the play button
-            isRecording = false;
-            //This code updates the UI, needs to be separate because on the original thread can touch the views
-            getActivity().runOnUiThread(updateViewSubRunnableImage);
-        }
-    };
-
-    Runnable updateViewSubRunnableScore = new Runnable() {
-        @Override
-        public void run() {
-            currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
-            if (currentUser.getSpinScore() == 0.0) {
-                yourBestScoreTextView.setText(TUTORIAL_TEXT);
-            } else{
-                yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getSpinScore()));
+                //once the loop is done, stop recording and switch the image back to the play button
+                isRecording = false;
+                //This code updates the UI, needs to be separate because on the original thread can touch the views
+                getActivity().runOnUiThread(updateViewSubRunnableImage);
             }
-        }
-    };
+        };
+
+        updateViewSubRunnableScore = new Runnable() {
+            @Override
+            public void run() {
+                currentScoreTextView.setText(String.format("%d", score));
+                if (currentUser.getSpinScore() == 0.0) {
+                    yourBestScoreTextView.setText(TUTORIAL_TEXT);
+                } else{
+                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getSpinScore()));
+                }
+            }
+        };
+    }
 }

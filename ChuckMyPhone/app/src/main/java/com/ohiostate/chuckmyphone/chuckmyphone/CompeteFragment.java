@@ -11,7 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,14 +40,25 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean isRecording;
     protected long lastUpdate;
 
+    // Control the progress of the progress bar
+    protected int progress;
+
+    // Score of the different compete screens
+    protected long score;
+
     protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
     protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
 
+    ProgressBar progressBar;
+    Animation progressBarAnimation;
     TextView yourBestScoreTextView;
     TextView currentScoreTextView;
     ImageButton competeButton;
 
     Thread updateViewRunnableThread;
+
+    protected Runnable updateViewSubRunnableScore;
+    protected Runnable showTutorialToastRunnable;
 
     protected CurrentUser currentUser;
 
@@ -70,6 +85,20 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         isRecording = false;
         lastUpdate = 0;
+    }
+
+    public void initializeViews(View view) {
+        currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
+        yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
+        competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+
+        competeButton.setOnClickListener(buttonListener);
+
+        // Orient the progress bar
+        progressBar = (ProgressBar) view.findViewById(R.id.compete_progress_bar);
+        progressBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.pivot_center);
+        progressBarAnimation.setFillAfter(true);
+        progressBar.startAnimation(progressBarAnimation);
     }
 
     @Override
@@ -149,17 +178,62 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         public void onClick(View v) {
             if (userHasSensor) {
                 isRecording = !isRecording;
-                setButtonImage();
+                getActivity().runOnUiThread(updateViewSubRunnableImage);
 
                 updateViewRunnableThread.start();
             }
         }
     };
 
+    //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
+    Runnable updateViewRunnable = new Runnable() {
+        public void run() {
+
+            if (CurrentUser.getInstance().getTutorialMessagesEnabled() && isRecording) {
+                Thread showTutorialMessageThread = new Thread(showTutorialToastRunnable);
+                getActivity().runOnUiThread(showTutorialMessageThread);
+            }
+
+            long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
+            long timeNow = System.currentTimeMillis();
+            while (isRecording && (timeNow < timeUntilEnd)) {
+                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
+                    //This code updates the UI, needs to be separate because on the original thread can touch the views
+                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+                    progress = (int)((timeUntilEnd - timeNow) * 100 / NUM_MILLISECONDS_FOR_ACTION);
+                    getActivity().runOnUiThread(updateProgressBar);
+                }
+                timeNow = System.currentTimeMillis();
+            }
+
+            //once the loop is done, stop recording and switch the image back to the play button
+            isRecording = false;
+            //This code updates the UI, needs to be separate because on the original thread can touch the views
+            getActivity().runOnUiThread(updateViewSubRunnableImage);
+            getActivity().runOnUiThread(updateProgressBar);
+        }
+    };
+
     protected Runnable updateViewSubRunnableImage = new Runnable() {
         @Override
         public void run() {
-            competeButton.setImageResource(R.drawable.compete_play);
+            if (isRecording) {
+                competeButton.setImageResource(R.drawable.compete_stop);
+            } else {
+                competeButton.setImageResource(R.drawable.compete_play);
+            }
+        }
+    };
+
+    protected Runnable updateProgressBar = new Runnable() {
+
+        @Override
+        public void run() {
+            if (isRecording) {
+                progressBar.setProgress(progress);
+            } else {
+                progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
+            }
         }
     };
 }
