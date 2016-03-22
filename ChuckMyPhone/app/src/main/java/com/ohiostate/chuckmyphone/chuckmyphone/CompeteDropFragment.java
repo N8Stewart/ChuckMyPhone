@@ -28,7 +28,6 @@ public class CompeteDropFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then drop your phone!";
 
     private double acceleration;
-    private double timeFalling;
     private boolean isFalling;
 
     private long fallingStartTime;
@@ -60,7 +59,7 @@ public class CompeteDropFragment extends CompeteFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        timeFalling = 0;
+        score = 0;
         acceleration = 0;
         isFalling = false;
 
@@ -106,7 +105,7 @@ public class CompeteDropFragment extends CompeteFragment {
                 //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                acceleration = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+                acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling
                 if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
@@ -120,13 +119,13 @@ public class CompeteDropFragment extends CompeteFragment {
                 //if phone stops falling
                 if (isFalling && (acceleration < FALLING_MIN_ACCELERATION || acceleration > FALLING_MAX_ACCELERATION)) {
                     fallingEndTime = System.currentTimeMillis();
-                    timeFalling = (fallingEndTime-fallingStartTime);
+                    score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
                 }
 
                 //if new high score
-                if (timeFalling > currentUser.getDropScore()) {
-                    currentUser.updateDropScore(timeFalling);
+                if (score > currentUser.getDropScore()) {
+                    currentUser.updateDropScore(score);
                 }
             }
         }
@@ -148,7 +147,7 @@ public class CompeteDropFragment extends CompeteFragment {
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewRunnable = new Runnable() {
@@ -173,11 +172,11 @@ public class CompeteDropFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+                currentScoreTextView.setText(String.format("%d", score));
                 if (currentUser.getDropScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Longest Fall: %.3f ms", currentUser.getDropScore()));
+                    yourBestScoreTextView.setText(String.format("Longest Fall: %d", currentUser.getDropScore()));
                 }
             }
         };

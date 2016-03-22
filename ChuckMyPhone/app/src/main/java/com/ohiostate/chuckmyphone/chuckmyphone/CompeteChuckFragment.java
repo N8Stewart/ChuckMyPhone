@@ -18,6 +18,14 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.Buffer;
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -27,8 +35,6 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class CompeteChuckFragment extends CompeteFragment{
-    private double speed; //Speed is in meters per second
-
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
 
     Sensor linearAccelerometer;
@@ -57,7 +63,7 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        speed = 0;
+        score = 0;
     }
 
     @Override
@@ -95,15 +101,14 @@ public class CompeteChuckFragment extends CompeteFragment{
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 10) {
-                long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
                 //not actually speed, but that is hard to derive
-                speed = Math.sqrt(ax * ax + ay * ay + az * az);
+                score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
                 //if new high score
-                if (speed > currentUser.getChuckScore()) {
-                    currentUser.updateChuckScore(speed);
+                if (score > currentUser.getChuckScore()) {
+                    currentUser.updateChuckScore(score);
                 }
             }
         }
@@ -125,17 +130,17 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s", speed));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%.3f m/s", speed));
+                currentScoreTextView.setText(String.format("%d", score));
                 if (currentUser.getChuckScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getChuckScore()));
+                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getChuckScore()));
                 }
             }
         };
