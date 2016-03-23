@@ -25,6 +25,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private boolean actionPending;
+
     FirebaseHelper firebaseHelper;
 
     private Button cancelButton;
@@ -42,6 +44,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
+
+        actionPending = false;
 
         firebaseHelper = FirebaseHelper.getInstance();
         Log.d(TAG, "onCreate() called");
@@ -98,15 +102,18 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
                 break;
             case R.id.new_user_sign_up_button:
-                if (isReadyToCreateAccount()) {
+                if (!actionPending && isReadyToCreateAccount()) {
                     //Account creation works asynchronously
                     //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
+                    actionPending = true;
                     createUserData();
                 }
                 break;
             case R.id.new_user_cancel_button:
-                startActivity(new Intent(getApplication(), LoginActivity.class));
-                finish();
+                if (!actionPending) {
+                    startActivity(new Intent(getApplication(), LoginActivity.class));
+                    finish();
+                }
                 break;
             default:
                 break;
@@ -154,6 +161,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         sharedPreferencesHelper.clearSharedData();
         sharedPreferencesHelper.setSharedPreferencesData(emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString());
 
+        actionPending = false;
+
         //account was created successfully, navigate back to login page
         Toast.makeText(this.getApplicationContext(), "Account was successfully created, logging in now!", Toast.LENGTH_SHORT).show();
         this.startActivity(new Intent(this.getApplication(), LoginActivity.class));
@@ -162,6 +171,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     //called by Firebase helper when an account is not successfully created. Don't call from anywhere else
     protected void accountWasNotCreated(String error) {
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
+        actionPending = false;
     }
 
 }

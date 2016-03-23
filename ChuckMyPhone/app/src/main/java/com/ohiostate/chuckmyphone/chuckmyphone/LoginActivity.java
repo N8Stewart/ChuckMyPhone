@@ -21,6 +21,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
     private Button fbButton;
 
+    private boolean actionPending;
+
     private TextView forgotPasswordTextView;
 
     private EditText passwordEditText;
@@ -34,6 +36,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         Log.d(TAG, "onCreate() called");
+
+        actionPending = false;
 
         sharedPreferencesHelper = new SharedPreferencesHelper(this);
 
@@ -91,20 +95,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         switch(v.getId()){
             case R.id.login_facebook_button:
-                intent = new Intent(getApplication(), MainActivity.class);
-                startActivity(intent);
-                finish();
+
                 break;
             case R.id.login_login_button:
-                attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                if (!actionPending) {
+                    actionPending = true;
+                    attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                }
                 break;
             case R.id.login_forgot_password_textview:
-                intent = new Intent(getApplication(), ForgotPasswordActivity.class);
-                startActivity(intent);
+                if (!actionPending) {
+                    intent = new Intent(getApplication(), ForgotPasswordActivity.class);
+                    startActivity(intent);
+                }
                 break;
             default: //new user button case
-                intent = new Intent(getApplication(), NewUserActivity.class);
-                startActivity(intent);
+                if (!actionPending) {
+                    intent = new Intent(getApplication(), NewUserActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -134,11 +143,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
         }
 
+        actionPending = false;
+
         this.startActivity(new Intent(this.getApplication(), MainActivity.class));
     }
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
     protected void onUnsuccessfulLogin(String error) {
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
+        actionPending = false;
     }
 }
