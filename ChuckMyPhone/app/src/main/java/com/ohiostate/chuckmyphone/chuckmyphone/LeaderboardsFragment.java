@@ -121,15 +121,15 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                 String competitionOption = parentView.getItemAtPosition(position).toString();
                 if (competitionOption.equals("Chuck")) {
                     for (int i = 0; i < chuckRecords.size(); i++) {
-                        addEntryToLeaderboard(i+1, chuckRecords.get(i).username, chuckRecords.get(i).score, v, "m/s^2");
+                        addEntryToLeaderboard(i+1, chuckRecords.get(i).username, chuckRecords.get(i).score, v, "");
                     }
                 } else if (competitionOption.equals("Drop")) {
                     for (int i = 0; i < dropRecords.size(); i++) {
-                        addEntryToLeaderboard(i+1, dropRecords.get(i).username, dropRecords.get(i).score, v, "ms");
+                        addEntryToLeaderboard(i+1, dropRecords.get(i).username, dropRecords.get(i).score, v, "");
                     }
                 } else { // "Spin"
                     for (int i = 0; i < spinRecords.size(); i++) {
-                        addEntryToLeaderboard(i+1, spinRecords.get(i).username, spinRecords.get(i).score, v, "m/s^2");
+                        addEntryToLeaderboard(i+1, spinRecords.get(i).username, spinRecords.get(i).score, v, "");
                     }
                 }
             }

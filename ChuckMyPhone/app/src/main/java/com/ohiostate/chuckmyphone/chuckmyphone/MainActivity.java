@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.menu_hamburger_item_profile:
                 fragmentClass = ProfileFragment.class;
-                getSupportActionBar().setTitle(mSharedPreferencesHelper.getUsername());
+                getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + "'s Profile");
                 break;
             case R.id.menu_hamburger_item_leaderboards:
                 fragmentClass = LeaderboardsFragment.class;
