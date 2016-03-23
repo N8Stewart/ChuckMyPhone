@@ -27,14 +27,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText emailEditText;
 
     private static SharedPreferencesHelper sharedPreferencesHelper;
-    private FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        firebaseHelper = FirebaseHelper.getInstance();
 
         Log.d(TAG, "onCreate() called");
 
@@ -130,6 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //called by firebase when login is successfully performed. Don't call from anywhere else
     protected void onSuccessfulLogin(String email, String password) {
         Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+
         sharedPreferencesHelper.setSharedPreferencesData(email, password);
 
         this.startActivity(new Intent(this.getApplication(), MainActivity.class));
