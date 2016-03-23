@@ -154,9 +154,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         sharedPreferencesHelper.clearSharedData();
         sharedPreferencesHelper.setSharedPreferencesData(emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString());
 
-        //save the username to the current user instance
-        CurrentUser.getInstance().updateUsername(usernameEditText.getText().toString());
-
         //account was created successfully, navigate back to login page
         Toast.makeText(this.getApplicationContext(), "Account was successfully created, logging in now!", Toast.LENGTH_SHORT).show();
         this.startActivity(new Intent(this.getApplication(), LoginActivity.class));

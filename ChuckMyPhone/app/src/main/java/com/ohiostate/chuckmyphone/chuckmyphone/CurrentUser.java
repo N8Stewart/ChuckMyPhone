@@ -23,6 +23,7 @@ public class CurrentUser {
     private boolean isLoaded = false;
     private String userId;
     private String username;
+    private String provider;
 
     private double chuckScore;
     private double spinScore;
@@ -38,6 +39,10 @@ public class CurrentUser {
     //load userID, high scores
     public void loadUserMetaData(String userId, String provider) {
         this.userId = userId;
+        this.provider = provider;
+        if (this.username == null) {
+            this.username = "USERNAME NOT ASSIGNED";
+        }
         isLoaded = true;
 
         tutorialMessagesEnabled = true;
@@ -111,13 +116,12 @@ public class CurrentUser {
         return Math.floor(score * 1000) / 1000;
     }
 
-    protected String getUsername() {
-        //FirebaseHelper.getInstance().getUsername(userId);
-        return this.username;
+    protected void assignUsername(String username) {
+        this.username = username;
     }
 
-    protected void updateUsername(String username) {
-        this.username = username;
+    protected String getUsername() {
+        return this.username;
     }
 
     protected void updateChuckLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
