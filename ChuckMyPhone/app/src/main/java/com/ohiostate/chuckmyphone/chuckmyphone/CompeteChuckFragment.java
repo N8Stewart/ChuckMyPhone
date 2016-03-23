@@ -27,8 +27,6 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class CompeteChuckFragment extends CompeteFragment{
-    private double speed; //Speed is in meters per second
-
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
 
     Sensor linearAccelerometer;
@@ -57,7 +55,7 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        speed = 0;
+        score = 0;
     }
 
     @Override
@@ -99,11 +97,11 @@ public class CompeteChuckFragment extends CompeteFragment{
                 lastUpdate = curTime;
 
                 //not actually speed, but that is hard to derive
-                speed = Math.sqrt(ax * ax + ay * ay + az * az);
+                score = (long) Math.sqrt(ax * ax + ay * ay + az * az);
 
                 //if new high score
-                if (speed > currentUser.getChuckScore()) {
-                    currentUser.updateChuckScore(speed);
+                if (score > currentUser.getChuckScore()) {
+                    currentUser.updateChuckScore(score);
                 }
             }
         }
@@ -125,13 +123,13 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s", speed));
+        currentScoreTextView.setText(String.valueOf(score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%.3f m/s", speed));
+                currentScoreTextView.setText(String.valueOf(score));
                 if (currentUser.getChuckScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{

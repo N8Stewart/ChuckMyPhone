@@ -22,7 +22,6 @@ import android.widget.Toast;
  * create an instance of this fragment.
  */
 public class CompeteSpinFragment extends CompeteFragment{
-    private double rotationSpeed;
     Sensor gyroscope;
 
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
@@ -53,7 +52,7 @@ public class CompeteSpinFragment extends CompeteFragment{
 
         //max rotation speed is set when the scores are grabbed, no need to initialize here
         //maxRotationSpeed = 0;
-        rotationSpeed = 0;
+        score = 0;
     }
 
     @Override
@@ -96,9 +95,9 @@ public class CompeteSpinFragment extends CompeteFragment{
                 lastUpdate = currTime;
 
                 //not actually rotationSpeed, but that is hard to derive
-                rotationSpeed = Math.abs(ax) + Math.abs(ay) + Math.abs(az);
-                if (rotationSpeed > currentUser.getSpinScore()) {
-                    currentUser.updateSpinScore(rotationSpeed);
+                score = (long) (Math.abs(ax) + Math.abs(ay) + Math.abs(az));
+                if (score > currentUser.getSpinScore()) {
+                    currentUser.updateSpinScore(score);
                 }
             }
         }
@@ -120,7 +119,7 @@ public class CompeteSpinFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
+        currentScoreTextView.setText(String.valueOf(score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewRunnable = new Runnable() {
@@ -145,11 +144,11 @@ public class CompeteSpinFragment extends CompeteFragment{
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%.3f m/s", rotationSpeed));
+                currentScoreTextView.setText(String.valueOf(score));
                 if (currentUser.getSpinScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getSpinScore()));
+                    yourBestScoreTextView.setText(String.format("Your best: " + currentUser.getSpinScore()));
                 }
             }
         };

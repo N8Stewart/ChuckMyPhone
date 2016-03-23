@@ -40,6 +40,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean isRecording;
     protected long lastUpdate;
 
+    protected long score;
+
     // Control the progress of the progress bar
     protected int progress;
 

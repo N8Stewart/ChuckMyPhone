@@ -66,21 +66,18 @@ public class CurrentUser {
     }
 
     //updates high score in firebase
-    public void updateChuckScore(double score) {
-        chuckScore = score;
-        FirebaseHelper.getInstance().updateBestChuckScore(truncateDouble(score), 0.0, 0.0);
+    public void updateChuckScore(long score) {
+        FirebaseHelper.getInstance().updateBestChuckScore(score, 0.0, 0.0);
     }
 
     //updates high score in firebase
-    public void updateDropScore(double score) {
-        dropScore = score;
-        FirebaseHelper.getInstance().updateBestDropScore(truncateDouble(score), 0.0, 0.0);
+    public void updateDropScore(long score) {
+        FirebaseHelper.getInstance().updateBestDropScore(score, 0.0, 0.0);
     }
 
     //updates high score in firebase
-    public void updateSpinScore(double score) {
-        spinScore = score;
-        FirebaseHelper.getInstance().updateBestSpinScore(truncateDouble(score), 0.0, 0.0);
+    public void updateSpinScore(long score) {
+        FirebaseHelper.getInstance().updateBestSpinScore(score, 0.0, 0.0);
     }
 
     public void updateTutorialMessagesEnabled(boolean value) {
@@ -109,11 +106,6 @@ public class CurrentUser {
 
     public double getDropScore() {
         return dropScore;
-    }
-
-    //helper function. Used so firebase only saves up to three decimal places. May save size of total data saved
-    private double truncateDouble(double score) {
-        return Math.floor(score * 1000) / 1000;
     }
 
     protected void assignUsername(String username) {
