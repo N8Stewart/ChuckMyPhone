@@ -109,7 +109,6 @@ public class FirebaseHelper {
                 }
 
                 updateLeaderboard();
-
             }
 
             @Override
@@ -120,7 +119,6 @@ public class FirebaseHelper {
 
     public void createUserWithoutFacebook(String email, String password, String username, NewUserActivity activity) {
         newUserActivity = activity;
-        CurrentUser.getInstance().assignUsername(username);
         myFirebaseRef.createUser(email, password, userCreationHandler);
     }
 
@@ -160,8 +158,7 @@ public class FirebaseHelper {
             }
             System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
             CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
-            CurrentUser.getInstance().assignUsername(getUsername(authData.getUid()));
-            loginActivity.onSuccessfulLogin(loginEmail, loginPassword);
+            loginActivity.onSuccessfulLogin(loginEmail, loginPassword, authData.getUid());
         }
 
        //Event driven: called when user login fails
