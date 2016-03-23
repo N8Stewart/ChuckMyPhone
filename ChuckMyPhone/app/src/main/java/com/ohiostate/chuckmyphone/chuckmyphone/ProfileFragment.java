@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +26,10 @@ import android.widget.TextView;
 public class ProfileFragment extends Fragment {
 
     private final String TAG = this.getClass().getSimpleName();
+
+    private TextView bestChuckScoreTextView;
+    private TextView bestDropScoreTextView;
+    private TextView bestSpinScoreTextView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,6 +81,8 @@ public class ProfileFragment extends Fragment {
         for (int i = 0; i < 10;  i++) {
             addBadge("trophy name", view);
         }
+
+        initializeViews(view);
 
         return view;
     }
@@ -152,5 +160,15 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume() called");
+    }
+
+    private void initializeViews(View view) {
+        bestChuckScoreTextView = (TextView) view.findViewById(R.id.profile_fastest_thrown_record_textview);
+        bestDropScoreTextView = (TextView) view.findViewById(R.id.profile_furthest_drop_record_textview);
+        bestSpinScoreTextView = (TextView) view.findViewById(R.id.profile_most_spins_record_textview);
+
+        bestChuckScoreTextView.setText(""+FirebaseHelper.getInstance().getBestChuckScore());
+        bestDropScoreTextView.setText(""+FirebaseHelper.getInstance().getBestDropScore());
+        bestSpinScoreTextView.setText(""+FirebaseHelper.getInstance().getBestSpinScore());
     }
 }

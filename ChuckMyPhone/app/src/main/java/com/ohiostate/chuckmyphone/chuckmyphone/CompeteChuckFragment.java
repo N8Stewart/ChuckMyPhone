@@ -18,14 +18,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.Buffer;
-import java.util.ArrayList;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -101,10 +93,11 @@ public class CompeteChuckFragment extends CompeteFragment{
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 10) {
+                long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
                 //not actually speed, but that is hard to derive
-                score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
+                score = (long) Math.sqrt(ax * ax + ay * ay + az * az);
 
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
@@ -130,17 +123,17 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%d", score));
+        currentScoreTextView.setText(String.valueOf(score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%d", score));
+                currentScoreTextView.setText(String.valueOf(score));
                 if (currentUser.getChuckScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getChuckScore()));
+                    yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getChuckScore()));
                 }
             }
         };

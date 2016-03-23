@@ -40,11 +40,10 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean isRecording;
     protected long lastUpdate;
 
+    protected long score;
+
     // Control the progress of the progress bar
     protected int progress;
-
-    // Score of the different compete screens
-    protected long score;
 
     protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
     protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate

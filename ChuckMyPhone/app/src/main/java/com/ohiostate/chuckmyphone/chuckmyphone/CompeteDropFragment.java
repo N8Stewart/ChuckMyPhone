@@ -105,7 +105,7 @@ public class CompeteDropFragment extends CompeteFragment {
                 //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
+                acceleration = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
 
                 //if phone starts falling
                 if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
@@ -147,7 +147,7 @@ public class CompeteDropFragment extends CompeteFragment {
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%d", score));
+        currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewRunnable = new Runnable() {
@@ -172,11 +172,11 @@ public class CompeteDropFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%d", score));
+                currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
                 if (currentUser.getDropScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Longest Fall: %d", currentUser.getDropScore()));
+                    yourBestScoreTextView.setText("Longest Fall: " + String.valueOf(currentUser.getDropScore() + " ms"));
                 }
             }
         };

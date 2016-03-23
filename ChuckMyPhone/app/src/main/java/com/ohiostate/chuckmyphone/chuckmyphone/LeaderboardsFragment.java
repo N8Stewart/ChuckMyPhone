@@ -192,7 +192,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         void onFragmentInteraction(Uri uri);
     }
 
-    public void addEntryToLeaderboard(int rank, String name, long score, View view, String units) {
+    public void addEntryToLeaderboard(int rank, String name, double score, View view, String units) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
         LinearLayout leaderboardRow = (LinearLayout) view.findViewById(R.id.leaderboards_row_record_linear_layout);

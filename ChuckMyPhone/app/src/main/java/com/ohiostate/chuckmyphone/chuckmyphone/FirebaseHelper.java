@@ -1,5 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.util.Log;
+
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -7,9 +9,11 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by Tim on 3/11/2016.
@@ -90,7 +94,6 @@ public class FirebaseHelper {
     //firebase initializer, must be called before any other firebase logic is
     public void create() {
         myFirebaseRef = new Firebase("https://amber-inferno-6835.firebaseio.com/");
-
         myFirebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -157,8 +160,7 @@ public class FirebaseHelper {
             }
             System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
             CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
-            CurrentUser.getInstance().assignUsername(getUsername(authData.getUid()));
-            loginActivity.onSuccessfulLogin(loginEmail, loginPassword);
+            loginActivity.onSuccessfulLogin(loginEmail, loginPassword, authData.getUid());
         }
 
        //Event driven: called when user login fails
@@ -176,35 +178,36 @@ public class FirebaseHelper {
         if (dataSnapshot.hasChild("users/"+userID)) {
             return dataSnapshot.child("users/"+userID+"/username").getValue().toString();
         }
+
         return ""; //user doesn't exist
     }
 
     //Need user to be logged in before this may be called
-    protected long getBestSpinScore() {
+    protected double getBestSpinScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestSpinRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestSpinRecord/score");
-            return Long.parseLong(yourScoreSnapshot.getValue().toString());
+            return Double.parseDouble(yourScoreSnapshot.getValue().toString());
         }
-        return 0;
+        return 0.0;
     }
 
-    protected long getBestChuckScore() {
+    protected double getBestChuckScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestChuckRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestChuckRecord/score");
-            return Long.parseLong(yourScoreSnapshot.getValue().toString());
+            return Double.parseDouble(yourScoreSnapshot.getValue().toString());
         }
-        return 0;
+        return 0.0;
     }
 
-    protected long getBestDropScore() {
+    protected double getBestDropScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestDropRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestDropRecord/score");
-            return Long.parseLong(yourScoreSnapshot.getValue().toString());
+            return Double.parseDouble(yourScoreSnapshot.getValue().toString());
         }
-        return 0;
+        return 0.0;
     }
 
     //SETTING METHODS FOR SAVING SCORES
@@ -232,6 +235,7 @@ public class FirebaseHelper {
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     protected void addChuckScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
+        String username = CurrentUser.getInstance().getUsername();
         //priority set as inverse of the score, should order entries automatically
         myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, CurrentUser.getInstance().getUsername()), 999999999-score);
     }
@@ -257,6 +261,7 @@ public class FirebaseHelper {
 
         //may be possible to query up until the users entry, but that can wait until later
         //Query queryRef = myFirebaseRef.orderByPriority().endAt(??);
+
         Query top100Chuck = myFirebaseRef.child("ChuckScores").orderByPriority().limitToLast(100);
         Query top100Spin = myFirebaseRef.child("SpinScores").orderByPriority().limitToLast(100);
         Query top100Drop = myFirebaseRef.child("DropScores").orderByPriority().limitToLast(100);
