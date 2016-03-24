@@ -94,8 +94,7 @@ public class CompeteSpinFragment extends CompeteFragment{
                 long dt = (currTime - lastUpdate);
                 lastUpdate = currTime;
 
-                //not actually rotationSpeed, but that is hard to derive
-                score = (long) (Math.abs(ax) + Math.abs(ay) + Math.abs(az));
+                score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
                     currentUser.updateSpinScore(score);
                 }
@@ -119,7 +118,7 @@ public class CompeteSpinFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.valueOf(score));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewRunnable = new Runnable() {
@@ -144,11 +143,11 @@ public class CompeteSpinFragment extends CompeteFragment{
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.valueOf(score));
+                currentScoreTextView.setText(String.format("%d", score));
                 if (currentUser.getSpinScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: " + currentUser.getSpinScore()));
+                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getSpinScore()));
                 }
             }
         };

@@ -5,17 +5,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -93,11 +86,10 @@ public class CompeteChuckFragment extends CompeteFragment{
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 10) {
-                long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
                 //not actually speed, but that is hard to derive
-                score = (long) Math.sqrt(ax * ax + ay * ay + az * az);
+                score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
@@ -123,17 +115,17 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.valueOf(score));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.valueOf(score));
+                currentScoreTextView.setText(String.format("%d", score));
                 if (currentUser.getChuckScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %.3f m/s", currentUser.getChuckScore()));
+                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getChuckScore()));
                 }
             }
         };

@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -105,7 +103,7 @@ public class CompeteDropFragment extends CompeteFragment {
                 //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                acceleration = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+                acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling
                 if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
@@ -147,7 +145,7 @@ public class CompeteDropFragment extends CompeteFragment {
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewRunnable = new Runnable() {
@@ -172,11 +170,11 @@ public class CompeteDropFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
+                currentScoreTextView.setText(String.format("%d", score));
                 if (currentUser.getDropScore() == 0.0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText("Longest Fall: " + String.valueOf(currentUser.getDropScore() + " ms"));
+                    yourBestScoreTextView.setText(String.format("Longest Fall: %d", currentUser.getDropScore()));
                 }
             }
         };
