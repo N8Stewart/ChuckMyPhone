@@ -29,9 +29,9 @@
     <string name="action_about">About</string>
     <string name="action_logout">Log out</string>
     <string name="title_menu_competitions">Competitions</string>
-    <string name="action_drop">Drop your phone</string>
-    <string name="action_spin">Spin your phone</string>
-    <string name="action_chuck">Chuck your phone</string>
+    <string name="action_drop">Drop my phone</string>
+    <string name="action_spin">Spin my phone</string>
+    <string name="action_chuck">Chuck my phone</string>
     <string name="action_leaderboards">Leaderboards</string>
     <string name="action_profile">Profile</string>
 
