@@ -99,6 +99,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         progressBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.pivot_center);
         progressBarAnimation.setFillAfter(true);
         progressBar.startAnimation(progressBarAnimation);
+
+        currentScoreTextView.setText(String.format("%d", score));
     }
 
     @Override

@@ -145,37 +145,24 @@ public class CompeteDropFragment extends CompeteFragment {
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
-
-        updateViewRunnable = new Runnable() {
-            public void run() {
-                long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
-                long timeNow = System.currentTimeMillis();
-                while (isRecording && (timeNow < timeUntilEnd)) {
-                    if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
-                        //This code updates the UI, needs to be separate because on the original thread can touch the views
-                        getActivity().runOnUiThread(updateViewSubRunnableScore);
-                    }
-                    timeNow = System.currentTimeMillis();
-                }
-
-                //once the loop is done, stop recording and switch the image back to the play button
-                isRecording = false;
-                //This code updates the UI, needs to be separate because on the original thread can touch the views
-                getActivity().runOnUiThread(updateViewSubRunnableImage);
-            }
-        };
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
                 currentScoreTextView.setText(String.format("%d", score));
-                if (currentUser.getDropScore() == 0.0) {
+                if (currentUser.getDropScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Longest Fall: %d", currentUser.getDropScore()));
+                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getDropScore()));
                 }
+            }
+        };
+
+        showTutorialToastRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity().getApplicationContext(), "Drop your phone now! \n(disable this message in settings menu)", Toast.LENGTH_LONG).show();
             }
         };
     }

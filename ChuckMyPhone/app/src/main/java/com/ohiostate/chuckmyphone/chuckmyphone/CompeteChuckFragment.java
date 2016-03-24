@@ -115,14 +115,13 @@ public class CompeteChuckFragment extends CompeteFragment{
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%d", score));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
                 currentScoreTextView.setText(String.format("%d", score));
-                if (currentUser.getChuckScore() == 0.0) {
+                if (currentUser.getChuckScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
                     yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getChuckScore()));
