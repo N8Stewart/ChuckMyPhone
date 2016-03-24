@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -28,8 +26,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText passwordEditText;
     private EditText emailEditText;
 
-    private static SharedPreferencesHelper sharedPreferencesHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +34,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "onCreate() called");
 
         actionPending = false;
-
-        sharedPreferencesHelper = new SharedPreferencesHelper(this);
-
-        if (sharedPreferencesHelper.hasSharedData()) {
-            //user has login credentials saved, skip this and login for them
-            attemptLogin(sharedPreferencesHelper.getEmail(), sharedPreferencesHelper.getPassword());
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
         setSupportActionBar(toolbar);
@@ -135,9 +124,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     protected void onSuccessfulLogin(String email, String password, String userID) {
-        Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
 
-        sharedPreferencesHelper.setSharedPreferencesData(email, password);
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
+        sharedPreferencesHelper.reCreateSharedPreferencesData(emailEditText.getText().toString(), passwordEditText.getText().toString());
 
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));

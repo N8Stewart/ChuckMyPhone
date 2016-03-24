@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "onCreate() called");
-
+        Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
@@ -68,6 +69,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStop() {
         super.onStop();
+        mSharedPreferencesHelper.setTutorialMessages(CurrentUser.getInstance().getTutorialMessagesEnabled());
+        mSharedPreferencesHelper.setSoundEnabled(CurrentUser.getInstance().getSoundEnabled());
+        mSharedPreferencesHelper.setBestChuck(CurrentUser.getInstance().getChuckScore() + "");
+        mSharedPreferencesHelper.setBestDrop(CurrentUser.getInstance().getDropScore() + "");
+        mSharedPreferencesHelper.setBestSpin(CurrentUser.getInstance().getSpinScore() + "");
+        mSharedPreferencesHelper.setPassword(CurrentUser.getInstance().getPassword());
         Log.d(TAG, "onStop() called");
     }
 

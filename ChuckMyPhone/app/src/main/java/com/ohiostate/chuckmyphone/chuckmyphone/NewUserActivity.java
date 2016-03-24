@@ -103,10 +103,14 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.new_user_sign_up_button:
                 if (!actionPending && isReadyToCreateAccount()) {
+                    actionPending = true;
+                    String email = emailEditText.getText().toString();
+                    String password = passwordEditText.getText().toString();
+                    String username = usernameEditText.getText().toString();
+                    createUserData(email, password, username);
                     //Account creation works asynchronously
                     //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
-                    actionPending = true;
-                    createUserData();
+                    accountWasCreated(email, password, username);
                 }
                 break;
             case R.id.new_user_cancel_button:
@@ -140,9 +144,9 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //call firebase to create the user data (works asynchronously)
-    private void createUserData() {
+    private void createUserData(String email, String password, String username) {
         //Deal with Firebase user creation
-        firebaseHelper.createUserWithoutFacebook(emailEditText.getText().toString(), passwordEditText.getText().toString(), usernameEditText.getText().toString(), this);
+        firebaseHelper.createUserWithoutFacebook(email, password, username, this);
     }
 
     //checks if all 4 user input fields have at least 1 character entered
@@ -155,11 +159,11 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
-    protected void accountWasCreated() {
+    protected void accountWasCreated(String email, String password, String username) {
         //update shared preferences
         SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
         sharedPreferencesHelper.clearSharedData();
-        sharedPreferencesHelper.setSharedPreferencesData(emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString());
+        sharedPreferencesHelper.createSharedPreferencesData(email,password, username);
 
         actionPending = false;
 

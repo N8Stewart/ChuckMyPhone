@@ -26,13 +26,25 @@ public class SplashActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         FirebaseHelper.getInstance().create();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                //finish();
-            }
-        }, SPLASH_TIME);
+        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
+
+        if(mSharedPreferencesHelper.hasSharedData()){
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                    finish();
+                }
+            }, SPLASH_TIME);
+        } else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }, SPLASH_TIME);
+        }
     }
 
     @Override
