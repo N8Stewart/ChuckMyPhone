@@ -61,14 +61,6 @@ public class SharedPreferencesHelper {
         setBooleanValue("tutorial", tutorialMessages);
     }
 
-    public void setNotificationsEnabled(boolean value){
-        setBooleanValue("notifications", value);
-    }
-
-    public void setImperialSystem(boolean value){
-        setBooleanValue("system", value);
-    }
-
     private String getStringValue(String key){
         return sharedData.getString(key, MSG_KEY);
     }
@@ -105,20 +97,12 @@ public class SharedPreferencesHelper {
         return getBooleanValue("sound", true);
     }
 
-    public boolean getNotificationsEnabled(){
-        return getBooleanValue("notifications", true);
-    }
-
-    public boolean getImperialSystem(){
-        return getBooleanValue("system", true);
-    }
-
     public String getEmail() {
         return getStringValue("email");
     }
 
-    public void getTutorialMessages() {
-        getBooleanValue("tutorial", false);
+    public boolean getTutorialMessages() {
+        return getBooleanValue("tutorial", false);
     }
 
     protected boolean hasSharedData(){
@@ -137,9 +121,7 @@ public class SharedPreferencesHelper {
         this.setBestDrop("0");
         this.setBestSpin("0");
         this.setBestChuck("0");
-        this.setNotificationsEnabled(true);
         this.setSoundEnabled(false);
-        this.setImperialSystem(true);
         this.setTutorialMessages(true);
     }
 }

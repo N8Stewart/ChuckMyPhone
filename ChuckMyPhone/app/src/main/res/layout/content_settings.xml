@@ -20,21 +20,6 @@
         android:layout_alignParentTop="true"
         android:weightSum="1">
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/settings_imperial_system_button"
-            android:checked="true"
-            android:text="@string/imperial_system"/>
-
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/metric_system"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/settings_metric_system_button"
-            android:checked="false"/>
-
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,16 +30,19 @@
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/background_notifications"
-            android:id="@+id/settings_background_notification_checkbox"
-            android:checked="true"/>
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/tutorial"
             android:id="@+id/settings_tutorial_messages_checkbox"
             android:checked="true" />
+
+        <Button
+            android:id="@+id/settings_save_button"
+            android:layout_marginTop="30dp"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@color/colorAccent"
+            android:textColor="@color/colorWhite"
+            android:text="@string/save"/>
 
     </LinearLayout>
 

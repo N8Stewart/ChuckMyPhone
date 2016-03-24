@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 
 /**
@@ -37,10 +38,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     private Button saveButton;
-    private RadioButton metricSystemButton;
-    private RadioButton imperialSystemButton;
     private CheckBox soundEnabledCheckbox;
-    private CheckBox backgroundNotificationsCheckbox;
     private CheckBox tutorialMessagesEnabledCheckbox;
 
     private SharedPreferencesHelper mSharedPreferencesHelper;
@@ -75,8 +73,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity());
     }
 
     @Override
@@ -92,17 +88,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initializeViews(View view) {
-        metricSystemButton = (RadioButton) view.findViewById(R.id.settings_metric_system_button);
-        metricSystemButton.setOnClickListener(this);
-        imperialSystemButton = (RadioButton) view.findViewById(R.id.settings_imperial_system_button);
-        imperialSystemButton.setOnClickListener(this);
-
-        backgroundNotificationsCheckbox = (CheckBox) view.findViewById(R.id.settings_background_notification_checkbox);
-        backgroundNotificationsCheckbox.setOnClickListener(this);
         soundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_sound_enabled_checkbox);
         soundEnabledCheckbox.setOnClickListener(this);
         tutorialMessagesEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_tutorial_messages_checkbox);
         tutorialMessagesEnabledCheckbox.setOnClickListener(this);
+        saveButton = (Button) view.findViewById(R.id.settings_save_button);
+        saveButton.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -132,42 +123,22 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.settings_background_notification_checkbox:
-                mSharedPreferencesHelper.setNotificationsEnabled(backgroundNotificationsCheckbox.isChecked());
-                break;
-            case R.id.settings_sound_enabled_checkbox:
-                mSharedPreferencesHelper.setSoundEnabled(soundEnabledCheckbox.isChecked());
-                break;
-            case R.id.settings_imperial_system_button:
-                toggleUnitButtons(false);
-                break;
-            case R.id.settings_metric_system_button:
-                toggleUnitButtons(true);
-                break;
-            case R.id.settings_tutorial_messages_checkbox:
-                CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
+            case R.id.settings_save_button:
+                saveSettings();
+                Toast.makeText(getActivity().getApplicationContext(), "Saved successfully!", Toast.LENGTH_LONG).show();
             default:
                 break;
         }
     }
 
-    private void toggleUnitButtons(boolean metric){
-        if(imperialSystemButton.isChecked()) {
-            metricSystemButton.setChecked(metric);
-            imperialSystemButton.setChecked(!metric);
-            saveUnitSystem();
-        }
-    }
-
-    private void saveUnitSystem() {
-        mSharedPreferencesHelper.setImperialSystem(imperialSystemButton.isChecked());
+    private void saveSettings(){
+        CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
+        CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
     }
 
     private void loadSettings(){
-        backgroundNotificationsCheckbox.setChecked(mSharedPreferencesHelper.getNotificationsEnabled());
-        soundEnabledCheckbox.setChecked(mSharedPreferencesHelper.getSoundEnabled());
-        imperialSystemButton.setChecked(mSharedPreferencesHelper.getImperialSystem());
-        metricSystemButton.setChecked(!mSharedPreferencesHelper.getImperialSystem());
+        soundEnabledCheckbox.setChecked(CurrentUser.getInstance().getSoundEnabled());
+        tutorialMessagesEnabledCheckbox.setChecked(CurrentUser.getInstance().getTutorialMessagesEnabled());
     }
 
     /**

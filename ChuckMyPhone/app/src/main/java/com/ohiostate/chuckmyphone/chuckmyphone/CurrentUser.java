@@ -88,6 +88,14 @@ public class CurrentUser {
         return tutorialMessagesEnabled;
     }
 
+    public void updateSoundEnabled(boolean value) {
+        soundEnabled = value;
+    }
+
+    public boolean getSoundEnabled() {
+        return soundEnabled;
+    }
+
     public String getUserId() {
         return this.userId;
     }
