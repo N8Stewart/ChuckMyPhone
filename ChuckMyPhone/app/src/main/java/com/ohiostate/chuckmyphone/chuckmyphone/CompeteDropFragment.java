@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -105,7 +103,7 @@ public class CompeteDropFragment extends CompeteFragment {
                 //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
-                acceleration = Math.abs(ax)+Math.abs(ay)+Math.abs(az);
+                acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling
                 if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
@@ -147,37 +145,24 @@ public class CompeteDropFragment extends CompeteFragment {
     public void initializeViews(View view) {
         super.initializeViews(view);
 
-        currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
         yourBestScoreTextView.setText(TUTORIAL_TEXT);
-
-        updateViewRunnable = new Runnable() {
-            public void run() {
-                long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
-                long timeNow = System.currentTimeMillis();
-                while (isRecording && (timeNow < timeUntilEnd)) {
-                    if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
-                        //This code updates the UI, needs to be separate because on the original thread can touch the views
-                        getActivity().runOnUiThread(updateViewSubRunnableScore);
-                    }
-                    timeNow = System.currentTimeMillis();
-                }
-
-                //once the loop is done, stop recording and switch the image back to the play button
-                isRecording = false;
-                //This code updates the UI, needs to be separate because on the original thread can touch the views
-                getActivity().runOnUiThread(updateViewSubRunnableImage);
-            }
-        };
 
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%.3f m/s^2", acceleration));
-                if (currentUser.getDropScore() == 0.0) {
+                currentScoreTextView.setText(String.format("%d", score));
+                if (currentUser.getDropScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText("Longest Fall: " + String.valueOf(currentUser.getDropScore() + " ms"));
+                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getDropScore()));
                 }
+            }
+        };
+
+        showTutorialToastRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity().getApplicationContext(), "Drop your phone now! \n(disable this message in settings menu)", Toast.LENGTH_LONG).show();
             }
         };
     }

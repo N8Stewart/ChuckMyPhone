@@ -25,9 +25,9 @@ public class CurrentUser {
     private String username;
     private String provider;
 
-    private double chuckScore;
-    private double spinScore;
-    private double dropScore;
+    private long chuckScore;
+    private long spinScore;
+    private long dropScore;
 
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
@@ -48,9 +48,9 @@ public class CurrentUser {
         tutorialMessagesEnabled = true;
         soundEnabled = false;
 
-        chuckScore = 0.0;
-        spinScore = 0.0;
-        dropScore =  0.0;
+        chuckScore = 0;
+        spinScore = 0;
+        dropScore =  0;
 
         loadUserScoreData();
     }
@@ -104,15 +104,15 @@ public class CurrentUser {
         return isLoaded;
     }
 
-    public double getChuckScore() {
+    public long getChuckScore() {
         return chuckScore;
     }
 
-    public double getSpinScore() {
+    public long getSpinScore() {
         return spinScore;
     }
 
-    public double getDropScore() {
+    public long getDropScore() {
         return dropScore;
     }
 

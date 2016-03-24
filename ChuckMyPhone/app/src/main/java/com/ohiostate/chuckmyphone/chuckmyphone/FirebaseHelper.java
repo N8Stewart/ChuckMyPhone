@@ -183,31 +183,31 @@ public class FirebaseHelper {
     }
 
     //Need user to be logged in before this may be called
-    protected double getBestSpinScore() {
+    protected long getBestSpinScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestSpinRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestSpinRecord/score");
-            return Double.parseDouble(yourScoreSnapshot.getValue().toString());
+            return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
-        return 0.0;
+        return 0;
     }
 
-    protected double getBestChuckScore() {
+    protected long getBestChuckScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestChuckRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestChuckRecord/score");
-            return Double.parseDouble(yourScoreSnapshot.getValue().toString());
+            return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
-        return 0.0;
+        return 0;
     }
 
-    protected double getBestDropScore() {
+    protected long getBestDropScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestDropRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestDropRecord/score");
-            return Double.parseDouble(yourScoreSnapshot.getValue().toString());
+            return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
-        return 0.0;
+        return 0;
     }
 
     //SETTING METHODS FOR SAVING SCORES

@@ -22,8 +22,8 @@
         android:id="@+id/login_linear_layout">
 
         <ImageView
-            android:layout_width="175dp"
-            android:layout_height="175dp"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:id="@+id/login_app_icon_image_view"
             android:src="@mipmap/ic_launcher"
             android:layout_gravity="center"/>

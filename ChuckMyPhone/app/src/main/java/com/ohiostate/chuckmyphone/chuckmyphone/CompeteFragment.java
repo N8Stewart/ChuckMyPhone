@@ -40,10 +40,11 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean isRecording;
     protected long lastUpdate;
 
-    protected long score;
-
     // Control the progress of the progress bar
     protected int progress;
+
+    // Score of the different compete screens
+    protected long score;
 
     protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
     protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
@@ -75,7 +76,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         currentUser = CurrentUser.getInstance();
 
-                Log.d(TAG, "onCreate() called");
+        Log.d(TAG, "onCreate() called");
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -98,6 +99,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         progressBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.pivot_center);
         progressBarAnimation.setFillAfter(true);
         progressBar.startAnimation(progressBarAnimation);
+
+        currentScoreTextView.setText(String.format("%d", score));
     }
 
     @Override
