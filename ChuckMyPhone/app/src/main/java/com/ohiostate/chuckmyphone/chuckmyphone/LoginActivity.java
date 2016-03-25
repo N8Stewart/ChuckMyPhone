@@ -33,6 +33,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Log.d(TAG, "onCreate() called");
 
+
+
         actionPending = false;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
@@ -88,8 +90,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.login_login_button:
                 if (!actionPending) {
-                    actionPending = true;
-                    attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                    if (FirebaseHelper.getInstance().hasLoadedInitialSnapshot) {
+                        actionPending = true;
+                        attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                    } else {
+                        Toast.makeText(this.getApplicationContext(), "The app is still loading, please try again in a second", Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
             case R.id.login_forgot_password_textview:
@@ -131,6 +137,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
         }
+
+        CurrentUser.getInstance().loadUserBadgeData();
 
         actionPending = false;
 

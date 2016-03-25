@@ -30,6 +30,8 @@ public class FirebaseHelper {
     }
 
     private DataSnapshot dataSnapshot;
+    protected boolean hasLoadedInitialSnapshot;
+
 
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
@@ -41,8 +43,7 @@ public class FirebaseHelper {
     };
 
     public class User {
-        public Map<String, Object> badgeStatusMap;
-        public Map<String, Object> badgeEarnedOnMap;
+        public ArrayList<Badge> badgeList;
         public CompeteRecord bestChuckRecord;
         public CompeteRecord bestDropRecord;
         public CompeteRecord bestSpinRecord;
@@ -51,13 +52,25 @@ public class FirebaseHelper {
         //TODO get users location here
 
         public User(String username) {
-            this.badgeStatusMap = new HashMap<String, Object>();
-            this.badgeEarnedOnMap = new HashMap<String, Object>();
             this.username = username;
 
+            this.badgeList = new ArrayList<Badge>();
+
             //Add all badges here with no earned date
-            badgeStatusMap.put("badge1", "false");
-            badgeEarnedOnMap.put("badge1", "1/1/2016");
+            badgeList.add(new Badge("Noodle Arm"));
+            badgeList.add(new Badge("Flop Drop"));
+            badgeList.add(new Badge("Inelastic Gymnastics"));
+
+            badgeList.add(new Badge("Rocket Arm"));
+            badgeList.add(new Badge("Countertop Drop"));
+            badgeList.add(new Badge("Enthusiastic Gymnastics"));
+
+            badgeList.add(new Badge("Faster Than Light"));
+            badgeList.add(new Badge("Atmospheric Drop"));
+            badgeList.add(new Badge("Bombastic Gymnastics"));
+
+            badgeList.add(new Badge("The One Percent"));
+            badgeList.add(new Badge("The Kindness Badge"));
 
             bestChuckRecord = new CompeteRecord(competitionType.CHUCK, username);
             bestSpinRecord = new CompeteRecord(competitionType.SPIN, username);
@@ -94,17 +107,21 @@ public class FirebaseHelper {
     //firebase initializer, must be called before any other firebase logic is
     public void create() {
         myFirebaseRef = new Firebase("https://amber-inferno-6835.firebaseio.com/");
+        hasLoadedInitialSnapshot = false;
         myFirebaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 System.out.println("@@@@@@ DATA CHANGE @@@@@@" + snapshot.getValue());
                 dataSnapshot = snapshot;
 
+                hasLoadedInitialSnapshot = true;
+
                 //if users data has appeared then get their score from it
                 String userID = CurrentUser.getInstance().getUserId();
                 if (userID != null){
                         if(dataSnapshot.child("users").hasChild(userID)) {
                             CurrentUser.getInstance().loadUserScoreData();
+                            CurrentUser.getInstance().loadUserBadgeData();
                         }
                 }
 
@@ -208,6 +225,24 @@ public class FirebaseHelper {
             return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
         return 0;
+    }
+
+    protected ArrayList<Badge> getBadges() {
+        Log.d("tag", "GETTING USERS BADGES##################");
+        String userID = CurrentUser.getInstance().getUserId();
+        if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
+            DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
+            ArrayList<Badge> badgeList = new ArrayList<Badge>();
+            for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
+                String badgeName = badgeSnapshot.child("name").getValue().toString();
+                boolean unlocked = Boolean.valueOf(badgeSnapshot.child("unlocked").getValue().toString());
+                String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
+
+                badgeList.add(new Badge(badgeName, unlockDate, unlocked));
+            }
+            return badgeList;
+        }
+        return new ArrayList<Badge>();
     }
 
     //SETTING METHODS FOR SAVING SCORES

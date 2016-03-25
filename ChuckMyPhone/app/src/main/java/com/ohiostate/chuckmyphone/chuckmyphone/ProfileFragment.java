@@ -5,14 +5,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 
 /**
@@ -78,10 +82,18 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_profile, container, false);
-        for (int i = 0; i < 10;  i++) {
-            addBadge("trophy name", view);
-        }
 
+        ArrayList<Badge> badgeList = CurrentUser.getInstance().getBadgeList();
+        for (Badge badge : badgeList) {
+            if (badge.isUnlocked()) {
+                addBadge(view, badge);
+            }
+        }
+        for (Badge badge : badgeList) {
+            if (!badge.isUnlocked()) {
+                addBadge(view, badge);
+            }
+        }
         initializeViews(view);
 
         return view;
@@ -126,17 +138,34 @@ public class ProfileFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void addBadge(String text, View view) {
+    public void addBadge(View view, final Badge badge) {
+        boolean isUnlocked = badge.isUnlocked();
+
         LinearLayout horzLayout = (LinearLayout) view.findViewById(R.id.profile_trophies_linear_layout);
 
         LinearLayout podLayout = new LinearLayout(getActivity());
         podLayout.setOrientation(LinearLayout.VERTICAL);
 
         ImageView badgeImageView = new ImageView(getActivity());
-        badgeImageView.setImageResource(R.drawable.badge_locked);
+        if (isUnlocked) {
+            badgeImageView.setImageResource(R.drawable.badge_unlocked);
+        } else {
+            badgeImageView.setImageResource(R.drawable.badge_locked);
+        }
 
+        badgeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (badge.isUnlocked()) {
+                    Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription(), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), badge.LockedDescription(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
         TextView badgeNameTextView = new TextView(getActivity());
-        badgeNameTextView.setText("        " + text);
+        badgeNameTextView.setGravity(Gravity.CENTER);
+        badgeNameTextView.setText(badge.getName());
 
         podLayout.addView(badgeImageView);
         podLayout.addView(badgeNameTextView);

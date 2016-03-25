@@ -37,6 +37,8 @@ public class CurrentUser {
     private ArrayList<FirebaseHelper.CompeteRecord> spinLeaderboardGlobal;
     private ArrayList<FirebaseHelper.CompeteRecord> dropLeaderboardGlobal;
 
+    private ArrayList<Badge> badgeList;
+
     //load userID, high scores
     public void loadUserMetaData(String userId, String provider) {
         this.userId = userId;
@@ -60,6 +62,10 @@ public class CurrentUser {
         chuckScore = FirebaseHelper.getInstance().getBestChuckScore();
         spinScore = FirebaseHelper.getInstance().getBestSpinScore();
         dropScore =  FirebaseHelper.getInstance().getBestDropScore();
+    }
+
+    public void loadUserBadgeData() {
+        badgeList = FirebaseHelper.getInstance().getBadges();
     }
 
     public void unloadData() {
@@ -115,6 +121,10 @@ public class CurrentUser {
 
     public long getDropScore() {
         return dropScore;
+    }
+
+    public ArrayList<Badge> getBadgeList() {
+        return badgeList;
     }
 
     protected void assignPassword(String password) {
