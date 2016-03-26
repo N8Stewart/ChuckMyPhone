@@ -186,6 +186,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     public void onSuccessfulPasswordChange() {
         Toast.makeText(getActivity().getApplicationContext(), "Password was changed!", Toast.LENGTH_LONG).show();
+        mSharedPreferencesHelper.clearSharedData();
 
         //jump to chuck compete fragment, might be a better way to do this
         startActivity(new Intent(getActivity().getApplication(), MainActivity.class));

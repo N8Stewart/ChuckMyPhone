@@ -6,6 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.firebase.client.FirebaseError;
 
 public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -13,8 +16,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     private Button cancelButton;
     private Button resetButton;
-
-    private EditText usernameEditText;
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+    private EditText emailEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +27,19 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         Log.d(TAG, "onCreate() called");
 
         getSupportActionBar().setTitle("Forgot Password");
+        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
 
+        initializeViews();
+    }
+
+    public void initializeViews() {
         cancelButton = (Button) findViewById(R.id.activity_forgot_password_cancel_button);
         cancelButton.setOnClickListener(this);
 
         resetButton = (Button) findViewById(R.id.activity_forgot_password_reset_button);
         resetButton.setOnClickListener(this);
 
-        usernameEditText = (EditText) findViewById(R.id.activity_forgot_password_username_email_edit_text);
+        emailEditText = (EditText) findViewById(R.id.activity_forgot_password_email_edit_text);
     }
 
     @Override
@@ -56,11 +64,25 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.activity_forgot_password_reset_button:
-                // send email to user to reset password
+                if (!emailEditText.getText().toString().equals("")) {
+                    FirebaseHelper.getInstance().resetPassword(emailEditText.getText().toString(), this);
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "Please enter your email above", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 finish();
                 break;
         }
+    }
+
+    public void onPasswordSuccessfullyReset() {
+        Toast.makeText(this.getApplicationContext(), "Password reset email was sent", Toast.LENGTH_LONG).show();
+        mSharedPreferencesHelper.clearSharedData();
+        finish();
+    }
+
+    public void onPasswordUnsuccessfullyReset(FirebaseError error) {
+        Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ error.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

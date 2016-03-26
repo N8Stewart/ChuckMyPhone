@@ -1,6 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -39,6 +40,7 @@ public class FirebaseHelper {
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
     private LoginActivity loginActivity;
+    private ForgotPasswordActivity forgotPasswordActivity;
     ChangePasswordFragment changePasswordFragment;
     private String loginEmail, loginPassword;
 
@@ -392,8 +394,19 @@ public class FirebaseHelper {
         });
     }
 
-    public void resetPassword(String loginEmail) {
+    public void resetPassword(String loginEmail, final ForgotPasswordActivity forgotPasswordActivity) {
+        this.forgotPasswordActivity = forgotPasswordActivity;
+        myFirebaseRef.resetPassword(loginEmail, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                forgotPasswordActivity.onPasswordSuccessfullyReset();
+            }
 
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                forgotPasswordActivity.onPasswordUnsuccessfullyReset(firebaseError);
+            }
+        });
     }
 
 }
