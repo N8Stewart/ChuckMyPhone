@@ -157,7 +157,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (badge.isUnlocked()) {
-                    Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription() + "\n\n" +"Date Earned: " + badge.getUnlockDate(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), badge.LockedDescription(), Toast.LENGTH_LONG).show();
                 }

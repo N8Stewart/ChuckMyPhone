@@ -124,6 +124,15 @@ public class CompeteDropFragment extends CompeteFragment {
                 //if new high score
                 if (score > currentUser.getDropScore()) {
                     currentUser.updateDropScore(score);
+                    if (score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Flop Drop");
+                    }
+                    if (score >= Badge.BADGE_DROP_LEVEL_2_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Countertop Drop");
+                    }
+                    if (score >= Badge.BADGE_DROP_LEVEL_3_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Atmospheric Drop");
+                    }
                 }
             }
         }

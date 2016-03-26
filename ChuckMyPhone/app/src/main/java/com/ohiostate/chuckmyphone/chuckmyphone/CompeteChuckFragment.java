@@ -94,6 +94,15 @@ public class CompeteChuckFragment extends CompeteFragment{
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
                     currentUser.updateChuckScore(score);
+                    if (score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Noodle Arm");
+                    }
+                    if (score >= Badge.BADGE_CHUCK_LEVEL_2_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Rocket Arm");
+                    }
+                    if (score >= Badge.BADGE_CHUCK_LEVEL_3_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Faster Than Light");
+                    }
                 }
             }
         }

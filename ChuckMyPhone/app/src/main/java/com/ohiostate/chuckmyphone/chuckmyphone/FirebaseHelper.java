@@ -10,7 +10,10 @@ import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -58,15 +61,15 @@ public class FirebaseHelper {
 
             //Add all badges here with no earned date
             badgeList.add(new Badge("Noodle Arm"));
-            badgeList.add(new Badge("Flop Drop"));
-            badgeList.add(new Badge("Inelastic Gymnastics"));
-
             badgeList.add(new Badge("Rocket Arm"));
-            badgeList.add(new Badge("Countertop Drop"));
-            badgeList.add(new Badge("Enthusiastic Gymnastics"));
-
             badgeList.add(new Badge("Faster Than Light"));
+
+            badgeList.add(new Badge("Flop Drop"));
+            badgeList.add(new Badge("Countertop Drop"));
             badgeList.add(new Badge("Atmospheric Drop"));
+
+            badgeList.add(new Badge("Inelastic Gymnastics"));
+            badgeList.add(new Badge("Enthusiastic Gymnastics"));
             badgeList.add(new Badge("Bombastic Gymnastics"));
 
             badgeList.add(new Badge("The One Percent"));
@@ -272,7 +275,7 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         String username = CurrentUser.getInstance().getUsername();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, CurrentUser.getInstance().getUsername()), 999999999-score);
+        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, CurrentUser.getInstance().getUsername()), 999999999 - score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
@@ -287,6 +290,19 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
         myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.DROP, CurrentUser.getInstance().getUsername()), 999999999-score);
+    }
+
+    protected void unlockBadge(String badgeName) {
+        String userID = CurrentUser.getInstance().getUserId();
+        for (int i = 0; i < 11; i++) {
+            if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
+                myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlocked").setValue(true);
+                DateFormat df = new SimpleDateFormat("MM/dd/yy");
+                Date dateobj = new Date();
+                myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlockDate").setValue(df.format(dateobj));
+                i = 20; //end this loop
+            }
+        }
     }
 
     protected void updateLeaderboard() {

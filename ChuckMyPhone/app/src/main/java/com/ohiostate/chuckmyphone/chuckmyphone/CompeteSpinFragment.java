@@ -97,6 +97,15 @@ public class CompeteSpinFragment extends CompeteFragment{
                 score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
                     currentUser.updateSpinScore(score);
+                    if (score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Inelastic Gymnastics");
+                    }
+                    if (score >= Badge.BADGE_SPIN_LEVEL_2_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Enthusiastic Gymnastics");
+                    }
+                    if (score >= Badge.BADGE_SPIN_LEVEL_3_SCORE()) {
+                        FirebaseHelper.getInstance().unlockBadge("Bombastic Gymnastics");
+                    }
                 }
             }
         }
