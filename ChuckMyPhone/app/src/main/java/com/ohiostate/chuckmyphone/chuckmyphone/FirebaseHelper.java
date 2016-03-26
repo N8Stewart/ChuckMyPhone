@@ -39,6 +39,7 @@ public class FirebaseHelper {
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
     private LoginActivity loginActivity;
+    ChangePasswordFragment changePasswordFragment;
     private String loginEmail, loginPassword;
 
     public enum competitionType {
@@ -376,6 +377,25 @@ public class FirebaseHelper {
         public void onCancelled(FirebaseError error) {
         }
     };
+
+    public void changePassword(String loginEmail, String oldPassword, String newPassword, final ChangePasswordFragment changePasswordFragment) {
+        this.changePasswordFragment = changePasswordFragment;
+        myFirebaseRef.changePassword(loginEmail, oldPassword, newPassword, new Firebase.ResultHandler() {
+            @Override
+            public void onSuccess() {
+                changePasswordFragment.onSuccessfulPasswordChange();
+            }
+            @Override
+            public void onError(FirebaseError firebaseError) {
+                changePasswordFragment.onUnsuccessfulPasswordChange(firebaseError);
+            }
+        });
+    }
+
+    public void resetPassword(String loginEmail) {
+
+    }
+
 }
 
 
