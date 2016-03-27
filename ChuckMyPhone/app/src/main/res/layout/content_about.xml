@@ -17,7 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
-        android:id="@+id/about_linear_layout">
+        android:id="@+id/about_linear_layout"
+        android:weightSum="1">
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,19 +69,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="The Olympic Comitee"
+            android:text="The Olympic Committee"
             android:textStyle="italic"
             android:id="@+id/about_source_three_textview"
             android:layout_gravity="center_horizontal"/>
 
         <TextView
+            android:layout_width="43dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            android:layout_weight="0.32" />
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_marginTop="100dp"
-            android:text="Chuck your phone!"
-            android:id="@+id/about_app_title_textview"
-            android:layout_gravity="center_horizontal"/>
+            android:text="Credits"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/about_credits_button" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -94,5 +99,4 @@
             android:gravity="bottom"/>
 
     </LinearLayout>
-
 </RelativeLayout>

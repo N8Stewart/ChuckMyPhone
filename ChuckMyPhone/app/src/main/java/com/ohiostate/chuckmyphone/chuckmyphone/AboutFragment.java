@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -24,6 +26,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\nTim Taylor - The idea creator, Software Eng.\n\nNate Stewart - Lead Software Engineer\n\nJoao - Lead Software Engineer";
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -37,6 +41,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     // Views
     private TextView termsOfService;
+    private Button creditsButton;
 
     public AboutFragment() {}
 
@@ -73,10 +78,23 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_about, container, false);
 
-        termsOfService = (TextView) view.findViewById(R.id.about_terms_of_service_textview);
+        initializeViews(view);
+
         termsOfService.setOnClickListener(this);
 
         return view;
+    }
+
+    public void initializeViews(View view) {
+        termsOfService = (TextView) view.findViewById(R.id.about_terms_of_service_textview);
+        creditsButton = (Button) view.findViewById(R.id.about_credits_button);
+        creditsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
+                FirebaseHelper.getInstance().unlockBadge("The Kindness Badge");
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
