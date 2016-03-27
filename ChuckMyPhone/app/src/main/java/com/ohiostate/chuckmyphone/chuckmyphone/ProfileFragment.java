@@ -1,6 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -132,6 +133,12 @@ public class ProfileFragment extends Fragment {
         podLayout.addView(badgeNameTextView);
 
         horzLayout.addView(podLayout);
+
+        View dividerView = new View(getActivity());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(15, ViewGroup.LayoutParams.MATCH_PARENT);
+        dividerView.setLayoutParams(lp);
+
+        horzLayout.addView(dividerView);
     }
 
     @Override
