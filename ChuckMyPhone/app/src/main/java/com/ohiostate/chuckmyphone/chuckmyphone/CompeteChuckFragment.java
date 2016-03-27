@@ -11,14 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CompeteChuckFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CompeteChuckFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CompeteChuckFragment extends CompeteFragment{
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
 
@@ -26,21 +18,9 @@ public class CompeteChuckFragment extends CompeteFragment{
 
     public CompeteChuckFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CompeteChuckFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static CompeteFragment newInstance(String param1, String param2) {
         CompeteFragment fragment = new CompeteChuckFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 

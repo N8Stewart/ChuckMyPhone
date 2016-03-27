@@ -11,14 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link CompeteDropFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link CompeteDropFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class CompeteDropFragment extends CompeteFragment {
     private final float FALLING_MIN_ACCELERATION = 8.5f;
     private final float FALLING_MAX_ACCELERATION = 11.5f;
@@ -35,21 +27,8 @@ public class CompeteDropFragment extends CompeteFragment {
 
     public CompeteDropFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CompeteDropFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CompeteDropFragment newInstance(String param1, String param2) {
         CompeteDropFragment fragment = new CompeteDropFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
