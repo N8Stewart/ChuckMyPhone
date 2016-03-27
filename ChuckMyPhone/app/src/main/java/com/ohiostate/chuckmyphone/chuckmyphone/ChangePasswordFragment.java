@@ -76,7 +76,6 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         cancelButton.setOnClickListener(this);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

@@ -90,9 +90,6 @@ public class CompeteDropFragment extends CompeteFragment {
                     isFalling = true;
                 }
 
-                //TODO
-                //Need a way to ensure that the user does not just wave their phones around?
-
                 //if phone stops falling
                 if (isFalling && (acceleration < FALLING_MIN_ACCELERATION || acceleration > FALLING_MAX_ACCELERATION)) {
                     fallingEndTime = System.currentTimeMillis();
