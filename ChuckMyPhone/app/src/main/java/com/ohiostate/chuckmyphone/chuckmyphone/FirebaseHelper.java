@@ -159,7 +159,7 @@ public class FirebaseHelper {
         @Override
         public void onSuccess(Map<String, Object> result) {
             System.out.println("Successfully created user account with uid: " + result.get("uid"));
-            newUserActivity.accountWasCreated("", "","");
+            newUserActivity.accountWasCreated();
         }
 
         //Event driven: called when user creation fails

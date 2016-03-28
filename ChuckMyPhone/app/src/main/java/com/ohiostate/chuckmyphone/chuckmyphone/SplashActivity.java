@@ -14,8 +14,6 @@ public class SplashActivity extends AppCompatActivity {
 
     private static int SPLASH_TIME = 2000;
 
-    private SharedPreferencesHelper mSharedPreferencesHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,25 +24,13 @@ public class SplashActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         FirebaseHelper.getInstance().create();
 
-        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
-
-        if(mSharedPreferencesHelper.hasSharedData()){
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                    finish();
-                }
-            }, SPLASH_TIME);
-        } else {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
-                }
-            }, SPLASH_TIME);
-        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                finish();
+            }
+        }, SPLASH_TIME);
     }
 
     @Override

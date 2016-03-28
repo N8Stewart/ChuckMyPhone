@@ -23,7 +23,6 @@ public class CurrentUser {
     private boolean isLoaded = false;
     private String userId;
     private String username;
-    private String password;
     private String provider;
 
     private long chuckScore;
@@ -125,14 +124,6 @@ public class CurrentUser {
 
     public ArrayList<Badge> getBadgeList() {
         return badgeList;
-    }
-
-    protected void assignPassword(String password) {
-        this.password = password;
-    }
-
-    protected String getPassword() {
-        return this.password;
     }
 
     protected void assignUsername(String username) {

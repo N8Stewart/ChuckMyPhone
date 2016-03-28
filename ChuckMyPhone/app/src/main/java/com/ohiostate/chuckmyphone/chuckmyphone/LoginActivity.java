@@ -26,6 +26,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText passwordEditText;
     private EditText emailEditText;
 
+    private static SharedPreferencesHelper sSharedPreferencesHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,9 +35,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Log.d(TAG, "onCreate() called");
 
-
-
         actionPending = false;
+
+        sSharedPreferencesHelper = new SharedPreferencesHelper(this);
+
+        if (sSharedPreferencesHelper.hasSharedData()) {
+            attemptLogin(sSharedPreferencesHelper.getEmail(), sSharedPreferencesHelper.getPassword());
+        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
         setSupportActionBar(toolbar);
@@ -131,8 +137,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //called by firebase when login is successfully performed. Don't call from anywhere else
     protected void onSuccessfulLogin(String email, String password, String userID) {
 
-        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
-        sharedPreferencesHelper.reCreateSharedPreferencesData(emailEditText.getText().toString(), passwordEditText.getText().toString());
+        Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
+
+        sSharedPreferencesHelper.setSharedPreferencesData(email, password);
 
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
