@@ -75,7 +75,7 @@ public class CompeteSpinFragment extends CompeteFragment{
 
                 score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
-                    currentUser.updateSpinScore(score);
+                    currentUser.updateSpinScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     if (score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
                         FirebaseHelper.getInstance().unlockBadge("Inelastic Gymnastics");
                     }

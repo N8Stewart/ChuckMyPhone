@@ -99,7 +99,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
                 //if new high score
                 if (score > currentUser.getDropScore()) {
-                    currentUser.updateDropScore(score);
+                    currentUser.updateDropScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     if (score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
                         FirebaseHelper.getInstance().unlockBadge("Flop Drop");
                     }

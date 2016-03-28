@@ -3,8 +3,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +18,6 @@ public class CompeteChuckFragment extends CompeteFragment{
 
     public CompeteChuckFragment() {}
 
-
     public static CompeteFragment newInstance(String param1, String param2) {
         CompeteFragment fragment = new CompeteChuckFragment();
         return fragment;
@@ -27,8 +26,17 @@ public class CompeteChuckFragment extends CompeteFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         score = 0;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -73,7 +81,8 @@ public class CompeteChuckFragment extends CompeteFragment{
 
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
-                    currentUser.updateChuckScore(score);
+                    Log.d("coordsscore", mGPSHelper.getLatitude()+"");
+                    currentUser.updateChuckScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     if (score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
                         FirebaseHelper.getInstance().unlockBadge("Noodle Arm");
                     }
@@ -92,10 +101,8 @@ public class CompeteChuckFragment extends CompeteFragment{
         //set up sensor overhead
         sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE) ;
         linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
-
         //make the sensor start listening, don't want this here later
         userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_GAME);
-
         if (!userHasSensor) {
             Toast.makeText(getActivity().getApplicationContext(), "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG).show();
         }

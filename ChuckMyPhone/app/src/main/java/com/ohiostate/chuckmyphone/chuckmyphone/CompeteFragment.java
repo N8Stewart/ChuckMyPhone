@@ -4,6 +4,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected final String TAG = this.getClass().getSimpleName();
 
     SensorManager sensManager;
+    GPSHelper mGPSHelper;
 
     protected boolean userHasSensor;
     protected boolean isRecording;
@@ -60,6 +62,9 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         super.onCreate(savedInstanceState);
 
         currentUser = CurrentUser.getInstance();
+
+        mGPSHelper = new GPSHelper(getActivity());
+        mGPSHelper.requestPermissionForGPS(getActivity());
 
         Log.d(TAG, "onCreate() called");
 
@@ -123,9 +128,17 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mGPSHelper.requestLocation(getActivity(), LocationManager.GPS_PROVIDER);
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause() called");
+        mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
     }
 
@@ -133,6 +146,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop() called");
+        mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
     }
 
@@ -146,12 +160,15 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if (userHasSensor) {
-                isRecording = !isRecording;
-                getActivity().runOnUiThread(updateViewSubRunnableImage);
-
-                updateViewRunnableThread.start();
-            }
+            if(mGPSHelper.isPreciseGPSPresent()) {
+                if(mGPSHelper.isPreciseGPSEnabled()) {
+                    if (userHasSensor) {
+                        isRecording = !isRecording;
+                        getActivity().runOnUiThread(updateViewSubRunnableImage);
+                        updateViewRunnableThread.start();
+                    }
+                } else Toast.makeText(getActivity().getApplicationContext(), "Turn on the GPS!", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(getActivity().getApplicationContext(), "Your device doesn't have GPS!", Toast.LENGTH_LONG).show();
         }
     };
 
