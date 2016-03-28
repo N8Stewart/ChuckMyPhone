@@ -1,8 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,15 +11,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firebase.client.FirebaseError;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.concurrent.Semaphore;
-
 
 
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
+
+    public final int USERNAME_LENGTH_MIN = 4;
+    public final int USERNAME_lENGTH_MAX = 10;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -122,38 +117,45 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     //ensures user has all necessary fields filled, that the passwords match, and that the terms of service box is checked
     private boolean isReadyToCreateAccount() {
+
+        String username = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        String passwordVerification = passwordConfirmationEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+
+        Toast toast = null;
         boolean isReady = false;
-        if (necessaryFieldsAreFull()) {
-            if (passwordEditText.getText().toString().equals(passwordConfirmationEditText.getText().toString())) {
-                if (termsOfServiceCheckBox.isChecked()) {
-                    isReady = true;
-                } else {
-                    Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this.getApplicationContext(), "Your passwords don't match, please re-enter them both", Toast.LENGTH_LONG).show();
-            }
+
+        // Ensure username length is restricted
+        if (username.length() < USERNAME_LENGTH_MIN || username.length() > USERNAME_lENGTH_MAX) {
+            toast = Toast.makeText(this.getApplicationContext(), String.format("Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_lENGTH_MAX), Toast.LENGTH_SHORT);
+        } else if (password.isEmpty()) {
+            toast = Toast.makeText(this.getApplicationContext(), "Please enter a password.", Toast.LENGTH_SHORT);
+        } else if (!password.equals(passwordVerification)) {
+            toast = Toast.makeText(this.getApplicationContext(), String.format("Passwords do not match"), Toast.LENGTH_SHORT);
+        } else if (email.isEmpty()) {
+            toast = Toast.makeText(this.getApplicationContext(), "Enter a valid email to create an account.", Toast.LENGTH_SHORT);
+        } else if (!termsOfServiceCheckBox.isChecked()) {
+            toast = Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_SHORT);
         } else {
-            Toast.makeText(this.getApplicationContext(), "You need to fill out all four fields", Toast.LENGTH_LONG).show();
+            isReady = true;
         }
+
+        if (toast != null)
+            toast.show();
+
         return isReady;
     }
 
     //call firebase to create the user data (works asynchronously)
     private void createUserData() {
-        //Deal with Firebase user creation
-        firebaseHelper.createUserWithoutFacebook(emailEditText.getText().toString(),
-                passwordConfirmationEditText.getText().toString(),
-                usernameEditText.getText().toString(), this);
-    }
 
-    //checks if all 4 user input fields have at least 1 character entered
-    private boolean necessaryFieldsAreFull() {
-        boolean fieldsAreFull = !(usernameEditText.getText().toString().equals(""));
-        fieldsAreFull = fieldsAreFull && !(passwordEditText.getText().toString().equals(""));
-        fieldsAreFull = fieldsAreFull && !(passwordConfirmationEditText.toString().equals(""));
-        fieldsAreFull = fieldsAreFull && !(emailEditText.getText().toString().equals(""));
-        return fieldsAreFull;
+        String username = usernameEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+
+        //Deal with Firebase user creation
+        firebaseHelper.createUserWithoutFacebook(email,password, username, this);
     }
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
