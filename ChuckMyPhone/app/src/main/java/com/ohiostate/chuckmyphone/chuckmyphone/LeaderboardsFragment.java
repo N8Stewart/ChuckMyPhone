@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,23 +153,23 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         LinearLayout leaderboardRowLayout = new LinearLayout(getActivity());
         leaderboardRowLayout.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,3);
+        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 3);
         leaderboardRowLayout.setLayoutParams(LLParams);
 
         TextView leaderboardRank = new TextView(getActivity());
         leaderboardRank.setText(String.valueOf(rank));
         leaderboardRank.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-        //leaderboardRank.setWidth((int) (62 * scale + 0.5f));
         leaderboardRank.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
         TextView leaderboardName = new TextView(getActivity());
         leaderboardName.setText(name);
+        leaderboardName.setGravity(Gravity.LEFT);
         leaderboardName.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
-        //leaderboardName.setWidth((int) (169 * scale + 0.5f));
         leaderboardName.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
         TextView leaderboardScore = new TextView(getActivity());
         leaderboardScore.setText(String.valueOf(score) + " " + units);
+        leaderboardScore.setGravity(Gravity.RIGHT);
         leaderboardScore.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
         leaderboardScore.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
