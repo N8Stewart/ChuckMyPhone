@@ -151,7 +151,12 @@ public class FirebaseHelper {
         loginActivity = activity;
         loginEmail = email;
         loginPassword = password;
-        myFirebaseRef.authWithPassword(email, password, loginHandler);
+        if (myFirebaseRef != null) {
+            myFirebaseRef.authWithPassword(email, password, loginHandler);
+        } else {
+            //TODO
+            //Need to do something here, maybe prompt user to try again?
+        }
     }
 
     Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
@@ -174,16 +179,21 @@ public class FirebaseHelper {
        //Event driven: called when user login succeeds
        @Override
         public void onAuthenticated(AuthData authData) {
-            if (!dataSnapshot.hasChild("users/"+authData.getUid())) {
-                //create the record and insert it into Firebase
-                Firebase newUserRef = myFirebaseRef.child("users/"+authData.getUid());
-                newUserRef.setValue(new User(CurrentUser.getInstance().getUsername()));
+            if (dataSnapshot != null) {
+                if (!dataSnapshot.hasChild("users/" + authData.getUid())) {
+                    //create the record and insert it into Firebase
+                    Firebase newUserRef = myFirebaseRef.child("users/" + authData.getUid());
+                    newUserRef.setValue(new User(CurrentUser.getInstance().getUsername()));
+                } else {
+                    System.out.println("User logged into existing account, no data was changed");
+                }
+                System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
+                CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
+                loginActivity.onSuccessfulLogin(loginEmail, loginPassword, authData.getUid());
             } else {
-                System.out.println("User logged into existing account, no data was changed");
+                //TODO
+                //need to do something here? maybe try to re-authenticate user?
             }
-            System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-            CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
-            loginActivity.onSuccessfulLogin(loginEmail, loginPassword, authData.getUid());
         }
 
        //Event driven: called when user login fails
