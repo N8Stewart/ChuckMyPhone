@@ -163,8 +163,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         //update shared preferences
         SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
         sharedPreferencesHelper.clearSharedData();
-        sharedPreferencesHelper.setSharedPreferencesData(emailEditText.getText().toString(),
-                passwordConfirmationEditText.getText().toString());
+        sharedPreferencesHelper.createSharedPreferencesData(emailEditText.getText().toString(),
+                passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
 
         actionPending = false;
 

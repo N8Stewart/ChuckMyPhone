@@ -157,4 +157,9 @@ public class CurrentUser {
     protected ArrayList<FirebaseHelper.CompeteRecord> getDropLeaderboard() {
         return dropLeaderboardGlobal;
     }
+
+    public void loadSettings(boolean tutorialEnabled, boolean soundEnabled) {
+        updateTutorialMessagesEnabled(tutorialEnabled);
+        updateSoundEnabled(soundEnabled);
+    }
 }

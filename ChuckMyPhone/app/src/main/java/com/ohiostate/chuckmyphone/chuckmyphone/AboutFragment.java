@@ -26,8 +26,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - The idea creator, Software Eng.\n\nNate Stewart - Lead Software Engineer\n\nJoao - Lead Software Engineer";
-
+    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - The idea creator, Software Eng.\n\n" +
+            "Nate Stewart - Lead Software Engineer\n\nJoao Magalhaes - Lead Software Eng.";
 
     private OnFragmentInteractionListener mListener;
 
@@ -55,21 +55,15 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
         initializeViews(view);
 
-        termsOfService.setOnClickListener(this);
-
         return view;
     }
 
     public void initializeViews(View view) {
         termsOfService = (TextView) view.findViewById(R.id.about_terms_of_service_textview);
+        termsOfService.setOnClickListener(this);
+
         creditsButton = (Button) view.findViewById(R.id.about_credits_button);
-        creditsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
-                FirebaseHelper.getInstance().unlockBadge("The Kindness Badge");
-            }
-        });
+        creditsButton.setOnClickListener(this);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -97,7 +91,15 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // open webview or dialog to terms of service
+        switch(v.getId()){
+            case R.id.about_terms_of_service_textview:
+                // open webview to show terms of service
+                break;
+            default:
+                Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
+                FirebaseHelper.getInstance().unlockBadge("The Kindness Badge");
+                break;
+        }
     }
 
     public interface OnFragmentInteractionListener {
