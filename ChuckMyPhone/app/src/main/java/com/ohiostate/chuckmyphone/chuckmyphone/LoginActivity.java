@@ -90,32 +90,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         Intent intent;
 
-        switch(v.getId()){
-            case R.id.login_facebook_button:
+        if (!actionPending) {
+            switch (v.getId()) {
+                case R.id.login_facebook_button:
 
-                break;
-            case R.id.login_login_button:
-                if (!actionPending) {
+                    break;
+                case R.id.login_login_button:
                     if (FirebaseHelper.getInstance().hasLoadedInitialSnapshot) {
                         actionPending = true;
                         attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                     } else {
                         Toast.makeText(this.getApplicationContext(), "The app is still loading, please try again in a second", Toast.LENGTH_LONG).show();
                     }
-                }
-                break;
-            case R.id.login_forgot_password_textview:
-                if (!actionPending) {
+                    break;
+                case R.id.login_forgot_password_textview:
                     intent = new Intent(getApplication(), ForgotPasswordActivity.class);
                     startActivity(intent);
-                }
-                break;
-            default: //new user button case
-                if (!actionPending) {
+
+                    break;
+                default: //new user button case
                     intent = new Intent(getApplication(), NewUserActivity.class);
                     startActivity(intent);
-                }
-                break;
+                    break;
+            }
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_LONG).show();
         }
     }
 
