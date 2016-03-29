@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
-    public final int USERNAME_LENGTH_MIN = 4;
-    public final int USERNAME_lENGTH_MAX = 10;
+    public final int USERNAME_LENGTH_MIN = 3;
+    public final int USERNAME_lENGTH_MAX = 12;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -91,27 +91,29 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.new_user_facebook_button:
-                //Facebook login logic goes here
+        if (!actionPending) {
+            switch (v.getId()) {
+                case R.id.new_user_facebook_button:
+                    //Facebook login logic goes here
 
-                break;
-            case R.id.new_user_sign_up_button:
-                if (!actionPending && isReadyToCreateAccount()) {
-                    //Account creation works asynchronously
-                    //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
-                    actionPending = true;
-                    createUserData();
-                }
-                break;
-            case R.id.new_user_cancel_button:
-                if (!actionPending) {
+                    break;
+                case R.id.new_user_sign_up_button:
+                    if (isReadyToCreateAccount()) {
+                        //Account creation works asynchronously
+                        //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
+                        actionPending = true;
+                        createUserData();
+                    }
+                    break;
+                case R.id.new_user_cancel_button:
                     startActivity(new Intent(getApplication(), LoginActivity.class));
                     finish();
-                }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -153,6 +155,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
         String email = emailEditText.getText().toString();
+
+        Toast.makeText(this.getApplicationContext(), "Creating account, please wait", Toast.LENGTH_LONG).show();
 
         //Deal with Firebase user creation
         firebaseHelper.createUserWithoutFacebook(email,password, username, this);

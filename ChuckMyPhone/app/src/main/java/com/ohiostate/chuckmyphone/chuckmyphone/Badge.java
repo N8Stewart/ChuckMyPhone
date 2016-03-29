@@ -31,16 +31,16 @@ public class Badge {
     }
 
     private static final int BADGE_DROP_LEVEL_1_SCORE = 200;
-    private static final int BADGE_DROP_LEVEL_2_SCORE = 400;
-    private static final int BADGE_DROP_LEVEL_3_SCORE = 600;
+    private static final int BADGE_DROP_LEVEL_2_SCORE = 600;
+    private static final int BADGE_DROP_LEVEL_3_SCORE = 1000;
 
-    private static final int BADGE_CHUCK_LEVEL_1_SCORE = 200;
-    private static final int BADGE_CHUCK_LEVEL_2_SCORE = 400;
-    private static final int BADGE_CHUCK_LEVEL_3_SCORE = 600;
+    private static final int BADGE_CHUCK_LEVEL_1_SCORE = 1000;
+    private static final int BADGE_CHUCK_LEVEL_2_SCORE = 3000;
+    private static final int BADGE_CHUCK_LEVEL_3_SCORE = 5000;
 
-    private static final int BADGE_SPIN_LEVEL_1_SCORE = 200;
-    private static final int BADGE_SPIN_LEVEL_2_SCORE = 400;
-    private static final int BADGE_SPIN_LEVEL_3_SCORE = 600;
+    private static final int BADGE_SPIN_LEVEL_1_SCORE = 1500;
+    private static final int BADGE_SPIN_LEVEL_2_SCORE = 2500;
+    private static final int BADGE_SPIN_LEVEL_3_SCORE = 4000;
 
     public Badge(String name) {
         this.unlocked = false;
