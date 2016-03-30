@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 public class CompeteDropFragment extends CompeteFragment {
-    private final float FALLING_MIN_ACCELERATION = 8.5f;
-    private final float FALLING_MAX_ACCELERATION = 11.5f;
+    private final float FALLING_MAX_ACCELERATION = 4.0f;
 
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then drop your phone!";
 
@@ -73,7 +72,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
         Sensor sensor = event.sensor;
 
-        if (isRecording && sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
+        if (isRecording && sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float ax = event.values[0];
             float ay = event.values[1];
             float az = event.values[2];
@@ -87,13 +86,13 @@ public class CompeteDropFragment extends CompeteFragment {
                 acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling
-                if (!isFalling && acceleration > FALLING_MIN_ACCELERATION) {
+                if (!isFalling && acceleration < FALLING_MAX_ACCELERATION) {
                     fallingStartTime = System.currentTimeMillis();
                     isFalling = true;
                 }
 
                 //if phone stops falling
-                if (isFalling && (acceleration < FALLING_MIN_ACCELERATION || acceleration > FALLING_MAX_ACCELERATION)) {
+                if (isFalling && acceleration > FALLING_MAX_ACCELERATION) {
                     fallingEndTime = System.currentTimeMillis();
                     score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
@@ -123,10 +122,10 @@ public class CompeteDropFragment extends CompeteFragment {
     public void initializeSensors() {
         //set up sensor overhead
         sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
-        linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         //make the sensor start listening
-        userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
 
         if (!userHasSensor) {
             Toast.makeText(getActivity().getApplicationContext(), "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG).show();

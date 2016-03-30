@@ -5,13 +5,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class CompeteSpinFragment extends CompeteFragment{
@@ -105,7 +102,7 @@ public class CompeteSpinFragment extends CompeteFragment{
         gyroscope = sensManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
         //make the sensor start listening, don't want this here later
-        userHasSensor = sensManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+        userHasSensor = sensManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_GAME);
 
         if (!userHasSensor) {
             Toast.makeText(getActivity().getApplicationContext(), "Your phone does not have the necessary sensors for this activity", Toast.LENGTH_LONG).show();

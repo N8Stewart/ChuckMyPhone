@@ -8,13 +8,12 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -95,12 +94,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -148,14 +141,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         Log.d(TAG, "onStop() called");
         mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
-    }
-
-    public void setButtonImage() {
-        if (isRecording) {
-            competeButton.setImageResource(R.drawable.compete_stop);
-        } else {
-            competeButton.setImageResource(R.drawable.compete_play);
-        }
     }
 
     View.OnClickListener buttonListener = new View.OnClickListener() {

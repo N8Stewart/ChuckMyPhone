@@ -141,13 +141,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
 
-        sSharedPreferencesHelper.setSharedPreferencesData(email, password);
-
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
         }
 
         CurrentUser.getInstance().loadUserBadgeData();
+        CurrentUser.getInstance().loadUserScoreData();
+
+        if(sSharedPreferencesHelper.hasSharedData()){
+            sSharedPreferencesHelper.createSharedPreferencesData(email, password, CurrentUser.getInstance().getUsername());
+        } else sSharedPreferencesHelper.setSharedPreferencesData(email, password, CurrentUser.getInstance().getUsername(),
+                CurrentUser.getInstance().getChuckScore(), CurrentUser.getInstance().getDropScore(),
+                CurrentUser.getInstance().getSpinScore());
+
+        CurrentUser.getInstance().loadSettings(sSharedPreferencesHelper.getTutorialMessages(),
+                sSharedPreferencesHelper.getSoundEnabled());
 
         actionPending = false;
 

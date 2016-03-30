@@ -113,16 +113,28 @@ public class SharedPreferencesHelper {
         return sharedData.edit().clear().commit();
     }
 
-    public void setSharedPreferencesData(String email, String password) {
-        //TODO get saved data from Firebase for badge, score info
-        // recreate data after new user activity
+    public void createSharedPreferencesData(String email, String password, String username) {
+        // create data after new user activity
         this.setEmail(email);
         this.setPassword(password);
+        this.setUsername(username);
         this.setBadges("00000000000");
         this.setBestDrop("0");
         this.setBestSpin("0");
         this.setBestChuck("0");
         this.setSoundEnabled(false);
         this.setTutorialMessages(true);
+    }
+
+    public void setSharedPreferencesData(String email, String password, String username, double chuckScore,
+                                         double dropScore, double spinScore) {
+        //TODO get badges as parameters and somehow fit them into the shared preferences
+        this.setEmail(email);
+        this.setPassword(password);
+        this.setUsername(username);
+        this.setBestDrop(dropScore + "");
+        this.setBestSpin(spinScore + "");
+        this.setBestChuck(chuckScore + "");
+        this.setBadges("00000000000");
     }
 }

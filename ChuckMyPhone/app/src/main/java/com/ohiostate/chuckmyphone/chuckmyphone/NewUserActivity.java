@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
-    public final int USERNAME_LENGTH_MIN = 4;
-    public final int USERNAME_lENGTH_MAX = 10;
+    public final int USERNAME_LENGTH_MIN = 3;
+    public final int USERNAME_lENGTH_MAX = 12;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -167,8 +167,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         //update shared preferences
         SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
         sharedPreferencesHelper.clearSharedData();
-        sharedPreferencesHelper.setSharedPreferencesData(emailEditText.getText().toString(),
-                passwordConfirmationEditText.getText().toString());
+        sharedPreferencesHelper.createSharedPreferencesData(emailEditText.getText().toString(),
+                passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
 
         actionPending = false;
 
