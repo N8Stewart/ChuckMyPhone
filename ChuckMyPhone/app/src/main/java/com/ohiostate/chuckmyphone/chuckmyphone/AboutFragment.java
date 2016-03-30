@@ -26,7 +26,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - The idea creator, Software Eng.\n\nNate Stewart - Lead Software Engineer\n\nJoao - Lead Software Engineer";
+    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - Idea Creator, Software Eng.\n\nNate Stewart - Lead Software Engineer\n\nJoao - Lead Software Engineer";
 
 
     private OnFragmentInteractionListener mListener;
