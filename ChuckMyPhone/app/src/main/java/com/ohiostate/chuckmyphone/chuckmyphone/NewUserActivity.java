@@ -165,10 +165,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
     protected void accountWasCreated() {
         //update shared preferences
-        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
-        sharedPreferencesHelper.clearSharedData();
-        sharedPreferencesHelper.createSharedPreferencesData(emailEditText.getText().toString(),
-                passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
+        SharedPreferencesHelper.clearSharedData(getApplicationContext());
 
         actionPending = false;
 
@@ -182,5 +179,4 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
     }
-
 }

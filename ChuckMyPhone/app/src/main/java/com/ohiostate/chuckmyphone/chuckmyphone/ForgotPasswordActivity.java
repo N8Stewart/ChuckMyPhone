@@ -16,7 +16,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     private Button cancelButton;
     private Button resetButton;
-    private SharedPreferencesHelper mSharedPreferencesHelper;
     private EditText emailEditText;
 
     @Override
@@ -27,7 +26,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         Log.d(TAG, "onCreate() called");
 
         getSupportActionBar().setTitle("Forgot Password");
-        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
 
         initializeViews();
     }
@@ -78,7 +76,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     public void onPasswordSuccessfullyReset() {
         Toast.makeText(this.getApplicationContext(), "Password reset email was sent", Toast.LENGTH_LONG).show();
-        mSharedPreferencesHelper.clearSharedData();
+        SharedPreferencesHelper.clearSharedData(getApplicationContext());
         finish();
     }
 

@@ -37,8 +37,6 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private EditText newPasswordEditText;
     private EditText newPasswordConfirmationEditText;
 
-    private SharedPreferencesHelper mSharedPreferencesHelper;
-
     public ChangePasswordFragment() {}
 
     public static ChangePasswordFragment newInstance(String param1, String param2) {
@@ -52,7 +50,6 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
         Log.d(TAG, "onCreate() called");
 
-        mSharedPreferencesHelper = new SharedPreferencesHelper(getActivity());
     }
 
     @Override
@@ -106,9 +103,12 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                 if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
                     //TODO
                     //is it bad to use the shared preferences as the check here for the password?
-                    if (mSharedPreferencesHelper.getPassword().equals(oldPasswordEditText.getText().toString())) {
-                        mSharedPreferencesHelper.setPassword(newPasswordConfirmationEditText.getText().toString());
-                        FirebaseHelper.getInstance().changePassword(mSharedPreferencesHelper.getEmail(), oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
+                    if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).
+                            equals(oldPasswordEditText.getText().toString())) {
+                        SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(),
+                                newPasswordConfirmationEditText.getText().toString());
+                        FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
+                                oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
                     } else {
                         Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
                     }
@@ -158,7 +158,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     public void onSuccessfulPasswordChange() {
         Toast.makeText(getActivity().getApplicationContext(), "Password was changed!", Toast.LENGTH_LONG).show();
-        mSharedPreferencesHelper.clearSharedData();
+        SharedPreferencesHelper.clearSharedData(getActivity().getApplicationContext());
 
         //jump to chuck compete fragment, might be a better way to do this
         startActivity(new Intent(getActivity().getApplication(), MainActivity.class));

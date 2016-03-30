@@ -1,6 +1,8 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -29,13 +31,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private final String TAG = this.getClass().getSimpleName();
 
     private DrawerLayout mDrawerLayout;
-    private SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        CurrentUser.getInstance().loadUserScoreData();
         Log.d(TAG, "onCreate() called");
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
@@ -56,7 +58,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         getSupportActionBar().setTitle("Chuck My Phone");
 
-        mSharedPreferencesHelper = new SharedPreferencesHelper(this);
+        Context context = getApplicationContext();
+        Log.d("vars", SharedPreferencesHelper.getEmail(context) + " " + SharedPreferencesHelper.getUsername(context) +
+                " " + SharedPreferencesHelper.getBestChuck(context) + " " + SharedPreferencesHelper.getBestDrop(context) +
+                " " + SharedPreferencesHelper.getBestSpin(context) + " " + SharedPreferencesHelper.getSoundEnabled(context) + " " +
+                SharedPreferencesHelper.getTutorialMessages(context));
+
     }
 
     @Override
@@ -119,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             default: // logout button
                 //wipe shared preferences so it doesn't auto login on this account anymore
-                SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(this);
-                sharedPreferencesHelper.clearSharedData();
+                SharedPreferencesHelper.clearSharedData(getApplicationContext());
 
                 //go back to login screen
                 Intent intent = new Intent(this, LoginActivity.class);

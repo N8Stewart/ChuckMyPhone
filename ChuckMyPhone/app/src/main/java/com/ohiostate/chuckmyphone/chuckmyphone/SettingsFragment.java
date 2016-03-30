@@ -22,9 +22,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private Button saveButton;
     private CheckBox soundEnabledCheckbox;
     private CheckBox tutorialMessagesEnabledCheckbox;
-
-    private SharedPreferencesHelper mSharedPreferencesHelper;
-
     public SettingsFragment() {}
 
     public static SettingsFragment newInstance(String param1, String param2) {
@@ -35,7 +32,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Log.d(TAG, "onCreate() called");
     }
 
@@ -43,19 +39,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_settings, container, false);
-
         initializeViews(view);
-
         loadSettings();
-        
         return view;
     }
 
     private void initializeViews(View view) {
         soundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_sound_enabled_checkbox);
         soundEnabledCheckbox.setOnClickListener(this);
+
         tutorialMessagesEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_tutorial_messages_checkbox);
         tutorialMessagesEnabledCheckbox.setOnClickListener(this);
+
         saveButton = (Button) view.findViewById(R.id.settings_save_button);
         saveButton.setOnClickListener(this);
     }
@@ -97,6 +92,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private void saveSettings(){
         CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
         CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
+        SharedPreferencesHelper.setSoundEnabled(getActivity().getApplicationContext(), soundEnabledCheckbox.isChecked());
+        SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(),
+                tutorialMessagesEnabledCheckbox.isChecked());
     }
 
     private void loadSettings(){

@@ -26,8 +26,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText passwordEditText;
     private EditText emailEditText;
 
-    private static SharedPreferencesHelper sSharedPreferencesHelper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +35,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         actionPending = false;
 
-        sSharedPreferencesHelper = new SharedPreferencesHelper(this);
-
-        if (sSharedPreferencesHelper.hasSharedData()) {
-            attemptLogin(sSharedPreferencesHelper.getEmail(), sSharedPreferencesHelper.getPassword());
+        if (SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
+            attemptLogin(SharedPreferencesHelper.getEmail(getApplicationContext()),
+                    SharedPreferencesHelper.getPassword(getApplicationContext()));
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
@@ -145,14 +142,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         CurrentUser.getInstance().loadUserBadgeData();
         CurrentUser.getInstance().loadUserScoreData();
 
-        if(sSharedPreferencesHelper.hasSharedData()){
-            sSharedPreferencesHelper.createSharedPreferencesData(email, password, CurrentUser.getInstance().getUsername());
-        } else sSharedPreferencesHelper.setSharedPreferencesData(email, password, CurrentUser.getInstance().getUsername(),
-                CurrentUser.getInstance().getChuckScore(), CurrentUser.getInstance().getDropScore(),
-                CurrentUser.getInstance().getSpinScore());
+        if(!SharedPreferencesHelper.hasSharedData(getApplicationContext())){
+            SharedPreferencesHelper.createSharedPreferencesData(getApplicationContext(),
+                    email, password, CurrentUser.getInstance().getUsername());
+        } else {
+            SharedPreferencesHelper.setSharedPreferencesData(getApplicationContext(),
+                    email, password, CurrentUser.getInstance().getUsername(), CurrentUser.getInstance().getChuckScore(),
+                    CurrentUser.getInstance().getDropScore(), CurrentUser.getInstance().getSpinScore());
+        }
 
-        CurrentUser.getInstance().loadSettings(sSharedPreferencesHelper.getTutorialMessages(),
-                sSharedPreferencesHelper.getSoundEnabled());
+        CurrentUser.getInstance().loadSettings(SharedPreferencesHelper.getTutorialMessages(getApplicationContext()),
+                SharedPreferencesHelper.getSoundEnabled(getApplicationContext()));
 
         actionPending = false;
 
