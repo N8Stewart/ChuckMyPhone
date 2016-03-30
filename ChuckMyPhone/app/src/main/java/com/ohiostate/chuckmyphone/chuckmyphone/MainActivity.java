@@ -57,13 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
 
         getSupportActionBar().setTitle("Chuck My Phone");
-
-        Context context = getApplicationContext();
-        Log.d("vars", SharedPreferencesHelper.getEmail(context) + " " + SharedPreferencesHelper.getUsername(context) +
-                " " + SharedPreferencesHelper.getBestChuck(context) + " " + SharedPreferencesHelper.getBestDrop(context) +
-                " " + SharedPreferencesHelper.getBestSpin(context) + " " + SharedPreferencesHelper.getSoundEnabled(context) + " " +
-                SharedPreferencesHelper.getTutorialMessages(context));
-
     }
 
     @Override

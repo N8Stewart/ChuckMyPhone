@@ -150,8 +150,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     email, password, CurrentUser.getInstance().getUsername());
         } else {
             SharedPreferencesHelper.setSharedPreferencesData(getApplicationContext(),
-                    email, password, CurrentUser.getInstance().getUsername(), CurrentUser.getInstance().getChuckScore(),
-                    CurrentUser.getInstance().getDropScore(), CurrentUser.getInstance().getSpinScore());
+                    email, password, CurrentUser.getInstance().getUsername());
         }
 
         CurrentUser.getInstance().loadSettings(SharedPreferencesHelper.getTutorialMessages(getApplicationContext()),

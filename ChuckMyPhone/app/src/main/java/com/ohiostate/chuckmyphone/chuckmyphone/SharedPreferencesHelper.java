@@ -19,10 +19,6 @@ public class SharedPreferencesHelper {
         public static final String keyEmail = "email";
         public static final String keyTutorial = "tutorial";
         public static final String keySound = "sound";
-        public static final String keyChuck = "chuck";
-        public static final String keyDrop = "drop";
-        public static final String keySpin = "spin";
-        public static final String keyBadges = "badges";
     }
 
     public SharedPreferencesHelper(){}
@@ -39,12 +35,6 @@ public class SharedPreferencesHelper {
         editor.putBoolean(key, value).commit();
     }
 
-    private static void setLongValue(Context context, String key, long value){
-        SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedData.edit();
-        editor.putLong(key, value).commit();
-    }
-
     public static void setEmail(Context context, String email){
         setStringValue(context, Keys.keyEmail, email);
     }
@@ -55,22 +45,6 @@ public class SharedPreferencesHelper {
 
     public static void setPassword(Context context, String password){
         setStringValue(context, Keys.keyPassword, password);
-    }
-
-    public static void setBadges(Context context, String badges){
-        setStringValue(context, Keys.keyBadges, badges);
-    }
-
-    public static void setBestDrop(Context context, long dropScore){
-        setLongValue(context, Keys.keyDrop, dropScore);
-    }
-
-    public static void setBestSpin(Context context, long spinScore){
-        setLongValue(context, Keys.keySpin, spinScore);
-    }
-
-    public static void setBestChuck(Context context, long chuckScore){
-        setLongValue(context, Keys.keyChuck, chuckScore);
     }
 
     public static void setSoundEnabled(Context context, boolean value){
@@ -91,33 +65,12 @@ public class SharedPreferencesHelper {
         return sharedData.getBoolean(key, defValue);
     }
 
-    private static long getLongValue(Context context, String key){
-        SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
-        return sharedData.getLong(key, 0);
-    }
-
     public static String getUsername(Context context){
         return getStringValue(context, Keys.keyUsername);
     }
 
     public static String getPassword(Context context){
         return getStringValue(context, Keys.keyPassword);
-    }
-
-    public static String getBadges(Context context){
-        return getStringValue(context, Keys.keyBadges);
-    }
-
-    public static long getBestDrop(Context context){
-        return getLongValue(context, Keys.keyDrop);
-    }
-
-    public static long getBestSpin(Context context){
-        return getLongValue(context, Keys.keySpin);
-    }
-
-    public static long getBestChuck(Context context){
-        return getLongValue(context, Keys.keyChuck);
     }
 
     public static boolean getSoundEnabled(Context context){
@@ -144,27 +97,16 @@ public class SharedPreferencesHelper {
     }
 
     public static void createSharedPreferencesData(Context context, String email, String password, String username) {
-        // create data after new user activity
         setEmail(context, email);
         setPassword(context, password);
         setUsername(context, username);
-        setBadges(context, "00000000000");
-        setBestDrop(context, 0);
-        setBestSpin(context, 0);
-        setBestChuck(context, 0);
         setSoundEnabled(context, false);
         setTutorialMessages(context, true);
     }
 
-    public static void setSharedPreferencesData(Context context, String email, String password, String username, long chuckScore,
-                                         long dropScore, long spinScore) {
-        //TODO get badges as parameters and somehow fit them into the shared preferences
+    public static void setSharedPreferencesData(Context context, String email, String password, String username) {
         setEmail(context, email);
         setPassword(context, password);
         setUsername(context, username);
-        setBestDrop(context, dropScore);
-        setBestSpin(context, spinScore);
-        setBestChuck(context, chuckScore);
-        setBadges(context, "00000000000");
     }
 }

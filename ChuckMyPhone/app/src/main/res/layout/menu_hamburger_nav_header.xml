@@ -11,10 +11,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
 
-    <FrameLayout
+    <ImageView
         android:id="@+id/menu_hamburger_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_gravity="center"
         android:background="@drawable/logo_splash"/>
 
     <ListView
