@@ -3,6 +3,7 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 public class CompeteSpinFragment extends CompeteFragment{
     Sensor gyroscope;
+
+    MediaPlayer spinSound;
 
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
 
@@ -25,6 +28,8 @@ public class CompeteSpinFragment extends CompeteFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        spinSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
 
         //max rotation speed is set when the scores are grabbed, no need to initialize here
         //maxRotationSpeed = 0;
@@ -65,6 +70,10 @@ public class CompeteSpinFragment extends CompeteFragment{
             float az = event.values[2];
 
             long currTime = System.currentTimeMillis();
+
+            if (score > 600) {
+                spinSound.start();
+            }
 
             if ((currTime - lastUpdate) > 10) {
                 long dt = (currTime - lastUpdate);

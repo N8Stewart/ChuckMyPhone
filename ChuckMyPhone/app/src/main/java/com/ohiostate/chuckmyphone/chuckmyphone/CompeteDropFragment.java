@@ -3,6 +3,7 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ public class CompeteDropFragment extends CompeteFragment {
     private long fallingEndTime;
 
     Sensor linearAccelerometer;
+
+    MediaPlayer explosionSound;
 
     public CompeteDropFragment() {}
 
@@ -93,6 +96,10 @@ public class CompeteDropFragment extends CompeteFragment {
                     fallingEndTime = System.currentTimeMillis();
                     score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
+                    if (CurrentUser.getInstance().getSoundEnabled()) {
+                        explosionSound = MediaPlayer.create(getActivity(), R.raw.explosion_sound);
+                        explosionSound.start();
+                    }
                 }
 
                 //if new high score

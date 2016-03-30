@@ -147,16 +147,16 @@ public class FirebaseHelper {
         myFirebaseRef.createUser(email, password, userCreationHandler);
     }
 
-    public void loginWithoutFacebook(String email, String password, LoginActivity activity) {
+    public boolean loginWithoutFacebook(String email, String password, LoginActivity activity) {
         loginActivity = activity;
         loginEmail = email;
         loginPassword = password;
+        boolean firebaseWasLoaded = false;
         if (myFirebaseRef != null) {
+            firebaseWasLoaded = true;
             myFirebaseRef.authWithPassword(email, password, loginHandler);
-        } else {
-            //TODO
-            //Need to do something here, maybe prompt user to try again?
         }
+        return firebaseWasLoaded;
     }
 
     Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
@@ -178,8 +178,8 @@ public class FirebaseHelper {
    Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
        //Event driven: called when user login succeeds
        @Override
-        public void onAuthenticated(AuthData authData) {
-            if (dataSnapshot != null) {
+       public void onAuthenticated(AuthData authData) {
+           if (dataSnapshot != null) {
                 if (!dataSnapshot.hasChild("users/" + authData.getUid())) {
                     //create the record and insert it into Firebase
                     Firebase newUserRef = myFirebaseRef.child("users/" + authData.getUid());

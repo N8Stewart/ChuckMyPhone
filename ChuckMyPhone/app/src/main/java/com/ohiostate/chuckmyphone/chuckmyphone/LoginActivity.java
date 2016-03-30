@@ -120,7 +120,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!email.equals("")) {
             if (!password.equals("")) {
                 Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
-                FirebaseHelper.getInstance().loginWithoutFacebook(email, password, this);
+                boolean firebaseWasLoaded = FirebaseHelper.getInstance().loginWithoutFacebook(email, password, this);
+                if (!firebaseWasLoaded) {
+                    Toast.makeText(this.getApplicationContext(), "App is still loading, please try to login again in a second", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_LONG).show();
             }

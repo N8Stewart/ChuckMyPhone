@@ -25,8 +25,8 @@ import org.w3c.dom.Text;
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
-
-    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - The idea creator, Software Eng.\n\n" +
+    
+    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - Idea creator, Software Eng.\n\n" +
             "Nate Stewart - Lead Software Engineer\n\nJoao Magalhaes - Lead Software Eng.";
 
     private OnFragmentInteractionListener mListener;

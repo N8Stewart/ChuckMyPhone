@@ -30,15 +30,15 @@ public class Badge {
         badgeNameToDescriptionMap.put("The Kindness Badge", "Unlocked by viewing the credits, Thank you so much for playing our game! \n    - Tim, Nate, Joao");
     }
 
-    private static final int BADGE_DROP_LEVEL_1_SCORE = 200;
+    private static final int BADGE_DROP_LEVEL_1_SCORE = 1;
     private static final int BADGE_DROP_LEVEL_2_SCORE = 600;
     private static final int BADGE_DROP_LEVEL_3_SCORE = 1000;
 
-    private static final int BADGE_CHUCK_LEVEL_1_SCORE = 1000;
+    private static final int BADGE_CHUCK_LEVEL_1_SCORE = 1;
     private static final int BADGE_CHUCK_LEVEL_2_SCORE = 3000;
     private static final int BADGE_CHUCK_LEVEL_3_SCORE = 5000;
 
-    private static final int BADGE_SPIN_LEVEL_1_SCORE = 1500;
+    private static final int BADGE_SPIN_LEVEL_1_SCORE = 1;
     private static final int BADGE_SPIN_LEVEL_2_SCORE = 2500;
     private static final int BADGE_SPIN_LEVEL_3_SCORE = 4000;
 

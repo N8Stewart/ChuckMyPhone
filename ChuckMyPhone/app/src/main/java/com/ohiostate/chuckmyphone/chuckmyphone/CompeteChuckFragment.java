@@ -3,7 +3,7 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.location.LocationManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,8 +15,11 @@ public class CompeteChuckFragment extends CompeteFragment{
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
 
     Sensor linearAccelerometer;
-
     public CompeteChuckFragment() {}
+
+    MediaPlayer goofyScreamSound;
+    MediaPlayer womanScreamSound;
+    MediaPlayer whooshSound;
 
     public static CompeteFragment newInstance(String param1, String param2) {
         CompeteFragment fragment = new CompeteChuckFragment();
@@ -26,6 +29,10 @@ public class CompeteChuckFragment extends CompeteFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        goofyScreamSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
+        womanScreamSound = MediaPlayer.create(getActivity(), R.raw.woman_scream_sound);
+        whooshSound = MediaPlayer.create(getActivity(), R.raw.whoosh_sound);
+
         score = 0;
     }
 
@@ -78,6 +85,12 @@ public class CompeteChuckFragment extends CompeteFragment{
 
                 //not actually speed, but that is hard to derive
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
+
+                if (score > 400) {
+                    if (CurrentUser.getInstance().getSoundEnabled()) {
+                        whooshSound.start();
+                    }
+                }
 
                 //if new high score
                 if (score > currentUser.getChuckScore()) {

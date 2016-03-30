@@ -63,6 +63,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/profile_furthest_drop_linear_layout">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Longest Dropped"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/profile_furthest_drop_title_textview" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Text"
+                    android:id="@+id/textView19"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10 meters"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:id="@+id/profile_furthest_drop_record_textview" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:id="@+id/profile_most_spins_linear_layout">
 
                 <TextView
@@ -87,34 +116,6 @@
                     android:id="@+id/profile_most_spins_record_textview" />
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:id="@+id/profile_furthest_drop_linear_layout">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Longest Dropped"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/profile_furthest_drop_title_textview" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="New Text"
-                    android:id="@+id/textView19"
-                    android:visibility="invisible" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10 meters"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:id="@+id/profile_furthest_drop_record_textview" />
-            </LinearLayout>
         </LinearLayout>
 
         <TextView
