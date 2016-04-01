@@ -251,10 +251,9 @@ public class FirebaseHelper {
             ArrayList<Badge> badgeList = new ArrayList<Badge>();
             for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
                 String badgeName = badgeSnapshot.child("name").getValue().toString();
-                boolean unlocked = Boolean.valueOf(badgeSnapshot.child("unlocked").getValue().toString());
                 String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
 
-                badgeList.add(new Badge(badgeName, unlockDate, unlocked));
+                badgeList.add(new Badge(badgeName, unlockDate));
             }
             return badgeList;
         }

@@ -1,7 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,8 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -59,12 +56,12 @@ public class ProfileFragment extends Fragment {
 
         ArrayList<Badge> badgeList = CurrentUser.getInstance().getBadgeList();
         for (Badge badge : badgeList) {
-            if (badge.isUnlocked()) {
+            if (badge.unlocked()) {
                 addBadge(view, badge);
             }
         }
         for (Badge badge : badgeList) {
-            if (!badge.isUnlocked()) {
+            if (!badge.unlocked()) {
                 addBadge(view, badge);
             }
         }
@@ -101,7 +98,7 @@ public class ProfileFragment extends Fragment {
     }
 
     public void addBadge(View view, final Badge badge) {
-        boolean isUnlocked = badge.isUnlocked();
+        boolean isUnlocked = badge.unlocked();
 
         LinearLayout horzLayout = (LinearLayout) view.findViewById(R.id.profile_trophies_linear_layout);
 
@@ -118,7 +115,7 @@ public class ProfileFragment extends Fragment {
         badgeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (badge.isUnlocked()) {
+                if (badge.unlocked()) {
                     Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription() + "\n\n" +"Date Earned: " + badge.getUnlockDate(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), badge.LockedDescription(), Toast.LENGTH_LONG).show();
