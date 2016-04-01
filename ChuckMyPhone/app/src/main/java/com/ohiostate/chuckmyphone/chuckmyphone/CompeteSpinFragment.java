@@ -71,7 +71,7 @@ public class CompeteSpinFragment extends CompeteFragment{
 
             long currTime = System.currentTimeMillis();
 
-            if (score > 600) {
+            if (score > 600 && CurrentUser.getInstance().getSoundEnabled()) {
                 spinSound.start();
             }
 
