@@ -78,7 +78,6 @@ public class CompeteChuckFragment extends CompeteFragment {
             double ax = event.values[0];
             double ay = event.values[1];
             double az = event.values[2];
-            Log.d(TAG, "ax=" + ax + " | ay=" + ay + " | az=" + az);
 
             long curTime = System.currentTimeMillis();
 

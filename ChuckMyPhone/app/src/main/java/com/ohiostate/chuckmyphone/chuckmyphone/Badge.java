@@ -7,7 +7,6 @@ import java.util.Map;
  * Created by Tim on 3/25/2016.
  */
 public class Badge {
-    private boolean unlocked;
     private String unlockDate;
     private String name;
 
@@ -15,7 +14,7 @@ public class Badge {
 
     public void initializeDescriptionMappings() {
         badgeNameToDescriptionMap.put("Noodle Arm", "Unlock this by doing your first chuck trial");
-        badgeNameToDescriptionMap.put("Rocket Arm", "Unlock this by getting a score of" + BADGE_CHUCK_LEVEL_2_SCORE +" or more in a chuck trial");
+        badgeNameToDescriptionMap.put("Rocket Arm", "Unlock this by getting a score of " + BADGE_CHUCK_LEVEL_2_SCORE +" or more in a chuck trial");
         badgeNameToDescriptionMap.put("Faster Than Light", "Unlock this by getting a score of " + BADGE_CHUCK_LEVEL_3_SCORE +" or more in a chuck trial");
 
         badgeNameToDescriptionMap.put("Flop Drop", "Unlock this by doing your first drop trial");
@@ -43,13 +42,11 @@ public class Badge {
     private static final int BADGE_SPIN_LEVEL_3_SCORE = 4000;
 
     public Badge(String name) {
-        this.unlocked = false;
         unlockDate = "";
         this.name = name;
     }
 
-    public Badge(String name, String unlockDate, boolean isUnlocked) {
-        this.unlocked = isUnlocked;
+    public Badge(String name, String unlockDate) {
         this.unlockDate = unlockDate;
         this.name = name;
     }
@@ -77,8 +74,8 @@ public class Badge {
         return badgeNameToDescriptionMap.get(name);
     }
 
-    public boolean isUnlocked() {
-        return unlocked;
+    public boolean unlocked() {
+        return (!unlockDate.equals(""));
     }
 
     public static int BADGE_DROP_LEVEL_1_SCORE() {

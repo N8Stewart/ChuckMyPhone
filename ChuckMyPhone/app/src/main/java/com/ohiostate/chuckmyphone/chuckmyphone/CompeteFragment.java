@@ -168,12 +168,16 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             long timeUntilEnd = System.currentTimeMillis() + NUM_MILLISECONDS_FOR_ACTION;
             long timeNow = System.currentTimeMillis();
             while (isRecording && (timeNow < timeUntilEnd)) {
-                if (timeNow % SCORE_VIEW_UPDATE_FREQUENCY == 0) {
-                    //This code updates the UI, needs to be separate because on the original thread can touch the views
-                    getActivity().runOnUiThread(updateViewSubRunnableScore);
-                    progress = (int)((timeUntilEnd - timeNow) * 100 / NUM_MILLISECONDS_FOR_ACTION);
-                    getActivity().runOnUiThread(updateProgressBar);
+                try {
+                    Thread.sleep(SCORE_VIEW_UPDATE_FREQUENCY, 0);
+                } catch (Exception e) {
+
                 }
+
+                //This code updates the UI, needs to be separate because on the original thread can touch the views
+                getActivity().runOnUiThread(updateViewSubRunnableScore);
+                progress = (int)((timeUntilEnd - timeNow) * 100 / NUM_MILLISECONDS_FOR_ACTION);
+                getActivity().runOnUiThread(updateProgressBar);
                 timeNow = System.currentTimeMillis();
             }
 
