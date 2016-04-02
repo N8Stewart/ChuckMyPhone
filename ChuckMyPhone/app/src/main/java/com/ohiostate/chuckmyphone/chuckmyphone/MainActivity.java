@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.util.Objects;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout mDrawerLayout;
 
+    private NavigationView mNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,19 +47,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment(), "Chuck My Phone").commit();
-        navigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
+        mNavigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
 
         getSupportActionBar().setTitle("Chuck My Phone");
     }
@@ -86,7 +88,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            getSupportActionBar().setTitle(NavigationHelper.getInstance().previousFragmentTag());
+            String previousTag = NavigationHelper.getInstance().previousFragmentTag();
+            if(previousTag.equals("' Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
+            else getSupportActionBar().setTitle(previousTag);
+            markHamburgerMenu();
+
+        }
+    }
+
+    private void markHamburgerMenu(){
+        Object choice = NavigationHelper.getInstance().lastMenuChoice();
+        if(choice!=null) mNavigationView.setCheckedItem((int) choice);
+        else {
+            int size = mNavigationView.getMenu().size();
+            for (int i = 0; i < size; i++) mNavigationView.getMenu().getItem(i).setChecked(false);
         }
     }
 
@@ -140,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().currentFragmentTag(nextFragmentTag)).
                     replace(R.id.activity_main_fragment_content, fragment).commit();
+            markHamburgerMenu();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -161,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.menu_hamburger_item_profile:
                 fragmentClass = ProfileFragment.class;
-                nextFragmentTag = CurrentUser.getInstance().getUsername() + "'s Profile";
+                nextFragmentTag = "'s Profile";
                 break;
             case R.id.menu_hamburger_item_leaderboards:
                 fragmentClass = LeaderboardsFragment.class;
@@ -180,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 nextFragmentTag = "Chuck My Phone";
         }
 
-        getSupportActionBar().setTitle(nextFragmentTag);
+        getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername()+ nextFragmentTag);
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();

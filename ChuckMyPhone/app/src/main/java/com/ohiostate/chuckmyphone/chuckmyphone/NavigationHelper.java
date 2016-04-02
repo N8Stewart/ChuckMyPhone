@@ -5,6 +5,8 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -17,10 +19,21 @@ public class NavigationHelper {
     public static NavigationHelper getInstance(){ return ourInstance;}
 
     private Stack<String> fragmentTags;
+    private Map<String, Integer> fragmentTagsToID;
     
     public NavigationHelper(String firstTag){
         fragmentTags = new Stack<>();
         fragmentTags.push(firstTag);
+        fragmentTagsToID = new HashMap<>(8);
+        fillMap();
+    }
+
+    private void fillMap(){
+        fragmentTagsToID.put("Chuck My Phone", R.id.menu_hamburger_item_chuck);
+        fragmentTagsToID.put("Drop My Phone", R.id.menu_hamburger_item_drop);
+        fragmentTagsToID.put("Spin My Phone", R.id.menu_hamburger_item_spin);
+        fragmentTagsToID.put("'s Profile", R.id.menu_hamburger_item_profile);
+        fragmentTagsToID.put("Leaderboards", R.id.menu_hamburger_item_leaderboards);
     }
 
     public String previousFragmentTag(){
@@ -31,5 +44,9 @@ public class NavigationHelper {
     public String currentFragmentTag (String nextFragmentTag){
         fragmentTags.push(nextFragmentTag);
         return fragmentTags.lastElement();
+    }
+
+    public Object lastMenuChoice(){
+      return fragmentTagsToID.get(fragmentTags.lastElement());
     }
 }
