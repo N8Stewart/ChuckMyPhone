@@ -87,10 +87,8 @@ public class CompeteChuckFragment extends CompeteFragment {
                 //not actually speed, but that is hard to derive
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
-                if (score > 400) {
-                    if (CurrentUser.getInstance().getSoundEnabled()) {
-                        whooshSound.start();
-                    }
+                if (score > 400 && CurrentUser.getInstance().getSoundEnabled()) {
+                    whooshSound.start();
                 }
 
                 //if new high score

@@ -208,11 +208,16 @@ public class FirebaseHelper {
     //ACCESSOR METHODS FOR GETTING DATA
 
     public String getUsername(String userID) {
+        String username = "";
         if (dataSnapshot.hasChild("users/"+userID)) {
-            return dataSnapshot.child("users/"+userID+"/username").getValue().toString();
+            if (dataSnapshot.hasChild("users/"+userID+"/username")) {
+                username = dataSnapshot.child("users/" + userID + "/username").getValue().toString();
+            } else {
+                //user doesn't have a username saved
+            }
         }
 
-        return ""; //user doesn't exist
+        return username;
     }
 
     //Need user to be logged in before this may be called
@@ -308,7 +313,6 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         for (int i = 0; i < 11; i++) {
             if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
-                myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlocked").setValue(true);
                 DateFormat df = new SimpleDateFormat("MM/dd/yy");
                 Date dateobj = new Date();
                 myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlockDate").setValue(df.format(dateobj));

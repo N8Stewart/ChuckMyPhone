@@ -4,8 +4,6 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.GpsStatus;
-import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -64,7 +62,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         currentUser = CurrentUser.getInstance();
 
-        mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
+        mGPSHelper = new GPSHelper(getActivity());
+        mGPSHelper.requestPermissionForGPS(getActivity());
 
         Log.d(TAG, "onCreate() called");
 
@@ -117,19 +116,22 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
 
     @Override
     public void onResume() {
         super.onResume();
+        mGPSHelper.requestLocation(getActivity(), LocationManager.GPS_PROVIDER);
         Log.d(TAG, "onResume() called");
-        mGPSHelper.setToLastLocation(getActivity());
     }
 
     @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause() called");
+        mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
     }
 
@@ -137,22 +139,21 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop() called");
+        mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
-    }
-
-    private void recordRun(){
-        if (userHasSensor) {
-            isRecording = !isRecording;
-            if(mGPSHelper.cannotUseCoordinates()) Toast.makeText(getActivity().getApplicationContext(),
-                    "You need to enable the GPS to make your scores filterable by location on the leaderboards", Toast.LENGTH_LONG).show();
-            getActivity().runOnUiThread(updateViewSubRunnableImage);
-            updateViewRunnableThread.start();
-        }
     }
 
     View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            recordRun();
+            if(mGPSHelper.isPreciseGPSPresent()) {
+                if(mGPSHelper.isPreciseGPSEnabled()) {
+                    if (userHasSensor) {
+                        isRecording = !isRecording;
+                        getActivity().runOnUiThread(updateViewSubRunnableImage);
+                        updateViewRunnableThread.start();
+                    }
+                } else Toast.makeText(getActivity().getApplicationContext(), "Turn on the GPS!", Toast.LENGTH_LONG).show();
+            } else Toast.makeText(getActivity().getApplicationContext(), "Your device doesn't have GPS!", Toast.LENGTH_LONG).show();
         }
     };
 
@@ -208,26 +209,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 progressBar.setProgress(progress);
             } else {
                 progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
-            }
-        }
-    };
-
-    public GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
-        @Override
-        public void onGpsStatusChanged(int event) {
-            switch(event){
-                case GpsStatus.GPS_EVENT_FIRST_FIX:
-                    Log.d("coordsevent", "fixed");
-                    break;
-                case GpsStatus.GPS_EVENT_STARTED:
-                    mGPSHelper.requestLocation(getActivity(), LocationManager.GPS_PROVIDER);
-                    Log.d("coordsevent", "started");
-                case GpsStatus.GPS_EVENT_STOPPED:
-                    mGPSHelper.stopGPS(getActivity());
-                    Log.d("coordsevent", "stopped");
-                    break;
-                default:
-                    break;
             }
         }
     };
