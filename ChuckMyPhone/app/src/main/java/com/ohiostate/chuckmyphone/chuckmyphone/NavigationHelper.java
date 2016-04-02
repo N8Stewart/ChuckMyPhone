@@ -41,7 +41,7 @@ public class NavigationHelper {
         return fragmentTags.lastElement();
     }
 
-    public String currentFragmentTag (String nextFragmentTag){
+    public String addNextFragmentTag (String nextFragmentTag){
         fragmentTags.push(nextFragmentTag);
         return fragmentTags.lastElement();
     }

@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
@@ -92,16 +93,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(previousTag.equals("' Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
             else getSupportActionBar().setTitle(previousTag);
             markHamburgerMenu();
-
         }
     }
 
     private void markHamburgerMenu(){
         Object choice = NavigationHelper.getInstance().lastMenuChoice();
-        if(choice!=null) mNavigationView.setCheckedItem((int) choice);
+        if(choice!=null) mNavigationView.setCheckedItem((Integer) choice);
         else {
-            int size = mNavigationView.getMenu().size();
-            for (int i = 0; i < size; i++) mNavigationView.getMenu().getItem(i).setChecked(false);
+            mNavigationView.getMenu().getItem(0).setChecked(false);
+            mNavigationView.getMenu().getItem(1).setChecked(false);
+            SubMenu subMenu = mNavigationView.getMenu().getItem(2).getSubMenu();
+            subMenu.getItem(0).setChecked(false);
+            subMenu.getItem(1).setChecked(false);
+            subMenu.getItem(2).setChecked(false);
         }
     }
 
@@ -153,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().currentFragmentTag(nextFragmentTag)).
+            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
                     replace(R.id.activity_main_fragment_content, fragment).commit();
             markHamburgerMenu();
         } catch (Exception e) {
@@ -201,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         try {
             fragment = (Fragment) fragmentClass.newInstance();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().currentFragmentTag(nextFragmentTag)).
+            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
                     replace(R.id.activity_main_fragment_content, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
