@@ -88,10 +88,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
             if(!NavigationHelper.getInstance().noFragmentsLeft()) {
                 String previousTag = NavigationHelper.getInstance().previousFragmentTag();
-                if (previousTag.equals("' Profile"))
-                    getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
-                else getSupportActionBar().setTitle(previousTag);
-                markHamburgerMenu();
+                if (previousTag != null){
+                    if (previousTag.equals("' Profile"))
+                        getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
+                    else getSupportActionBar().setTitle(previousTag);
+                    markHamburgerMenu();
+                }
             }
         }
     }

@@ -1,10 +1,5 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.app.Activity;
-import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -39,6 +34,7 @@ public class NavigationHelper {
     public String previousFragmentTag(){
         if(noFragmentsLeft()) return null;
         fragmentTags.pop();
+        if(noFragmentsLeft()) return null;
         return fragmentTags.lastElement();
     }
 
