@@ -19,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.EmptyStackException;
+
 public abstract class CompeteFragment extends Fragment implements SensorEventListener {
 
     protected final String TAG = this.getClass().getSimpleName();
@@ -65,8 +67,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         mGPSHelper = new GPSHelper(getActivity());
         mGPSHelper.requestPermissionForGPS(getActivity());
 
-        Log.d(TAG, "onCreate() called");
-
         isRecording = false;
         lastUpdate = 0;
     }
@@ -88,8 +88,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_compete, container, false);
         return view;
     }
@@ -212,4 +211,10 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             }
         }
     };
+    //unregister all listeners when the app is killed
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        sensManager.unregisterListener(this);
+    }
 }

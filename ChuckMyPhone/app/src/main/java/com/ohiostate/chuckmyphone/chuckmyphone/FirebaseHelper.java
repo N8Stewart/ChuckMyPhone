@@ -208,11 +208,16 @@ public class FirebaseHelper {
     //ACCESSOR METHODS FOR GETTING DATA
 
     public String getUsername(String userID) {
+        String username = "";
         if (dataSnapshot.hasChild("users/"+userID)) {
-            return dataSnapshot.child("users/"+userID+"/username").getValue().toString();
+            if (dataSnapshot.hasChild("users/"+userID+"/username")) {
+                username = dataSnapshot.child("users/" + userID + "/username").getValue().toString();
+            } else {
+                //user doesn't have a username saved
+            }
         }
 
-        return ""; //user doesn't exist
+        return username;
     }
 
     //Need user to be logged in before this may be called

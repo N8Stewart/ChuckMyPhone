@@ -72,24 +72,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
-    @Override
     public void onClick(View v) {
         if (!actionPending) {
             switch (v.getId()) {
@@ -166,7 +148,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     protected void accountWasCreated() {
         //update shared preferences
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
-
+        SharedPreferencesHelper.setSharedPreferencesData(this,emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
         actionPending = false;
 
         //account was created successfully, navigate back to login page
