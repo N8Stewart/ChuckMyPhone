@@ -3,6 +3,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.location.GpsStatus;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class CompeteChuckFragment extends CompeteFragment{
+public class CompeteChuckFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
 
     Sensor linearAccelerometer;
@@ -94,8 +96,8 @@ public class CompeteChuckFragment extends CompeteFragment{
 
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
-                    Log.d("coordsscore", mGPSHelper.getLatitude()+"");
                     currentUser.updateChuckScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                    Log.d("coordschuck", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
                     if (score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
                         FirebaseHelper.getInstance().unlockBadge("Noodle Arm");
                     }
@@ -144,6 +146,8 @@ public class CompeteChuckFragment extends CompeteFragment{
                 Toast.makeText(getActivity().getApplicationContext(), "Chuck your phone now! \n(disable this message in settings menu)", Toast.LENGTH_LONG).show();
             }
         };
-
     }
+
+    @Override
+    public void onGpsStatusChanged(int event) {}
 }

@@ -3,6 +3,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.location.GpsStatus;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class CompeteSpinFragment extends CompeteFragment{
+public class CompeteSpinFragment extends CompeteFragment {
     Sensor gyroscope;
 
     MediaPlayer spinSound;
@@ -72,7 +74,9 @@ public class CompeteSpinFragment extends CompeteFragment{
             long currTime = System.currentTimeMillis();
 
             if (score > 600) {
-                spinSound.start();
+                if (CurrentUser.getInstance().getSoundEnabled()) {
+                    spinSound.start();
+                }
             }
 
             if ((currTime - lastUpdate) > 10) {
@@ -82,6 +86,8 @@ public class CompeteSpinFragment extends CompeteFragment{
                 score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
                     currentUser.updateSpinScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                    Log.d("coordsspin", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
+
                     if (score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
                         FirebaseHelper.getInstance().unlockBadge("Inelastic Gymnastics");
                     }
@@ -133,4 +139,7 @@ public class CompeteSpinFragment extends CompeteFragment{
             }
         };
     }
+
+    @Override
+    public void onGpsStatusChanged(int event) {}
 }

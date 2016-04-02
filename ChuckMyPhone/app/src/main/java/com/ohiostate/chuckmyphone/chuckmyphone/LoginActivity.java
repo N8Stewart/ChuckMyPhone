@@ -159,6 +159,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         actionPending = false;
 
         this.startActivity(new Intent(this.getApplication(), MainActivity.class));
+        finish();
     }
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else

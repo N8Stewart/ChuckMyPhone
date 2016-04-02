@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.util.Stack;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment(), "Chuck My Phone").commit();
         navigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
 
         getSupportActionBar().setTitle("Chuck My Phone");
@@ -84,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            getSupportActionBar().setTitle(NavigationHelper.getInstance().previousFragmentTag());
         }
     }
 
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        String nextFragmentTag = "";
+
         Fragment fragment = null;
 
         Class fragmentClass = null;
@@ -107,15 +112,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.menu_dot_item_about:
                 fragmentClass = AboutFragment.class;
-                getSupportActionBar().setTitle("About");
+                nextFragmentTag = "About";
                 break;
             case R.id.menu_dot_item_change_password:
                 fragmentClass = ChangePasswordFragment.class;
-                getSupportActionBar().setTitle("Change Password");
+                nextFragmentTag = "Change Password";
                 break;
             case R.id.menu_dot_item_settings:
                 fragmentClass = SettingsFragment.class;
-                getSupportActionBar().setTitle("Settings");
+                nextFragmentTag = "Settings";
                 break;
             default: // logout button
                 //wipe shared preferences so it doesn't auto login on this account anymore
@@ -128,14 +133,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return super.onOptionsItemSelected(item);
         }
 
+        getSupportActionBar().setTitle(nextFragmentTag);
+
         try {
             fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().currentFragmentTag(nextFragmentTag)).
+                    replace(R.id.activity_main_fragment_content, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, fragment).commit();
 
         return super.onOptionsItemSelected(item);
     }
@@ -145,6 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        String nextFragmentTag = "";
+
         Fragment fragment = null;
 
         Class fragmentClass = null;
@@ -152,40 +161,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id) {
             case R.id.menu_hamburger_item_profile:
                 fragmentClass = ProfileFragment.class;
-                getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + "'s Profile");
+                nextFragmentTag = CurrentUser.getInstance().getUsername() + "'s Profile";
                 break;
             case R.id.menu_hamburger_item_leaderboards:
                 fragmentClass = LeaderboardsFragment.class;
-                getSupportActionBar().setTitle("Leaderboards");
+                nextFragmentTag = "Leaderboards";
                 break;
             case R.id.menu_hamburger_item_drop:
                 fragmentClass = CompeteDropFragment.class;
-                getSupportActionBar().setTitle("Drop My Phone");
+                nextFragmentTag = "Drop My Phone";
                 break;
             case R.id.menu_hamburger_item_spin:
                 fragmentClass = CompeteSpinFragment.class;
-                getSupportActionBar().setTitle("Spin My Phone");
+                nextFragmentTag = "Spin My Phone";
                 break;
             default:
                 fragmentClass = CompeteChuckFragment.class;
-                getSupportActionBar().setTitle("Chuck My Phone");
+                nextFragmentTag = "Chuck My Phone";
         }
+
+        getSupportActionBar().setTitle(nextFragmentTag);
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().currentFragmentTag(nextFragmentTag)).
+                    replace(R.id.activity_main_fragment_content, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, fragment).commit();
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
+    public void onFragmentInteraction(Uri uri) {}
 }

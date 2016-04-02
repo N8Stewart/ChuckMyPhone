@@ -3,6 +3,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.location.GpsStatus;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,6 +42,8 @@ public class CompeteDropFragment extends CompeteFragment {
         score = 0;
         acceleration = 0;
         isFalling = false;
+
+        explosionSound = MediaPlayer.create(getActivity(), R.raw.explosion_sound);
 
         //max falling speed is set when the scores are grabbed, no need to initialize here
         //maxTimeFalling = 0;
@@ -97,7 +101,6 @@ public class CompeteDropFragment extends CompeteFragment {
                     score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
                     if (CurrentUser.getInstance().getSoundEnabled()) {
-                        explosionSound = MediaPlayer.create(getActivity(), R.raw.explosion_sound);
                         explosionSound.start();
                     }
                 }
@@ -105,6 +108,8 @@ public class CompeteDropFragment extends CompeteFragment {
                 //if new high score
                 if (score > currentUser.getDropScore()) {
                     currentUser.updateDropScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                    Log.d("coordsdrop", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
+
                     if (score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
                         FirebaseHelper.getInstance().unlockBadge("Flop Drop");
                     }
@@ -156,4 +161,7 @@ public class CompeteDropFragment extends CompeteFragment {
             }
         };
     }
+
+    @Override
+    public void onGpsStatusChanged(int event) {}
 }
