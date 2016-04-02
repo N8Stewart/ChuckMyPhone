@@ -19,6 +19,7 @@ public class CompeteSpinFragment extends CompeteFragment {
     MediaPlayer spinSound;
 
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
+    private final int SCORE_THRESHOLD_FOR_SOUND = 2500;
 
     public CompeteSpinFragment() {}
 
@@ -73,7 +74,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
             long currTime = System.currentTimeMillis();
 
-            if (score > 600 && CurrentUser.getInstance().getSoundEnabled()) {
+            if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
                 spinSound.start();
             }
 

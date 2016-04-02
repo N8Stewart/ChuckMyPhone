@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 public class CompeteChuckFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
+    private final int SCORE_THRESHOLD_FOR_SOUND = 1500;
 
     Sensor linearAccelerometer;
     public CompeteChuckFragment() {}
@@ -87,7 +88,7 @@ public class CompeteChuckFragment extends CompeteFragment {
                 //not actually speed, but that is hard to derive
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
-                if (score > 400 && CurrentUser.getInstance().getSoundEnabled()) {
+                if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
                     whooshSound.start();
                 }
 
