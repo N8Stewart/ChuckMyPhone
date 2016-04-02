@@ -4,6 +4,7 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.GpsStatus;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -62,8 +63,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         currentUser = CurrentUser.getInstance();
 
-        mGPSHelper = new GPSHelper(getActivity());
-        mGPSHelper.requestPermissionForGPS(getActivity());
+        mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
 
         Log.d(TAG, "onCreate() called");
 
@@ -131,7 +131,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause() called");
-        mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
     }
 
@@ -139,21 +138,20 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop() called");
-        mGPSHelper.stopGPS(getActivity());
         sensManager.unregisterListener(this);
     }
 
     View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if(mGPSHelper.isPreciseGPSPresent()) {
-                if(mGPSHelper.isPreciseGPSEnabled()) {
-                    if (userHasSensor) {
-                        isRecording = !isRecording;
-                        getActivity().runOnUiThread(updateViewSubRunnableImage);
-                        updateViewRunnableThread.start();
-                    }
-                } else Toast.makeText(getActivity().getApplicationContext(), "Turn on the GPS!", Toast.LENGTH_LONG).show();
-            } else Toast.makeText(getActivity().getApplicationContext(), "Your device doesn't have GPS!", Toast.LENGTH_LONG).show();
+            if(mGPSHelper.cannotUseCoordinates()){
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "You need to enable the GPS to have your scores filterable by distance in leaderboards", Toast.LENGTH_LONG).show();
+            }
+            if (userHasSensor) {
+                isRecording = !isRecording;
+                getActivity().runOnUiThread(updateViewSubRunnableImage);
+                updateViewRunnableThread.start();
+            }
         }
     };
 
@@ -209,6 +207,26 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 progressBar.setProgress(progress);
             } else {
                 progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
+            }
+        }
+    };
+
+    private GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
+        @Override
+        public void onGpsStatusChanged(int event) {
+            switch(event) {
+                case GpsStatus.GPS_EVENT_STARTED:
+                    Log.d("coordsstatus", "started");
+                    mGPSHelper.setToLastLocation(getActivity());
+                    break;
+                case GpsStatus.GPS_EVENT_STOPPED:
+                    Log.d("coordsstatus", "stopped");
+                    break;
+                case GpsStatus.GPS_EVENT_FIRST_FIX:
+                    mGPSHelper.requestLocation(getActivity(), LocationManager.GPS_PROVIDER);
+                    break;
+                default:
+                    break;
             }
         }
     };

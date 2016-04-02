@@ -148,7 +148,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     protected void accountWasCreated() {
         //update shared preferences
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
-        SharedPreferencesHelper.setSharedPreferencesData(this,emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
+        SharedPreferencesHelper.createSharedPreferencesData(this,emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
         actionPending = false;
 
         //account was created successfully, navigate back to login page
