@@ -308,7 +308,6 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         for (int i = 0; i < 11; i++) {
             if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
-                myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlocked").setValue(true);
                 DateFormat df = new SimpleDateFormat("MM/dd/yy");
                 Date dateobj = new Date();
                 myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlockDate").setValue(df.format(dateobj));
