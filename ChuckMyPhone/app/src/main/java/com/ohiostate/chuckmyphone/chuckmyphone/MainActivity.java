@@ -19,10 +19,7 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-
 import java.util.Objects;
-import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CompeteFragment.OnFragmentInteractionListener,
@@ -89,10 +86,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            String previousTag = NavigationHelper.getInstance().previousFragmentTag();
-            if(previousTag.equals("' Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
-            else getSupportActionBar().setTitle(previousTag);
-            markHamburgerMenu();
+            if(!NavigationHelper.getInstance().noFragmentsLeft()) {
+                String previousTag = NavigationHelper.getInstance().previousFragmentTag();
+                if (previousTag.equals("' Profile"))
+                    getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
+                else getSupportActionBar().setTitle(previousTag);
+                markHamburgerMenu();
+            }
         }
     }
 
@@ -191,25 +191,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menu_hamburger_item_profile:
                 fragmentClass = ProfileFragment.class;
                 nextFragmentTag = "'s Profile";
+                getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername()+ nextFragmentTag);
                 break;
             case R.id.menu_hamburger_item_leaderboards:
                 fragmentClass = LeaderboardsFragment.class;
                 nextFragmentTag = "Leaderboards";
+                getSupportActionBar().setTitle(nextFragmentTag);
                 break;
             case R.id.menu_hamburger_item_drop:
                 fragmentClass = CompeteDropFragment.class;
                 nextFragmentTag = "Drop My Phone";
+                getSupportActionBar().setTitle(nextFragmentTag);
                 break;
             case R.id.menu_hamburger_item_spin:
                 fragmentClass = CompeteSpinFragment.class;
                 nextFragmentTag = "Spin My Phone";
+                getSupportActionBar().setTitle(nextFragmentTag);
                 break;
             default:
                 fragmentClass = CompeteChuckFragment.class;
                 nextFragmentTag = "Chuck My Phone";
+                getSupportActionBar().setTitle(nextFragmentTag);
         }
-
-        getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername()+ nextFragmentTag);
 
         try {
             fragment = (Fragment) fragmentClass.newInstance();

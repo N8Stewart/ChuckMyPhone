@@ -37,8 +37,13 @@ public class NavigationHelper {
     }
 
     public String previousFragmentTag(){
+        if(noFragmentsLeft()) return null;
         fragmentTags.pop();
         return fragmentTags.lastElement();
+    }
+
+    public boolean noFragmentsLeft(){
+        return fragmentTags.isEmpty();
     }
 
     public String addNextFragmentTag (String nextFragmentTag){
@@ -47,6 +52,7 @@ public class NavigationHelper {
     }
 
     public Object lastMenuChoice(){
-      return fragmentTagsToID.get(fragmentTags.lastElement());
+        if(noFragmentsLeft()) return null;
+        return fragmentTagsToID.get(fragmentTags.lastElement());
     }
 }
