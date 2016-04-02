@@ -24,16 +24,16 @@ public class NavigationHelper {
     public NavigationHelper(String firstTag){
         fragmentTags = new Stack<>();
         fragmentTags.push(firstTag);
-        fragmentTagsToID = new HashMap<>(8);
+        fragmentTagsToID = new HashMap<>(5);
         fillMap();
     }
 
     private void fillMap(){
-        fragmentTagsToID.put("Chuck My Phone", R.id.menu_hamburger_item_chuck);
-        fragmentTagsToID.put("Drop My Phone", R.id.menu_hamburger_item_drop);
-        fragmentTagsToID.put("Spin My Phone", R.id.menu_hamburger_item_spin);
-        fragmentTagsToID.put("'s Profile", R.id.menu_hamburger_item_profile);
-        fragmentTagsToID.put("Leaderboards", R.id.menu_hamburger_item_leaderboards);
+        fragmentTagsToID.put("Chuck My Phone", 10);
+        fragmentTagsToID.put("Drop My Phone", 11);
+        fragmentTagsToID.put("Spin My Phone", 12);
+        fragmentTagsToID.put("'s Profile", 0);
+        fragmentTagsToID.put("Leaderboards", 1);
     }
 
     public String previousFragmentTag(){

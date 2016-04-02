@@ -97,16 +97,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void markHamburgerMenu(){
+        unmarkAllItemsOnMenu();
         Object choice = NavigationHelper.getInstance().lastMenuChoice();
-        if(choice!=null) mNavigationView.setCheckedItem((Integer) choice);
-        else {
-            mNavigationView.getMenu().getItem(0).setChecked(false);
-            mNavigationView.getMenu().getItem(1).setChecked(false);
-            SubMenu subMenu = mNavigationView.getMenu().getItem(2).getSubMenu();
-            subMenu.getItem(0).setChecked(false);
-            subMenu.getItem(1).setChecked(false);
-            subMenu.getItem(2).setChecked(false);
+        if(choice!=null){
+            int c = (Integer) choice;
+            if(c < 10){
+                mNavigationView.getMenu().getItem(c).setChecked(true);
+            } else {
+                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%10).setChecked(true);
+            }
         }
+    }
+
+    private void unmarkAllItemsOnMenu(){
+        mNavigationView.getMenu().getItem(0).setChecked(false);
+        mNavigationView.getMenu().getItem(1).setChecked(false);
+        SubMenu subMenu = mNavigationView.getMenu().getItem(2).getSubMenu();
+        subMenu.getItem(0).setChecked(false);
+        subMenu.getItem(1).setChecked(false);
+        subMenu.getItem(2).setChecked(false);
     }
 
     @Override
