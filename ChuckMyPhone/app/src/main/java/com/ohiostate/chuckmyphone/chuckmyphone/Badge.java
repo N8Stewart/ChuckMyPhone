@@ -1,5 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,23 +12,23 @@ public class Badge {
     private String unlockDate;
     private String name;
 
-    private static Map<String, String> badgeNameToDescriptionMap = new HashMap<String, String>();
+    public static Map<String, String> badgeNameToDescriptionMap = new HashMap<String, String>();
 
-    public void initializeDescriptionMappings() {
-        badgeNameToDescriptionMap.put("Noodle Arm", "Unlock this by doing your first chuck trial");
-        badgeNameToDescriptionMap.put("Rocket Arm", "Unlock this by getting a score of " + BADGE_CHUCK_LEVEL_2_SCORE +" or more in a chuck trial");
-        badgeNameToDescriptionMap.put("Faster Than Light", "Unlock this by getting a score of " + BADGE_CHUCK_LEVEL_3_SCORE +" or more in a chuck trial");
+    public void initializeDescriptionMappings(Context c) {
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_chuck_level_one), "Unlock this by doing your first chuck trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_chuck_level_two), "Unlock this by getting a score of " + BADGE_CHUCK_LEVEL_2_SCORE +" or more in a chuck trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_chuck_level_three), "Unlock this by getting a score of " + BADGE_CHUCK_LEVEL_3_SCORE +" or more in a chuck trial");
 
-        badgeNameToDescriptionMap.put("Flop Drop", "Unlock this by doing your first drop trial");
-        badgeNameToDescriptionMap.put("Countertop Drop", "Unlock this by getting a score of " + BADGE_DROP_LEVEL_2_SCORE +" or more in a drop trial");
-        badgeNameToDescriptionMap.put("Atmospheric Drop", "Unlock this by getting a score of " + BADGE_DROP_LEVEL_3_SCORE +" or more in a drop trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_drop_level_one), "Unlock this by doing your first drop trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_drop_level_two), "Unlock this by getting a score of " + BADGE_DROP_LEVEL_2_SCORE +" or more in a drop trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_drop_level_three), "Unlock this by getting a score of " + BADGE_DROP_LEVEL_3_SCORE +" or more in a drop trial");
 
-        badgeNameToDescriptionMap.put("Inelastic Gymnastics", "Unlock this by doing your first spin trial");
-        badgeNameToDescriptionMap.put("Enthusiastic Gymnastics", "Unlock this by getting a score of " + BADGE_SPIN_LEVEL_2_SCORE +" or more in a spin trial");
-        badgeNameToDescriptionMap.put("Bombastic Gymnastics", "Unlock this by getting a score of " + BADGE_SPIN_LEVEL_3_SCORE +" or more in a spin trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_spin_level_one), "Unlock this by doing your first spin trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_spin_level_two), "Unlock this by getting a score of " + BADGE_SPIN_LEVEL_2_SCORE +" or more in a spin trial");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_spin_level_three), "Unlock this by getting a score of " + BADGE_SPIN_LEVEL_3_SCORE + " or more in a spin trial");
 
-        badgeNameToDescriptionMap.put("The One Percent", "Unlock this by getting in the top 10 for any leaderboard category (Minimum of 100 participants)");
-        badgeNameToDescriptionMap.put("The Kindness Badge", "Unlocked by viewing the credits, Thank you so much for playing our game! \n    - Tim, Nate, Joao");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_one_percent), "Unlock this by getting in the top 10 for any leaderboard category (Minimum of 100 participants)");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_hidden), "Unlocked by viewing the credits, Thank you so much for playing our game! \n    - Tim, Nate, Joao");
     }
 
     private static final int BADGE_DROP_LEVEL_1_SCORE = 1;
@@ -60,15 +62,11 @@ public class Badge {
     }
 
     public String UnlockedDescription() {
-        initializeDescriptionMappings();
-
         return badgeNameToDescriptionMap.get(name);
     }
 
-    public String LockedDescription() {
-        initializeDescriptionMappings();
-
-        if (this.name.equals("The Kindness Badge")) {
+    public String LockedDescription(Context c) {
+        if (this.name.equals(c.getString(R.string.badge_hidden))) {
             return "This is a hidden badge, no hints at how to unlock";
         }
         return badgeNameToDescriptionMap.get(name);

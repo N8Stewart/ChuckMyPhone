@@ -21,6 +21,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private Button saveButton;
     private CheckBox soundEnabledCheckbox;
     private CheckBox tutorialMessagesEnabledCheckbox;
+    private CheckBox badgeNotificationsCheckbox;
     public SettingsFragment() {}
 
     public static SettingsFragment newInstance(String param1, String param2) {
@@ -46,6 +47,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private void initializeViews(View view) {
         soundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_sound_enabled_checkbox);
         soundEnabledCheckbox.setOnClickListener(this);
+
+        badgeNotificationsCheckbox = (CheckBox) view.findViewById(R.id.settings_badge_unlock_notifications_checkbox);
+        badgeNotificationsCheckbox.setOnClickListener(this);
 
         tutorialMessagesEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_tutorial_messages_checkbox);
         tutorialMessagesEnabledCheckbox.setOnClickListener(this);
@@ -91,14 +95,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private void saveSettings(){
         CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
         CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
+        CurrentUser.getInstance().updateBadgeNotificationsEnabled(badgeNotificationsCheckbox.isChecked());
         SharedPreferencesHelper.setSoundEnabled(getActivity().getApplicationContext(), soundEnabledCheckbox.isChecked());
-        SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(),
-                tutorialMessagesEnabledCheckbox.isChecked());
+        SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(), tutorialMessagesEnabledCheckbox.isChecked());
+        SharedPreferencesHelper.setBadgeNotificationsEnabled(getActivity().getApplicationContext(), badgeNotificationsCheckbox.isChecked());
     }
 
     private void loadSettings(){
         soundEnabledCheckbox.setChecked(CurrentUser.getInstance().getSoundEnabled());
         tutorialMessagesEnabledCheckbox.setChecked(CurrentUser.getInstance().getTutorialMessagesEnabled());
+        badgeNotificationsCheckbox.setChecked(CurrentUser.getInstance().getBadgeNotificationsEnabled());
     }
 
     public interface OnFragmentInteractionListener {

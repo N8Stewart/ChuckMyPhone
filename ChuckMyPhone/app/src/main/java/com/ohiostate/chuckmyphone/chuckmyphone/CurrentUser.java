@@ -31,6 +31,7 @@ public class CurrentUser {
 
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
+    private boolean badgeUnlockNotificationsEnabled;
 
     private ArrayList<FirebaseHelper.CompeteRecord> chuckLeaderboardGlobal;
     private ArrayList<FirebaseHelper.CompeteRecord> spinLeaderboardGlobal;
@@ -47,8 +48,9 @@ public class CurrentUser {
         }
         isLoaded = true;
 
-        tutorialMessagesEnabled = true;
         soundEnabled = false;
+        tutorialMessagesEnabled = true;
+        badgeUnlockNotificationsEnabled = true;
 
         chuckScore = 0;
         spinScore = 0;
@@ -98,9 +100,13 @@ public class CurrentUser {
         soundEnabled = value;
     }
 
+    public void updateBadgeNotificationsEnabled(boolean value) { badgeUnlockNotificationsEnabled = value; }
+
     public boolean getSoundEnabled() {
         return soundEnabled;
     }
+
+    public boolean getBadgeNotificationsEnabled() { return badgeUnlockNotificationsEnabled; }
 
     public String getUserId() {
         return this.userId;
@@ -158,8 +164,9 @@ public class CurrentUser {
         return dropLeaderboardGlobal;
     }
 
-    public void loadSettings(boolean tutorialEnabled, boolean soundEnabled) {
+    public void loadSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled) {
         updateTutorialMessagesEnabled(tutorialEnabled);
         updateSoundEnabled(soundEnabled);
+        updateBadgeNotificationsEnabled(badgeUnlockNotificationsEnabled);
     }
 }

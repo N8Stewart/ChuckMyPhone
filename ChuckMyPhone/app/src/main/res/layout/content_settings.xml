@@ -34,6 +34,13 @@
             android:id="@+id/settings_tutorial_messages_checkbox"
             android:checked="true" />
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show badge unlock notifications"
+            android:id="@+id/settings_badge_unlock_notifications_checkbox"
+            android:checked="true" />
+
         <Button
             android:id="@+id/settings_save_button"
             android:layout_marginTop="30dp"

@@ -19,6 +19,7 @@ public class SharedPreferencesHelper {
         public static final String keyEmail = "email";
         public static final String keyTutorial = "tutorial";
         public static final String keySound = "sound";
+        public static final String keyBadgeNotifications = "badge";
     }
 
     public SharedPreferencesHelper(){}
@@ -49,6 +50,10 @@ public class SharedPreferencesHelper {
 
     public static void setSoundEnabled(Context context, boolean value){
         setBooleanValue(context, Keys.keySound, value);
+    }
+
+    public static void setBadgeNotificationsEnabled(Context context, boolean value){
+        setBooleanValue(context, Keys.keyBadgeNotifications, value);
     }
 
     public static void setTutorialMessages(Context context, boolean tutorialMessages) {
@@ -83,6 +88,10 @@ public class SharedPreferencesHelper {
 
     public static boolean getTutorialMessages(Context context) {
         return getBooleanValue(context, Keys.keyTutorial, true);
+    }
+
+    public static boolean getBadgeNotifications(Context context) {
+        return getBooleanValue(context, Keys.keyBadgeNotifications, true);
     }
 
     protected static boolean hasSharedData(Context context){

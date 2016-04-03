@@ -19,6 +19,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        //need to initialize mappings for badge descriptions
+        Badge b = new Badge("");
+        b.initializeDescriptionMappings(getApplicationContext());
+
         Log.d(TAG, "onCreate() called");
 
         Firebase.setAndroidContext(this);

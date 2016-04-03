@@ -9,13 +9,17 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +34,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean userHasSensor;
     protected boolean isRecording;
     protected long lastUpdate;
+    protected boolean popupIsUp;
 
     // Control the progress of the progress bar
     protected int progress;
@@ -64,6 +69,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         currentUser = CurrentUser.getInstance();
 
         mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
+
+        popupIsUp = false;
 
         Log.d(TAG, "onCreate() called");
 
@@ -228,6 +235,40 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 default:
                     break;
             }
+        }
+    };
+
+    protected PopupWindow pw;
+    protected void initiatePopupWindow(String badgeName) {
+        if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
+            try {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
+                // create a 300px width and 470px height PopupWindow
+                pw = new PopupWindow(layout, 800, 800, true);
+                // display the popup in the center
+                pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+                TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
+
+                badgeDescription.setText(Html.fromHtml("<i>" + badgeName + "</i>"));
+                badgeDescription.append("\n\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(badgeName));
+
+                Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
+                cancelButton.setOnClickListener(cancel_button_click_listener);
+
+                popupIsUp = true;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            pw.dismiss();
+            popupIsUp = false;
         }
     };
 }

@@ -1,5 +1,8 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -7,10 +10,19 @@ import android.location.GpsStatus;
 import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class CompeteChuckFragment extends CompeteFragment {
@@ -95,15 +107,18 @@ public class CompeteChuckFragment extends CompeteFragment {
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
                     currentUser.updateChuckScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
-                    Log.d("coordschuck", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
-                    if (score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
-                        FirebaseHelper.getInstance().unlockBadge("Noodle Arm");
+
+                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_one)) && !popupIsUp && score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
+                        initiatePopupWindow(getString(R.string.badge_chuck_level_one));
+                        FirebaseHelper.getInstance().unlockBadge(getString(R.string.badge_chuck_level_one));
                     }
-                    if (score >= Badge.BADGE_CHUCK_LEVEL_2_SCORE()) {
-                        FirebaseHelper.getInstance().unlockBadge("Rocket Arm");
+                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_two)) && !popupIsUp && score >= Badge.BADGE_CHUCK_LEVEL_2_SCORE()) {
+                        initiatePopupWindow(getString(R.string.badge_chuck_level_two));
+                        FirebaseHelper.getInstance().unlockBadge(getString(R.string.badge_chuck_level_two));
                     }
-                    if (score >= Badge.BADGE_CHUCK_LEVEL_3_SCORE()) {
-                        FirebaseHelper.getInstance().unlockBadge("Faster Than Light");
+                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_three)) && !popupIsUp && score >= Badge.BADGE_CHUCK_LEVEL_3_SCORE()) {
+                        initiatePopupWindow(getString(R.string.badge_chuck_level_three));
+                        FirebaseHelper.getInstance().unlockBadge(getString(R.string.badge_chuck_level_three));
                     }
                 }
             }
@@ -148,4 +163,5 @@ public class CompeteChuckFragment extends CompeteFragment {
 
     @Override
     public void onGpsStatusChanged(int event) {}
+
 }

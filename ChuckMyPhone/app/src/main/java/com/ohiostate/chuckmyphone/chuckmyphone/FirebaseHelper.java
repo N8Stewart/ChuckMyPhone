@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -57,26 +58,26 @@ public class FirebaseHelper {
 
         //TODO get users location here
 
-        public User(String username) {
+        public User(String username, Context c) {
             this.username = username;
 
             this.badgeList = new ArrayList<Badge>();
 
             //Add all badges here with no earned date
-            badgeList.add(new Badge("Noodle Arm"));
-            badgeList.add(new Badge("Rocket Arm"));
-            badgeList.add(new Badge("Faster Than Light"));
+            badgeList.add(new Badge(c.getString(R.string.badge_chuck_level_one)));
+            badgeList.add(new Badge(c.getString(R.string.badge_chuck_level_two)));
+            badgeList.add(new Badge(c.getString(R.string.badge_chuck_level_three)));
 
-            badgeList.add(new Badge("Flop Drop"));
-            badgeList.add(new Badge("Countertop Drop"));
-            badgeList.add(new Badge("Atmospheric Drop"));
+            badgeList.add(new Badge(c.getString(R.string.badge_drop_level_one)));
+            badgeList.add(new Badge(c.getString(R.string.badge_drop_level_two)));
+            badgeList.add(new Badge(c.getString(R.string.badge_drop_level_three)));
 
-            badgeList.add(new Badge("Inelastic Gymnastics"));
-            badgeList.add(new Badge("Enthusiastic Gymnastics"));
-            badgeList.add(new Badge("Bombastic Gymnastics"));
+            badgeList.add(new Badge(c.getString(R.string.badge_spin_level_one)));
+            badgeList.add(new Badge(c.getString(R.string.badge_spin_level_two)));
+            badgeList.add(new Badge(c.getString(R.string.badge_spin_level_three)));
 
-            badgeList.add(new Badge("The One Percent"));
-            badgeList.add(new Badge("The Kindness Badge"));
+            badgeList.add(new Badge(c.getString(R.string.badge_one_percent)));
+            badgeList.add(new Badge(c.getString(R.string.badge_hidden)));
 
             bestChuckRecord = new CompeteRecord(competitionType.CHUCK, username);
             bestSpinRecord = new CompeteRecord(competitionType.SPIN, username);
@@ -183,7 +184,7 @@ public class FirebaseHelper {
                 if (!dataSnapshot.hasChild("users/" + authData.getUid())) {
                     //create the record and insert it into Firebase
                     Firebase newUserRef = myFirebaseRef.child("users/" + authData.getUid());
-                    newUserRef.setValue(new User(CurrentUser.getInstance().getUsername()));
+                    newUserRef.setValue(new User(CurrentUser.getInstance().getUsername(), newUserActivity.getApplicationContext()));
                 } else {
                     System.out.println("User logged into existing account, no data was changed");
                 }
@@ -319,6 +320,25 @@ public class FirebaseHelper {
                 i = 20; //end this loop
             }
         }
+    }
+
+    protected boolean hasBadge(String badgeName) {
+        boolean hasBadge = false;
+        String userID = CurrentUser.getInstance().getUserId();
+        if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
+            DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
+            ArrayList<Badge> badgeList = new ArrayList<Badge>();
+            for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
+                if (badgeSnapshot.child("name").getValue().toString().equals(badgeName)) {
+                    String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
+                    if (unlockDate != "") {
+                        hasBadge = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return hasBadge;
     }
 
     protected void updateLeaderboard() {

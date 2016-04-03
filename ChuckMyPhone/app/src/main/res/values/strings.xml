@@ -46,4 +46,20 @@
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="tutorial">Display tutorial messages</string>
+
+    <string name="badge_chuck_level_one">Noodle Arm</string>
+    <string name="badge_chuck_level_two">Rocket Arm</string>
+    <string name="badge_chuck_level_three">Faster Than Light</string>
+
+    <string name="badge_drop_level_one">Flop Drop</string>
+    <string name="badge_drop_level_two">Countertop Drop</string>
+    <string name="badge_drop_level_three">Atmospheric Drop</string>
+
+    <string name="badge_spin_level_one">Inelastic Gymnastics</string>
+    <string name="badge_spin_level_two">Enthusiastic Gymnastics</string>
+    <string name="badge_spin_level_three">Bombastic Gymnastics</string>
+
+    <string name="badge_hidden">The Kindness Badge</string>
+    <string name="badge_one_percent">The 1%</string>
+
 </resources>
