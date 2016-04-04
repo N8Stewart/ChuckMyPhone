@@ -187,17 +187,28 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 }
 
                 //This code updates the UI, needs to be separate because on the original thread can touch the views
-                getActivity().runOnUiThread(updateViewSubRunnableScore);
-                progress = (int)((timeUntilEnd - timeNow) * 100 / NUM_MILLISECONDS_FOR_ACTION);
-                getActivity().runOnUiThread(updateProgressBar);
+                //this code may fail if it is performed when user transitions to other page during it
+                try {
+                    getActivity().runOnUiThread(updateViewSubRunnableScore);
+                    progress = (int) ((timeUntilEnd - timeNow) * 100 / NUM_MILLISECONDS_FOR_ACTION);
+                    getActivity().runOnUiThread(updateProgressBar);
+                } catch (Exception e) {
+                    //its okay for this chunk to fail, so don't print stuff here. We all make mistakes sometimes
+                }
                 timeNow = System.currentTimeMillis();
             }
 
             //once the loop is done, stop recording and switch the image back to the play button
             isRecording = false;
+
             //This code updates the UI, needs to be separate because on the original thread can touch the views
-            getActivity().runOnUiThread(updateViewSubRunnableImage);
-            getActivity().runOnUiThread(updateProgressBar);
+            //this code may fail if it is performed when user transitions to other page during it
+            try {
+                getActivity().runOnUiThread(updateViewSubRunnableImage);
+                getActivity().runOnUiThread(updateProgressBar);
+            } catch (Exception e) {
+                //its okay for this chunk to fail, so don't print stuff here. We all make mistakes sometimes
+            }
         }
     };
 
