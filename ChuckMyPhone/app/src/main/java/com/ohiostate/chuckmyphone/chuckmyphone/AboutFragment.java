@@ -97,7 +97,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 break;
             default:
                 Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
-                FirebaseHelper.getInstance().unlockBadge("The Kindness Badge");
+                FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
                 break;
         }
     }
