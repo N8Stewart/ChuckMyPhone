@@ -32,8 +32,6 @@ public class CompeteChuckFragment extends CompeteFragment {
     Sensor linearAccelerometer;
     public CompeteChuckFragment() {}
 
-    MediaPlayer goofyScreamSound;
-    MediaPlayer womanScreamSound;
     MediaPlayer whooshSound;
 
     public static CompeteFragment newInstance(String param1, String param2) {
@@ -44,8 +42,6 @@ public class CompeteChuckFragment extends CompeteFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        goofyScreamSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
-        womanScreamSound = MediaPlayer.create(getActivity(), R.raw.woman_scream_sound);
         whooshSound = MediaPlayer.create(getActivity(), R.raw.whoosh_sound);
 
         score = 0;

@@ -137,6 +137,12 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     @Override
     public void onPause() {
         super.onPause();
+
+        score = 0;
+        isRecording = false;
+        progress = 100;
+        getActivity().runOnUiThread(updateViewRunnable);
+
         Log.d(TAG, "onPause() called");
         sensManager.unregisterListener(this);
     }
