@@ -32,6 +32,8 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     private EditText newPasswordEditText;
     private EditText newPasswordConfirmationEditText;
 
+    private boolean actionPending;
+
     public ChangePasswordFragment() {}
 
     public static ChangePasswordFragment newInstance(String param1, String param2) {
@@ -42,7 +44,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        actionPending = false;
         Log.d(TAG, "onCreate() called");
 
     }
@@ -93,27 +95,34 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.change_password_confirm_button:
-                if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
-                    //TODO
-                    //is it bad to use the shared preferences as the check here for the password?
-                    if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).
-                            equals(oldPasswordEditText.getText().toString())) {
-                        SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(),
-                                newPasswordConfirmationEditText.getText().toString());
-                        FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
-                                oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
+        if (!actionPending) {
+            switch (v.getId()) {
+                case R.id.change_password_confirm_button:
+                    if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
+                        //TODO
+                        //is it bad to use the shared preferences as the check here for the password?
+                        if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).
+                                equals(oldPasswordEditText.getText().toString())) {
+                            Toast.makeText(getActivity().getApplicationContext(), "Sending email, please wait", Toast.LENGTH_SHORT).show();
+                            actionPending = true;
+
+                            SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(),
+                                    newPasswordConfirmationEditText.getText().toString());
+                            FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
+                                    oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Your new password entries don't match, please re-type them", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Your new password entries don't match, please re-type them", Toast.LENGTH_LONG).show();
-                }
-                break;
-            default:
-                getActivity().onBackPressed();
-                break;
+                    break;
+                default:
+                    getActivity().onBackPressed();
+                    break;
+            }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -143,11 +152,14 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         Toast.makeText(getActivity().getApplicationContext(), "Password was changed!", Toast.LENGTH_LONG).show();
         SharedPreferencesHelper.clearSharedData(getActivity().getApplicationContext());
 
+        actionPending = false;
+
         //jump to chuck compete fragment, might be a better way to do this
         startActivity(new Intent(getActivity().getApplication(), MainActivity.class));
     }
 
     public void onUnsuccessfulPasswordChange(FirebaseError firebaseError) {
+        actionPending = false;
         Toast.makeText(getActivity().getApplicationContext(), "Password was not changed: " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

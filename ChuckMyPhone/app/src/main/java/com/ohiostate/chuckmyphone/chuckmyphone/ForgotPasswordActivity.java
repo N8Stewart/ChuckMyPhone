@@ -18,13 +18,15 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     private Button resetButton;
     private EditText emailEditText;
 
+    private boolean actionPending;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
         Log.d(TAG, "onCreate() called");
-
+        actionPending = false;
         getSupportActionBar().setTitle("Forgot Password");
 
         initializeViews();
@@ -60,27 +62,35 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.activity_forgot_password_reset_button:
-                if (!emailEditText.getText().toString().equals("")) {
-                    FirebaseHelper.getInstance().resetPassword(emailEditText.getText().toString(), this);
-                } else {
-                    Toast.makeText(this.getApplicationContext(), "Please enter your email above", Toast.LENGTH_LONG).show();
-                }
-                break;
-            default:
-                finish();
-                break;
+        if (!actionPending) {
+            switch (v.getId()) {
+                case R.id.activity_forgot_password_reset_button:
+                    if (!emailEditText.getText().toString().equals("")) {
+                        actionPending = true;
+                        Toast.makeText(this.getApplicationContext(), "Changing password, please wait", Toast.LENGTH_SHORT).show();
+                        FirebaseHelper.getInstance().resetPassword(emailEditText.getText().toString(), this);
+                    } else {
+                        Toast.makeText(this.getApplicationContext(), "Please enter your email above", Toast.LENGTH_LONG).show();
+                    }
+                    break;
+                default:
+                    finish();
+                    break;
+            }
+        } else {
+            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_LONG).show();
         }
     }
 
     public void onPasswordSuccessfullyReset() {
         Toast.makeText(this.getApplicationContext(), "Password reset email was sent", Toast.LENGTH_LONG).show();
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
+        actionPending = false;
         finish();
     }
 
     public void onPasswordUnsuccessfullyReset(FirebaseError error) {
+        actionPending = false;
         Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ error.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

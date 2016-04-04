@@ -94,7 +94,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case R.id.login_login_button:
                     if (FirebaseHelper.getInstance().hasLoadedInitialSnapshot) {
-                        actionPending = true;
                         attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                     } else {
                         Toast.makeText(this.getApplicationContext(), "The app is still loading, please try again in a second", Toast.LENGTH_LONG).show();
@@ -119,9 +118,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         boolean loginSuccessful = false;
         if (!email.equals("")) {
             if (!password.equals("")) {
+                actionPending = true;
                 Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
                 boolean firebaseWasLoaded = FirebaseHelper.getInstance().loginWithoutFacebook(email, password, this);
                 if (!firebaseWasLoaded) {
+                    actionPending = false;
                     Toast.makeText(this.getApplicationContext(), "App is still loading, please try to login again in a second", Toast.LENGTH_SHORT).show();
                 }
             } else {
