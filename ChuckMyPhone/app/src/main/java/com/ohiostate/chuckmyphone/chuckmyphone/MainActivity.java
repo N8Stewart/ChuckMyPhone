@@ -1,8 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -17,9 +15,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.widget.Toast;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         CompeteFragment.OnFragmentInteractionListener,
@@ -89,8 +84,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(!NavigationHelper.getInstance().noFragmentsLeft()) {
                 String previousTag = NavigationHelper.getInstance().previousFragmentTag();
                 if (previousTag != null){
-                    if (previousTag.equals("' Profile"))
-                        getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
+                    if (previousTag.equals("'s Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
                     else getSupportActionBar().setTitle(previousTag);
                     markHamburgerMenu();
                 }
@@ -170,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
                     replace(R.id.activity_main_fragment_content, fragment).commit();
-            markHamburgerMenu();
+            unmarkAllItemsOnMenu();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
                     replace(R.id.activity_main_fragment_content, fragment).commit();
+            markHamburgerMenu();
         } catch (Exception e) {
             e.printStackTrace();
         }
