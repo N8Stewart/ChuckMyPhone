@@ -1,28 +1,14 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.location.GpsStatus;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class CompeteChuckFragment extends CompeteFragment {
@@ -100,6 +86,9 @@ public class CompeteChuckFragment extends CompeteFragment {
                     whooshSound.start();
                 }
 
+                if (score > runHighScore)
+                    runHighScore = score;
+
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
                     currentUser.updateChuckScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
@@ -140,7 +129,11 @@ public class CompeteChuckFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%d", score));
+                if(isRecording)
+                    currentScoreTextView.setText(String.format("%d", score));
+                else
+                    currentScoreTextView.setText(String.format("%d", runHighScore));
+
                 if (currentUser.getChuckScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{

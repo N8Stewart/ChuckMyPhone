@@ -105,6 +105,9 @@ public class CompeteDropFragment extends CompeteFragment {
                     }
                 }
 
+                if (score > runHighScore)
+                    runHighScore = score;
+
                 //if new high score
                 if (score > currentUser.getDropScore()) {
                     currentUser.updateDropScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
@@ -148,7 +151,11 @@ public class CompeteDropFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%d", score));
+                if(isRecording)
+                    currentScoreTextView.setText(String.format("%d", score));
+                else
+                    currentScoreTextView.setText(String.format("%d", runHighScore));
+
                 if (currentUser.getDropScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{

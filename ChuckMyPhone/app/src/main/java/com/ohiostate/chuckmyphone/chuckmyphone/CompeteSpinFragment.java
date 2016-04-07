@@ -78,6 +78,9 @@ public class CompeteSpinFragment extends CompeteFragment {
                 spinSound.start();
             }
 
+            if (score > runHighScore)
+                runHighScore = score;
+
             if ((currTime - lastUpdate) > 10) {
                 long dt = (currTime - lastUpdate);
                 lastUpdate = currTime;
@@ -125,7 +128,11 @@ public class CompeteSpinFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%d", score));
+                if(isRecording)
+                    currentScoreTextView.setText(String.format("%d", score));
+                else
+                    currentScoreTextView.setText(String.format("%d", runHighScore));
+
                 if (currentUser.getSpinScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
