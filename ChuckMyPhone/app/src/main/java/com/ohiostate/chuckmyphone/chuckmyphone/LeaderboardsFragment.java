@@ -112,7 +112,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                     } else {
                         // Grab out target distance
                         double targetDistance;
-                        if (distanceOption.equals("Within 10 kilometers"))
+                        if (distanceOption.equals("Within 10 miles"))
                             targetDistance = 10.0;
                         else
                             targetDistance = 100.0;
@@ -127,8 +127,10 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                             Location recordLocation = new Location("No provider");
                             recordLocation.setLatitude(record.latitude);
                             recordLocation.setLongitude(record.longitude);
-                            // Compute distance to target in kilometers
+                            // Compute distance to target in miles
+                            double scalingFactor = 0.0006213711923;
                             double distance = userLocation.distanceTo(recordLocation);
+                            distance = distance * scalingFactor;
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;

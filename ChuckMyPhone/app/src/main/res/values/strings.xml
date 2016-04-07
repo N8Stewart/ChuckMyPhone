@@ -8,8 +8,8 @@
     <string name="title_activity_leaderboard">LeaderboardActivity</string>
     <string-array name="Radius_spinner_labels">
         <item>Global</item>
-        <item>Within 10 kilometers</item>
-        <item>Within 100 kilometers</item>
+        <item>Within 10 miles</item>
+        <item>Within 100 miles</item>
     </string-array>
     <string-array name="Competition_spinner_labels">
         <item>Chuck</item>
