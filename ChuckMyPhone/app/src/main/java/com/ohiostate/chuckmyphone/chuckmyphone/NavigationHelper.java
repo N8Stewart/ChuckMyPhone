@@ -9,16 +9,15 @@ import java.util.Stack;
  */
 public class NavigationHelper {
 
-    private static NavigationHelper ourInstance = new NavigationHelper("Chuck My Phone");
+    private static NavigationHelper ourInstance = new NavigationHelper();
 
     public static NavigationHelper getInstance(){ return ourInstance;}
 
     private Stack<String> fragmentTags;
     private Map<String, Integer> fragmentTagsToID;
     
-    public NavigationHelper(String firstTag){
+    public NavigationHelper(){
         fragmentTags = new Stack<>();
-        fragmentTags.push(firstTag);
         fragmentTagsToID = new HashMap<>(5);
         fillMap();
     }
