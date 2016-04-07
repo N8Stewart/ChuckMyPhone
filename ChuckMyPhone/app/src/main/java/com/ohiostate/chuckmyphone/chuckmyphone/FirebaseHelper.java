@@ -100,7 +100,7 @@ public class FirebaseHelper {
             this.username = username;
         }
 
-        public CompeteRecord(long score, double longitude, double latitude, competitionType competition, String username) {
+        public CompeteRecord(long score, double latitude, double longitude, competitionType competition, String username) {
             this.score = score;
             this.longitude = longitude;
             this.latitude = latitude;
@@ -366,7 +366,9 @@ public class FirebaseHelper {
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
                 String username = (String) subSnapshot.child("username").getValue();
-                chuckRecords.add(new CompeteRecord(score, 0.0, 0.0, competitionType.CHUCK,username));
+                double latitude = (double) subSnapshot.child("latitude").getValue();
+                double longitude = (double) subSnapshot.child("longitude").getValue();
+                chuckRecords.add(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK,username));
             }
 
             CurrentUser.getInstance().updateChuckLeaderboard(chuckRecords);
@@ -384,7 +386,9 @@ public class FirebaseHelper {
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
                 String username = (String) subSnapshot.child("username").getValue();
-                spinRecords.add(new CompeteRecord(score, 0.0, 0.0, competitionType.SPIN, username));
+                double latitude = (double) subSnapshot.child("latitude").getValue();
+                double longitude = (double) subSnapshot.child("longitude").getValue();
+                spinRecords.add(new CompeteRecord(score, latitude, longitude, competitionType.SPIN, username));
             }
 
             CurrentUser.getInstance().updateSpinLeaderboard(spinRecords);
@@ -402,7 +406,9 @@ public class FirebaseHelper {
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
                 String username = (String) subSnapshot.child("username").getValue();
-                dropRecords.add(new CompeteRecord(score, 0.0, 0.0, competitionType.DROP, username));
+                double latitude = (double) subSnapshot.child("latitude").getValue();
+                double longitude = (double) subSnapshot.child("longitude").getValue();
+                dropRecords.add(new CompeteRecord(score, latitude, longitude, competitionType.DROP, username));
             }
 
             CurrentUser.getInstance().updateDropLeaderboard(dropRecords);

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -97,7 +100,10 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 break;
             default:
                 Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
-                FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
+                if (!FirebaseHelper.getInstance().hasBadge(getContext().getString(R.string.badge_hidden))) {
+                    FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
+                    initiatePopupWindow();
+                }
                 break;
         }
     }
@@ -123,4 +129,41 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         Log.d(TAG, "onResume() called");
     }
+
+    protected PopupWindow pw;
+    protected void initiatePopupWindow() {
+        if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
+            try {
+                final String bName = getString(R.string.badge_hidden);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
+                        // create a 300px width and 470px height PopupWindow
+                        pw = new PopupWindow(layout, 800, 800, true);
+
+                        // display the popup in the center
+                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+                        TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
+
+                        badgeDescription.setText(Html.fromHtml("<i>" + bName + "</i>"));
+                        badgeDescription.append("\n\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
+
+                        Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
+                        cancelButton.setOnClickListener(cancel_button_click_listener);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            pw.dismiss();
+        }
+    };
 }

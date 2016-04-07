@@ -105,22 +105,22 @@ public class CompeteDropFragment extends CompeteFragment {
                     }
                 }
 
+                if (score > runHighScore)
+                    runHighScore = score;
+
                 //if new high score
                 if (score > currentUser.getDropScore()) {
                     currentUser.updateDropScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     Log.d("coordsdrop", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
 
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_one)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
-                        initiatePopupWindow(getString(R.string.badge_drop_level_one));
-                        FirebaseHelper.getInstance().unlockBadge(getString(R.string.badge_drop_level_one));
+                        badgeUnlockName = getString(R.string.badge_drop_level_one);
                     }
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_two)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_2_SCORE()) {
-                        initiatePopupWindow(getString(R.string.badge_drop_level_two));
-                        FirebaseHelper.getInstance().unlockBadge(getString(R.string.badge_drop_level_two));
+                        badgeUnlockName = getString(R.string.badge_drop_level_two);
                     }
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_three)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_3_SCORE()) {
-                        initiatePopupWindow(getString(R.string.badge_drop_level_three));
-                        FirebaseHelper.getInstance().unlockBadge(getString(R.string.badge_drop_level_three));
+                        badgeUnlockName = getString(R.string.badge_drop_level_three);
                     }
                 }
             }
@@ -148,7 +148,11 @@ public class CompeteDropFragment extends CompeteFragment {
         updateViewSubRunnableScore = new Runnable() {
             @Override
             public void run() {
-                currentScoreTextView.setText(String.format("%d", score));
+                if(isRecording)
+                    currentScoreTextView.setText(String.format("%d", score));
+                else
+                    currentScoreTextView.setText(String.format("%d", runHighScore));
+
                 if (currentUser.getDropScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{

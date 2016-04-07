@@ -17,7 +17,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Button newUserButton;
     private Button loginButton;
-    private Button fbButton;
 
     private boolean actionPending;
 
@@ -58,9 +57,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginButton = (Button) findViewById(R.id.login_login_button);
         loginButton.setOnClickListener(this);
 
-        fbButton = (Button) findViewById(R.id.login_facebook_button);
-        fbButton.setOnClickListener(this);
-
         passwordEditText = (EditText) findViewById(R.id.login_password_edit_text);
         emailEditText = (EditText) findViewById(R.id.login_email_edit_text);
     }
@@ -89,9 +85,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (!actionPending) {
             switch (v.getId()) {
-                case R.id.login_facebook_button:
-
-                    break;
                 case R.id.login_login_button:
                     if (FirebaseHelper.getInstance().hasLoadedInitialSnapshot) {
                         attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());

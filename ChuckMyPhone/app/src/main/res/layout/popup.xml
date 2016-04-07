@@ -3,14 +3,15 @@
     android:id="@+id/popup_element"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/colorAccent"
     android:padding="10px"
+    android:background="@color/colorPrimaryLight"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/colorAccent"
         android:text="Badge Unlocked!"
         android:textSize="25dp" />
 
