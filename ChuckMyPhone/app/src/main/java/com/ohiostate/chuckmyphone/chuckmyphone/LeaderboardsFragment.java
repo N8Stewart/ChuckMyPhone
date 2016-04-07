@@ -247,33 +247,4 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         Log.d(TAG, "onResume() called");
     }
 
-    /**
-     * Compute the distance between the user's current location and the location of a score
-     * @param userLocation - user's most recent location
-     * @param scoreLocation - lat/long of the score
-     * @return the distance between the two scores
-     */
-    private double computeDistance(Location userLocation, Location scoreLocation) {
-
-        float hi = userLocation.distanceTo(scoreLocation);
-
-        // Convert locations from degrees to radians
-        double userLat = Math.PI * userLocation.getLatitude() / 180;
-        double scoreLat = Math.PI * scoreLocation.getLatitude() / 180;
-        double userLong = Math.PI * userLocation.getLongitude() / 180;
-        double scoreLong = Math.PI * scoreLocation.getLongitude() / 180;
-
-        // Great circle distance constant
-        int R = 6371; // in Kilometers
-
-        // Compute distance between two points in radian coordinates
-        double dlong = scoreLong - userLong;
-        double dlat = scoreLat - userLat;
-
-        // Compute the distance in plane geometry taking into account of Earth's spherical nature
-        double a = Math.pow(Math.sin(dlat/2), 2) + Math.cos(userLat) * Math.cos(scoreLat) * Math.pow(Math.sin(dlong/2), 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c;
-    }
-
 }
