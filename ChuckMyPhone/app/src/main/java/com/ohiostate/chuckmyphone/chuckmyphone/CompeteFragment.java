@@ -41,6 +41,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     // Score of the different compete screens
     protected long score;
+    // Largest score achieved in the past run
+    protected long runHighScore;
 
     protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
     protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
@@ -139,6 +141,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         super.onPause();
 
         score = 0;
+        runHighScore = 0;
         isRecording = false;
         progress = 100;
         getActivity().runOnUiThread(updateViewRunnable);
@@ -162,9 +165,12 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             }
             if (userHasSensor) {
                 isRecording = !isRecording;
+                if (isRecording)
+                    runHighScore = 0;
                 getActivity().runOnUiThread(updateViewSubRunnableImage);
                 updateViewRunnableThread.start();
             }
+
         }
     };
 
