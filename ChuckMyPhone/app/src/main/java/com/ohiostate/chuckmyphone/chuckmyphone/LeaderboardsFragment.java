@@ -2,6 +2,7 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 public class LeaderboardsFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -77,25 +77,64 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         //needs a final declaration to be used in listener
         final View v = view;
-        competitionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+        AdapterView.OnItemSelectedListener filterResults = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //clear leaderboard entries to make room for new entries
-                LinearLayout leaderboardRow = (LinearLayout) v.findViewById(R.id.leaderboards_row_record_linear_layout);
+                LinearLayout leaderboardRow = (LinearLayout) getActivity().findViewById(R.id.leaderboards_row_record_linear_layout);
                 leaderboardRow.removeAllViews();
 
-                String competitionOption = parentView.getItemAtPosition(position).toString();
-                if (competitionOption.equals("Chuck")) {
-                    for (int i = 0; i < chuckRecords.size(); i++) {
-                        addEntryToLeaderboard(i+1, chuckRecords.get(i).username, chuckRecords.get(i).score, v, "");
-                    }
-                } else if (competitionOption.equals("Drop")) {
-                    for (int i = 0; i < dropRecords.size(); i++) {
-                        addEntryToLeaderboard(i+1, dropRecords.get(i).username, dropRecords.get(i).score, v, "");
-                    }
-                } else { // "Spin"
-                    for (int i = 0; i < spinRecords.size(); i++) {
-                        addEntryToLeaderboard(i+1, spinRecords.get(i).username, spinRecords.get(i).score, v, "");
+                String distanceOption = distanceSpinner.getSelectedItem().toString();
+
+                // Select the correct records
+                String competitionOption = competitionSpinner.getSelectedItem().toString();
+                ArrayList<FirebaseHelper.CompeteRecord> records = null;
+                switch (competitionOption) {
+                    case "Chuck" :
+                        records = chuckRecords;
+                        break;
+                    case "Drop" :
+                        records = dropRecords;
+                        break;
+                    case "Spin" :
+                        records = spinRecords;
+                        break;
+                    default :
+                        Log.d(TAG, "No scores loaded.");
+                        break;
+                }
+                if (records != null) {
+                    if (distanceOption.equals("Global")) {
+                        for (int i = 0; i < records.size(); i++) {
+                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v, "");
+                        }
+                    } else {
+                        // Grab out target distance
+                        double targetDistance;
+                        if (distanceOption.equals("Within 10 kilometers"))
+                            targetDistance = 10.0;
+                        else
+                            targetDistance = 100.0;
+
+                        // Grab user's location
+                        Location userLocation = new Location("No provider");
+                        userLocation.setLatitude(0.0);
+                        userLocation.setLongitude(0.0);
+                        int i = 0;
+                        for (FirebaseHelper.CompeteRecord record : records) {
+                            // For each record, grab record location
+                            Location recordLocation = new Location("No provider");
+                            recordLocation.setLatitude(record.latitude);
+                            recordLocation.setLongitude(record.longitude);
+                            // Compute distance to target in kilometers
+                            double distance = userLocation.distanceTo(recordLocation);
+                            // If distance is within our target distance, display the record
+                            if (distance < targetDistance) {
+                                i++;
+                                addEntryToLeaderboard(i, record.username, record.score, v, "");
+                            }
+                        }
                     }
                 }
             }
@@ -104,7 +143,10 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
             public void onNothingSelected(AdapterView<?> parentView) {
                 // your code here
             }
-        });
+        };
+
+        competitionSpinner.setOnItemSelectedListener(filterResults);
+        distanceSpinner.setOnItemSelectedListener(filterResults);
     }
 
     public void onButtonPressed(Uri uri) {
@@ -204,4 +246,34 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         super.onResume();
         Log.d(TAG, "onResume() called");
     }
+
+    /**
+     * Compute the distance between the user's current location and the location of a score
+     * @param userLocation - user's most recent location
+     * @param scoreLocation - lat/long of the score
+     * @return the distance between the two scores
+     */
+    private double computeDistance(Location userLocation, Location scoreLocation) {
+
+        float hi = userLocation.distanceTo(scoreLocation);
+
+        // Convert locations from degrees to radians
+        double userLat = Math.PI * userLocation.getLatitude() / 180;
+        double scoreLat = Math.PI * scoreLocation.getLatitude() / 180;
+        double userLong = Math.PI * userLocation.getLongitude() / 180;
+        double scoreLong = Math.PI * scoreLocation.getLongitude() / 180;
+
+        // Great circle distance constant
+        int R = 6371; // in Kilometers
+
+        // Compute distance between two points in radian coordinates
+        double dlong = scoreLong - userLong;
+        double dlat = scoreLat - userLat;
+
+        // Compute the distance in plane geometry taking into account of Earth's spherical nature
+        double a = Math.pow(Math.sin(dlat/2), 2) + Math.cos(userLat) * Math.cos(scoreLat) * Math.pow(Math.sin(dlong/2), 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c;
+    }
+
 }
