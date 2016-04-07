@@ -35,6 +35,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean isRecording;
     protected long lastUpdate;
     protected boolean popupIsUp;
+    protected String badgeUnlockName;
 
     // Control the progress of the progress bar
     protected int progress;
@@ -72,6 +73,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
 
+        badgeUnlockName = "";
         popupIsUp = false;
 
         Log.d(TAG, "onCreate() called");
@@ -207,6 +209,13 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             //once the loop is done, stop recording and switch the image back to the play button
             isRecording = false;
 
+            //if a badge was unlocked during the run
+            if (!badgeUnlockName.equals("")) {
+                FirebaseHelper.getInstance().unlockBadge(badgeUnlockName);
+                initiatePopupWindow(badgeUnlockName);
+                badgeUnlockName = "";
+            }
+
             //This code updates the UI, needs to be separate because on the original thread can touch the views
             //this code may fail if it is performed when user transitions to other page during it
             try {
@@ -265,23 +274,29 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected void initiatePopupWindow(String badgeName) {
         if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
             try {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-                // create a 300px width and 470px height PopupWindow
-                pw = new PopupWindow(layout, 800, 800, true);
-                // display the popup in the center
-                pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                final String bName = badgeName;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
+                        // create a 300px width and 470px height PopupWindow
+                        pw = new PopupWindow(layout, 800, 800, true);
 
-                TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
+                        // display the popup in the center
+                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
-                badgeDescription.setText(Html.fromHtml("<i>" + badgeName + "</i>"));
-                badgeDescription.append("\n\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(badgeName));
+                        TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
 
-                Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
-                cancelButton.setOnClickListener(cancel_button_click_listener);
+                        badgeDescription.setText(Html.fromHtml("<i>" + bName + "</i>"));
+                        badgeDescription.append("\n\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
 
-                popupIsUp = true;
+                        Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
+                        cancelButton.setOnClickListener(cancel_button_click_listener);
 
+                        popupIsUp = true;
+                    }
+                });
             } catch (Exception e) {
                 e.printStackTrace();
             }
