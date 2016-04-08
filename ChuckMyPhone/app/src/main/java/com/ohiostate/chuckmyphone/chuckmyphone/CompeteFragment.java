@@ -286,10 +286,11 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                         // display the popup in the center
                         pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
+                        TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
                         TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
 
-                        badgeDescription.setText(Html.fromHtml("<i>" + bName + "</i>"));
-                        badgeDescription.append("\n\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
+                        badgeTitle.setText(Html.fromHtml("<i>" + bName + "</i>"));
+                        badgeDescription.setText("\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
 
                         Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
                         cancelButton.setOnClickListener(cancel_button_click_listener);

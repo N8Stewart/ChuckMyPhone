@@ -12,13 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:textColor="@color/colorAccent"
+        android:gravity="center"
         android:text="Badge Unlocked!"
         android:textSize="25dp" />
+
+    <TextView android:id="@+id/popup_BadgeTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="title"
+        android:gravity="center"
+        android:textSize="20dp" />
 
     <TextView android:id="@+id/popup_BadgeDescriptionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="bob"
+        android:text="description"
         android:paddingLeft="10sp"
         android:textSize="20dp" />
 
