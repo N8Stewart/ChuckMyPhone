@@ -70,16 +70,15 @@ public class CompeteChuckFragment extends CompeteFragment {
         Sensor mySensor = event.sensor;
 
         if (isRecording && mySensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-            double ax = event.values[0];
-            double ay = event.values[1];
-            double az = event.values[2];
-
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 10) {
                 lastUpdate = curTime;
 
                 //not actually speed, but that is hard to derive
+                double ax = event.values[0];
+                double ay = event.values[1];
+                double az = event.values[2];
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
                 if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {

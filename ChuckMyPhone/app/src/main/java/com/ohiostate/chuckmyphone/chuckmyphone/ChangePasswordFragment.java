@@ -3,6 +3,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -98,23 +100,27 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         if (!actionPending) {
             switch (v.getId()) {
                 case R.id.change_password_confirm_button:
-                    if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
-                        //TODO
-                        //is it bad to use the shared preferences as the check here for the password?
-                        if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).
-                                equals(oldPasswordEditText.getText().toString())) {
-                            Toast.makeText(getActivity().getApplicationContext(), "Sending email, please wait", Toast.LENGTH_SHORT).show();
-                            actionPending = true;
+                    if (isNetworkAvailable()) {
+                        if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
+                            //TODO
+                            //is it bad to use the shared preferences as the check here for the password?
+                            if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).
+                                    equals(oldPasswordEditText.getText().toString())) {
+                                Toast.makeText(getActivity().getApplicationContext(), "Sending email, please wait", Toast.LENGTH_SHORT).show();
+                                actionPending = true;
 
-                            SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(),
-                                    newPasswordConfirmationEditText.getText().toString());
-                            FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
-                                    oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
+                                SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(),
+                                        newPasswordConfirmationEditText.getText().toString());
+                                FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
+                                        oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
+                            }
                         } else {
-                            Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "Your new password entries don't match, please re-type them", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "Your new password entries don't match, please re-type them", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Cannot change password when you have no internet", Toast.LENGTH_LONG).show();
                     }
                     break;
                 default:
@@ -161,5 +167,11 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     public void onUnsuccessfulPasswordChange(FirebaseError firebaseError) {
         actionPending = false;
         Toast.makeText(getActivity().getApplicationContext(), "Password was not changed: " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

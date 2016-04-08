@@ -1,6 +1,9 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -112,21 +115,20 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
         // Ensure username length is restricted
         if (username.length() < USERNAME_LENGTH_MIN || username.length() > USERNAME_lENGTH_MAX) {
-            toast = Toast.makeText(this.getApplicationContext(), String.format("Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_lENGTH_MAX), Toast.LENGTH_SHORT);
+            Toast.makeText(this.getApplicationContext(), String.format("Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_lENGTH_MAX), Toast.LENGTH_SHORT).show();
         } else if (password.isEmpty()) {
-            toast = Toast.makeText(this.getApplicationContext(), "Please enter a password.", Toast.LENGTH_SHORT);
+            Toast.makeText(this.getApplicationContext(), "Please enter a password.", Toast.LENGTH_SHORT).show();
         } else if (!password.equals(passwordVerification)) {
-            toast = Toast.makeText(this.getApplicationContext(), String.format("Passwords do not match"), Toast.LENGTH_SHORT);
+            Toast.makeText(this.getApplicationContext(), String.format("Passwords do not match"), Toast.LENGTH_SHORT).show();
         } else if (email.isEmpty()) {
-            toast = Toast.makeText(this.getApplicationContext(), "Enter a valid email to create an account.", Toast.LENGTH_SHORT);
+            Toast.makeText(this.getApplicationContext(), "Enter a valid email to create an account.", Toast.LENGTH_SHORT).show();
         } else if (!termsOfServiceCheckBox.isChecked()) {
-            toast = Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_SHORT);
+            Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_SHORT).show();
+        } else if (!isNetworkAvailable()) {
+            Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_SHORT).show();
         } else {
             isReady = true;
         }
-
-        if (toast != null)
-            toast.show();
 
         return isReady;
     }
@@ -160,5 +162,11 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     protected void accountWasNotCreated(String error) {
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

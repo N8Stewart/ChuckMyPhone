@@ -77,16 +77,14 @@ public class CompeteDropFragment extends CompeteFragment {
         Sensor sensor = event.sensor;
 
         if (isRecording && sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float ax = event.values[0];
-            float ay = event.values[1];
-            float az = event.values[2];
-
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 10) {
-                //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
+                float ax = event.values[0];
+                float ay = event.values[1];
+                float az = event.values[2];
                 acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling

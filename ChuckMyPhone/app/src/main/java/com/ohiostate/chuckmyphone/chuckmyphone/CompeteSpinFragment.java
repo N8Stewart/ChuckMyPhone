@@ -68,9 +68,6 @@ public class CompeteSpinFragment extends CompeteFragment {
 
         //update speeds
         if (isRecording && mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            float ax = event.values[0];
-            float ay = event.values[1];
-            float az = event.values[2];
 
             long currTime = System.currentTimeMillis();
 
@@ -78,14 +75,17 @@ public class CompeteSpinFragment extends CompeteFragment {
                 spinSound.start();
             }
 
-            if (score > runHighScore)
-                runHighScore = score;
-
             if ((currTime - lastUpdate) > 10) {
-                long dt = (currTime - lastUpdate);
+                float ax = event.values[0];
+                float ay = event.values[1];
+                float az = event.values[2];
+                score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
+
+                if (score > runHighScore)
+                    runHighScore = score;
+
                 lastUpdate = currTime;
 
-                score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
                     currentUser.updateSpinScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     Log.d("coordsspin", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
@@ -99,6 +99,11 @@ public class CompeteSpinFragment extends CompeteFragment {
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_three)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_3_SCORE()) {
                         badgeUnlockName = getString(R.string.badge_spin_level_three);
                     }
+                }
+
+                //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
+                if (runHighScore > currentUser.getSpinScore()) {
+                    currentUser.updateSpinScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                 }
             }
         }

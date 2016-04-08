@@ -76,16 +76,19 @@ public class CurrentUser {
     //updates high score in firebase
     public void updateChuckScore(long score, double latitude, double longitude) {
         FirebaseHelper.getInstance().updateBestChuckScore(score, latitude, longitude);
+        chuckScore = score;
     }
 
     //updates high score in firebase
     public void updateDropScore(long score, double latitude, double longitude) {
         FirebaseHelper.getInstance().updateBestDropScore(score, latitude, longitude);
+        dropScore = score;
     }
 
     //updates high score in firebase
     public void updateSpinScore(long score, double latitude, double longitude) {
         FirebaseHelper.getInstance().updateBestSpinScore(score, latitude, longitude);
+        spinScore = score;
     }
 
     public void updateTutorialMessagesEnabled(boolean value) {

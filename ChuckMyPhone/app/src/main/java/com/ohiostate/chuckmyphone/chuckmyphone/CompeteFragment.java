@@ -6,6 +6,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.GpsStatus;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -102,6 +104,11 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_compete, container, false);
+
+        if (!isNetworkAvailable()) {
+            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nScores will only be saved locally until an internet connection is re-established", Toast.LENGTH_LONG).show();
+        }
+
         return view;
     }
 
@@ -310,4 +317,10 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             popupIsUp = false;
         }
     };
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

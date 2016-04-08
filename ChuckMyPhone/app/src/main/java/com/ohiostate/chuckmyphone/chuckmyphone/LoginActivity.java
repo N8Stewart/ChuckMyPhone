@@ -1,6 +1,9 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -89,7 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (FirebaseHelper.getInstance().hasLoadedInitialSnapshot) {
                         attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                     } else {
-                        Toast.makeText(this.getApplicationContext(), "The app is still loading, please try again in a second", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getApplicationContext(), "Still loading, please try again in a second\nIf this persists for more than a minute, check your internet connection", Toast.LENGTH_LONG).show();
                     }
                     break;
                 case R.id.login_forgot_password_textview:
@@ -109,20 +112,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public boolean attemptLogin(String email, String password) {
         boolean loginSuccessful = false;
-        if (!email.equals("")) {
-            if (!password.equals("")) {
-                actionPending = true;
-                Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
-                boolean firebaseWasLoaded = FirebaseHelper.getInstance().loginWithoutFacebook(email, password, this);
-                if (!firebaseWasLoaded) {
-                    actionPending = false;
-                    Toast.makeText(this.getApplicationContext(), "App is still loading, please try to login again in a second", Toast.LENGTH_SHORT).show();
+        if (isNetworkAvailable()) {
+            if (!email.equals("")) {
+                if (!password.equals("")) {
+                    actionPending = true;
+                    Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
+                    boolean firebaseWasLoaded = FirebaseHelper.getInstance().loginWithoutFacebook(email, password, this);
+                    if (!firebaseWasLoaded) {
+                        actionPending = false;
+                        Toast.makeText(this.getApplicationContext(), "App is still loading, please try to login again in a second", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getApplicationContext(), "Please enter your username", Toast.LENGTH_LONG).show();
             }
         } else {
-            Toast.makeText(this.getApplicationContext(), "Please enter your username", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_LONG).show();
         }
         return loginSuccessful;
     }
@@ -160,5 +167,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onUnsuccessfulLogin(String error) {
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
