@@ -3,6 +3,8 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.content.Context;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -61,6 +64,12 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         for (int i = 0; i < chuckRecords.size(); i++) {
             addEntryToLeaderboard(i+1, "Tim Taylor", chuckRecords.get(i).score, view, "m/s^2");
         }
+
+        if (!isNetworkAvailable()) {
+            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nThis leaderboard may be out of date", Toast.LENGTH_LONG).show();
+        }
+
+
         return view;
     }
 
@@ -249,4 +258,9 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         Log.d(TAG, "onResume() called");
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

@@ -20,6 +20,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private Button saveButton;
     private CheckBox soundEnabledCheckbox;
+    private CheckBox goofySoundEnabledCheckbox;
     private CheckBox tutorialMessagesEnabledCheckbox;
     private CheckBox badgeNotificationsCheckbox;
     public SettingsFragment() {}
@@ -54,8 +55,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         tutorialMessagesEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_tutorial_messages_checkbox);
         tutorialMessagesEnabledCheckbox.setOnClickListener(this);
 
+        goofySoundEnabledCheckbox = (CheckBox) view.findViewById(R.id.settings_goofy_sounds_checkbox);
+        goofySoundEnabledCheckbox.setOnClickListener(this);
+
         saveButton = (Button) view.findViewById(R.id.settings_save_button);
         saveButton.setOnClickListener(this);
+
+        if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_hidden))) {
+            goofySoundEnabledCheckbox.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void onButtonPressed(Uri uri) {
@@ -96,15 +104,20 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
         CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
         CurrentUser.getInstance().updateBadgeNotificationsEnabled(badgeNotificationsCheckbox.isChecked());
+        CurrentUser.getInstance().updateGoofySoundEnabled(goofySoundEnabledCheckbox.isChecked());
+
+
         SharedPreferencesHelper.setSoundEnabled(getActivity().getApplicationContext(), soundEnabledCheckbox.isChecked());
         SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(), tutorialMessagesEnabledCheckbox.isChecked());
         SharedPreferencesHelper.setBadgeNotificationsEnabled(getActivity().getApplicationContext(), badgeNotificationsCheckbox.isChecked());
+        SharedPreferencesHelper.setGoofySoundEnabled(getActivity().getApplicationContext(), goofySoundEnabledCheckbox.isChecked());
     }
 
     private void loadSettings(){
         soundEnabledCheckbox.setChecked(CurrentUser.getInstance().getSoundEnabled());
         tutorialMessagesEnabledCheckbox.setChecked(CurrentUser.getInstance().getTutorialMessagesEnabled());
         badgeNotificationsCheckbox.setChecked(CurrentUser.getInstance().getBadgeNotificationsEnabled());
+        goofySoundEnabledCheckbox.setChecked(CurrentUser.getInstance().getGoofySoundEnabled());
     }
 
     public interface OnFragmentInteractionListener {

@@ -3,8 +3,6 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.location.GpsStatus;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +24,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     Sensor linearAccelerometer;
 
-    MediaPlayer explosionSound;
+    MediaPlayer dropSound;
 
     public CompeteDropFragment() {}
 
@@ -42,8 +40,11 @@ public class CompeteDropFragment extends CompeteFragment {
         score = 0;
         acceleration = 0;
         isFalling = false;
-
-        explosionSound = MediaPlayer.create(getActivity(), R.raw.explosion_sound);
+        if (CurrentUser.getInstance().getGoofySoundEnabled()) {
+            dropSound = MediaPlayer.create(getActivity(), R.raw.grenade_sound);
+        } else {
+            dropSound = MediaPlayer.create(getActivity(), R.raw.splat_sound);
+        }
 
         //max falling speed is set when the scores are grabbed, no need to initialize here
         //maxTimeFalling = 0;
@@ -77,16 +78,14 @@ public class CompeteDropFragment extends CompeteFragment {
         Sensor sensor = event.sensor;
 
         if (isRecording && sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            float ax = event.values[0];
-            float ay = event.values[1];
-            float az = event.values[2];
-
             long curTime = System.currentTimeMillis();
 
             if ((curTime - lastUpdate) > 10) {
-                //long dt = (curTime - lastUpdate);
                 lastUpdate = curTime;
 
+                float ax = event.values[0];
+                float ay = event.values[1];
+                float az = event.values[2];
                 acceleration = Math.sqrt(ax*ax + ay*ay + az*az);
 
                 //if phone starts falling
@@ -101,7 +100,7 @@ public class CompeteDropFragment extends CompeteFragment {
                     score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
                     if (CurrentUser.getInstance().getSoundEnabled()) {
-                        explosionSound.start();
+                        dropSound.start();
                     }
                 }
 
@@ -112,14 +111,20 @@ public class CompeteDropFragment extends CompeteFragment {
                 if (score > currentUser.getDropScore()) {
                     currentUser.updateDropScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_one)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_drop_level_one);
+                    //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
+                    if (runHighScore > currentUser.getDropScore()) {
+                        currentUser.updateDropScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                        score = runHighScore;
                     }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_two)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_2_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_drop_level_two);
+
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_drop_level_one)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_one)) && score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_drop_level_one));
                     }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_three)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_3_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_drop_level_three);
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_drop_level_two)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_two)) && score >= Badge.BADGE_DROP_LEVEL_2_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_drop_level_two));
+                    }
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_drop_level_three)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_three)) && score >= Badge.BADGE_DROP_LEVEL_3_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_drop_level_three));
                     }
                 }
             }

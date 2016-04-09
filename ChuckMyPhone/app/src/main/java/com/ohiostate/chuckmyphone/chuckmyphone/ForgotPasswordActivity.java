@@ -1,5 +1,8 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -65,12 +68,16 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         if (!actionPending) {
             switch (v.getId()) {
                 case R.id.activity_forgot_password_reset_button:
-                    if (!emailEditText.getText().toString().equals("")) {
-                        actionPending = true;
-                        Toast.makeText(this.getApplicationContext(), "Changing password, please wait", Toast.LENGTH_SHORT).show();
-                        FirebaseHelper.getInstance().resetPassword(emailEditText.getText().toString(), this);
+                    if (isNetworkAvailable()) {
+                        if (!emailEditText.getText().toString().equals("")) {
+                            actionPending = true;
+                            Toast.makeText(this.getApplicationContext(), "Changing password, please wait", Toast.LENGTH_SHORT).show();
+                            FirebaseHelper.getInstance().resetPassword(emailEditText.getText().toString(), this);
+                        } else {
+                            Toast.makeText(this.getApplicationContext(), "Please enter your email above", Toast.LENGTH_LONG).show();
+                        }
                     } else {
-                        Toast.makeText(this.getApplicationContext(), "Please enter your email above", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_SHORT).show();
                     }
                     break;
                 default:
@@ -92,5 +99,11 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     public void onPasswordUnsuccessfullyReset(FirebaseError error) {
         actionPending = false;
         Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ error.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

@@ -6,6 +6,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.GpsStatus;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -33,8 +35,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean userHasSensor;
     protected boolean isRecording;
     protected long lastUpdate;
-    protected boolean popupIsUp;
-    protected String badgeUnlockName;
+    protected ArrayList<String> badgeUnlockNames;
 
     // Control the progress of the progress bar
     protected int progress;
@@ -72,6 +73,9 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         badgeUnlockName = "";
         popupIsUp = false;
+        mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
+
+        badgeUnlockNames = new ArrayList<String>();
 
         Log.d(TAG, "onCreate() called");
 
@@ -99,6 +103,11 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_compete, container, false);
+
+        if (!isNetworkAvailable()) {
+            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nScores will only be saved locally until an internet connection is re-established", Toast.LENGTH_LONG).show();
+        }
+
         return view;
     }
 
@@ -202,10 +211,16 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             isRecording = false;
 
             //if a badge was unlocked during the run
-            if (!badgeUnlockName.equals("")) {
-                FirebaseHelper.getInstance().unlockBadge(badgeUnlockName);
-                initiatePopupWindow(badgeUnlockName);
-                badgeUnlockName = "";
+            if (badgeUnlockNames.size() != 0) {
+                //to avoid concurrency issues, clone the list of badges to unlock
+                ArrayList<String> tempBadges = (ArrayList<String>) badgeUnlockNames.clone();
+                for (String badgeName : tempBadges) {
+                    FirebaseHelper.getInstance().unlockBadge(badgeName);
+                }
+                //only display pop up for most impressive badge
+                initiatePopupWindow(tempBadges.get(tempBadges.size()-1));
+
+                badgeUnlockNames.clear();
             }
 
             //This code updates the UI, needs to be separate because on the original thread can touch the views
@@ -258,15 +273,14 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                         // display the popup in the center
                         pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
+                        TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
                         TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
 
-                        badgeDescription.setText(Html.fromHtml("<i>" + bName + "</i>"));
-                        badgeDescription.append("\n\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
+                        badgeTitle.setText(Html.fromHtml("<i>" + bName + "</i>"));
+                        badgeDescription.setText("\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
 
                         Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
                         cancelButton.setOnClickListener(cancel_button_click_listener);
-
-                        popupIsUp = true;
                     }
                 });
             } catch (Exception e) {
@@ -278,7 +292,12 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
-            popupIsUp = false;
         }
     };
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 }

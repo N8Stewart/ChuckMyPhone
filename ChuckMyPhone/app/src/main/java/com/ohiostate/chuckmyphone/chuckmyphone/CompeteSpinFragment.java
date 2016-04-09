@@ -32,7 +32,11 @@ public class CompeteSpinFragment extends CompeteFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spinSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
+        if (CurrentUser.getInstance().getGoofySoundEnabled()) {
+            spinSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
+        } else {
+            spinSound = MediaPlayer.create(getActivity(), R.raw.descending_ufo);
+        }
 
         //max rotation speed is set when the scores are grabbed, no need to initialize here
         //maxRotationSpeed = 0;
@@ -68,9 +72,6 @@ public class CompeteSpinFragment extends CompeteFragment {
 
         //update speeds
         if (isRecording && mySensor.getType() == Sensor.TYPE_GYROSCOPE) {
-            float ax = event.values[0];
-            float ay = event.values[1];
-            float az = event.values[2];
 
             long currTime = System.currentTimeMillis();
 
@@ -78,25 +79,34 @@ public class CompeteSpinFragment extends CompeteFragment {
                 spinSound.start();
             }
 
-            if (score > runHighScore)
-                runHighScore = score;
-
             if ((currTime - lastUpdate) > 10) {
-                long dt = (currTime - lastUpdate);
+                float ax = event.values[0];
+                float ay = event.values[1];
+                float az = event.values[2];
+                score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
+
+                if (score > runHighScore)
+                    runHighScore = score;
+
                 lastUpdate = currTime;
 
-                score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
                     currentUser.updateSpinScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_one)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_spin_level_one);
+                    //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
+                    if (runHighScore > currentUser.getSpinScore()) {
+                        currentUser.updateSpinScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                        score = runHighScore;
                     }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_two)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_2_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_spin_level_two);
+
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_spin_level_one)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_one)) && score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_spin_level_one));
                     }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_three)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_3_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_spin_level_three);
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_spin_level_two)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_two)) && score >= Badge.BADGE_SPIN_LEVEL_2_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_spin_level_two));
+                    }
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_spin_level_three)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_three)) && score >= Badge.BADGE_SPIN_LEVEL_3_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_spin_level_three));
                     }
                 }
             }

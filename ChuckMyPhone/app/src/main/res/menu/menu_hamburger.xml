@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_hamburger_item_profile"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_profile"
             android:title="@string/action_profile"/>
         <item
             android:id="@+id/menu_hamburger_item_leaderboards"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_leaderboard"
             android:title="@string/action_leaderboards"/>
     </group>
 
@@ -17,15 +17,15 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/menu_hamburger_item_chuck"
-                    android:icon="@drawable/ic_menu_slideshow"
+                    android:icon="@drawable/ic_chuck"
                     android:title="@string/action_chuck"/>
                 <item
                     android:id="@+id/menu_hamburger_item_drop"
-                    android:icon="@drawable/ic_menu_slideshow"
+                    android:icon="@drawable/ic_drop"
                     android:title="@string/action_drop"/>
                 <item
                     android:id="@+id/menu_hamburger_item_spin"
-                    android:icon="@drawable/ic_menu_slideshow"
+                    android:icon="@drawable/ic_spin"
                     android:title="@string/action_spin"/>
             </group>
         </menu>

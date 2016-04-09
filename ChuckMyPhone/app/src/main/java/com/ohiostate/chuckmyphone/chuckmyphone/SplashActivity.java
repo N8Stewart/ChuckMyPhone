@@ -22,6 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         //need to initialize mappings for badge descriptions
         Badge b = new Badge("");
         b.initializeDescriptionMappings(getApplicationContext());
+        b.initializeDrawableMappings(getApplicationContext());
 
         Log.d(TAG, "onCreate() called");
 

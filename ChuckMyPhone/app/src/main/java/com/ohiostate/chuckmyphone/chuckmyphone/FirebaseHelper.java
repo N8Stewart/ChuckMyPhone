@@ -142,13 +142,29 @@ public class FirebaseHelper {
         });
     }
 
-    public void createUserWithoutFacebook(String email, String password, String username, NewUserActivity activity) {
+    public void createUser(String email, String password, String username, NewUserActivity activity) {
         newUserActivity = activity;
         CurrentUser.getInstance().assignUsername(username);
         myFirebaseRef.createUser(email, password, userCreationHandler);
     }
 
-    public boolean loginWithoutFacebook(String email, String password, LoginActivity activity) {
+    public boolean isUsernameAvailable(String username) {
+        boolean usernameIsAvailable = true;
+        if (dataSnapshot != null) {
+            for (DataSnapshot user : dataSnapshot.child("users").getChildren()) {
+                if (user.hasChild("username")) {
+                    if (username.equals(user.child("username").getValue())) {
+                        usernameIsAvailable = false;
+                    }
+                }
+            }
+        } else {
+            usernameIsAvailable = false;
+        }
+        return usernameIsAvailable;
+    }
+
+    public boolean login(String email, String password, LoginActivity activity) {
         loginActivity = activity;
         loginEmail = email;
         loginPassword = password;
