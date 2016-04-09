@@ -143,7 +143,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         Toast.makeText(this.getApplicationContext(), "Creating account, please wait", Toast.LENGTH_LONG).show();
 
         //Deal with Firebase user creation
-        firebaseHelper.createUserWithoutFacebook(email,password, username, this);
+        firebaseHelper.createUser(email, password, username, this);
     }
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
