@@ -126,6 +126,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_SHORT).show();
         } else if (!isNetworkAvailable()) {
             Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_SHORT).show();
+        } else if (!FirebaseHelper.getInstance().isUsernameAvailable(username)) {
+            Toast.makeText(this.getApplicationContext(), "That username is taken, please try another", Toast.LENGTH_SHORT).show();
         } else {
             isReady = true;
         }
