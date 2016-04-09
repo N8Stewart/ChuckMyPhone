@@ -109,11 +109,10 @@ public class CompeteDropFragment extends CompeteFragment {
 
                 //if new high score
                 if (score > currentUser.getDropScore()) {
-                    currentUser.updateDropScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getDropScore()) {
-                        currentUser.updateDropScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                        currentUser.updateDropScore(runHighScore, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
                         score = runHighScore;
                     }
 

@@ -71,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStop() {
         super.onStop();
+        SharedPreferencesHelper.setLatitude(getApplicationContext(), CurrentUser.getInstance().getLatitude());
+        SharedPreferencesHelper.setLongitude(getApplicationContext(), CurrentUser.getInstance().getLongitude());
         Log.d(TAG, "onStop() called");
     }
 

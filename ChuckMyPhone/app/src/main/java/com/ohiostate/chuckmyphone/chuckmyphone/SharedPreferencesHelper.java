@@ -21,6 +21,8 @@ public class SharedPreferencesHelper {
         public static final String keySound = "sound";
         public static final String keyBadgeNotifications = "badge";
         public static final String keyGoofySound = "goofy";
+        public static final String keyLatitude = "latitude";
+        public static final String keyLongitude = "longitude";
     }
 
     public SharedPreferencesHelper(){}
@@ -65,6 +67,14 @@ public class SharedPreferencesHelper {
         setBooleanValue(context, Keys.keyTutorial, tutorialMessages);
     }
 
+    public static void setLatitude(Context context, double latitude) {
+        setStringValue(context, Keys.keyLatitude, latitude + "");
+    }
+
+    public static void setLongitude(Context context, double longitude) {
+        setStringValue(context, Keys.keyLatitude, longitude + "");
+    }
+
     private static String getStringValue(Context context, String key){
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.getString(key, MSG_KEY);
@@ -103,6 +113,14 @@ public class SharedPreferencesHelper {
         return getBooleanValue(context, Keys.keyBadgeNotifications, true);
     }
 
+    public static double getLatitude(Context context) {
+        return Double.parseDouble(getStringValue(context, Keys.keyLatitude));
+    }
+
+    public static double getLongitude(Context context) {
+        return Double.parseDouble(getStringValue(context, Keys.keyLongitude));
+    }
+
     protected static boolean hasSharedData(Context context){
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.contains(Keys.keyEmail);
@@ -121,6 +139,8 @@ public class SharedPreferencesHelper {
         setSoundEnabled(context, false);
         setTutorialMessages(context, true);
         setGoofySoundEnabled(context, false);
+        setLatitude(context, 0.0);
+        setLongitude(context, 0.0);
     }
 
     public static void setSharedPreferencesData(Context context, String email, String password, String username) {

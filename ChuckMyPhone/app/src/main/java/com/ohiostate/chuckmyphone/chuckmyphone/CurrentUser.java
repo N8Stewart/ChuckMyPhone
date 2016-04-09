@@ -15,9 +15,9 @@ public class CurrentUser {
     }
 
     private CurrentUser() {
-        chuckLeaderboardGlobal = new ArrayList<FirebaseHelper.CompeteRecord>();
-        spinLeaderboardGlobal = new ArrayList<FirebaseHelper.CompeteRecord>();
-        dropLeaderboardGlobal = new ArrayList<FirebaseHelper.CompeteRecord>();
+        chuckLeaderboardGlobal = new ArrayList<>();
+        spinLeaderboardGlobal = new ArrayList<>();
+        dropLeaderboardGlobal = new ArrayList<>();
     }
 
     private boolean isLoaded = false;
@@ -61,6 +61,9 @@ public class CurrentUser {
         spinScore = 0;
         dropScore =  0;
 
+        latitude = 0.0;
+        longitude = 0.0;
+
         loadUserScoreData();
     }
 
@@ -98,10 +101,6 @@ public class CurrentUser {
 
     public void updateTutorialMessagesEnabled(boolean value) {
         tutorialMessagesEnabled = value;
-    }
-
-    public boolean getTutorialMessagesEnabled() {
-        return tutorialMessagesEnabled;
     }
 
     public void updateSoundEnabled(boolean value) {
@@ -199,10 +198,15 @@ public class CurrentUser {
         return dropLeaderboardGlobal;
     }
 
-    public void loadSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled, boolean goofySoundEnabled) {
+    public void loadUserSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled, boolean goofySoundEnabled) {
         updateTutorialMessagesEnabled(tutorialEnabled);
         updateSoundEnabled(soundEnabled);
         updateBadgeNotificationsEnabled(badgeUnlockNotificationsEnabled);
         updateGoofySoundEnabled(goofySoundEnabled);
+    }
+
+    public void loadUserLocation(double latitude, double longitude) {
+        updateLongitude(latitude);
+        updateLongitude(longitude);
     }
 }

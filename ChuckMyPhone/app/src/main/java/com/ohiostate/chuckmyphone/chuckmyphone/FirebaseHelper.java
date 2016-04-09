@@ -61,7 +61,7 @@ public class FirebaseHelper {
         public User(String username, Context c) {
             this.username = username;
 
-            this.badgeList = new ArrayList<Badge>();
+            this.badgeList = new ArrayList<>();
 
             //Add all badges here with no earned date
             badgeList.add(new Badge(c.getString(R.string.badge_chuck_level_one)));
@@ -270,7 +270,7 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
             DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
-            ArrayList<Badge> badgeList = new ArrayList<Badge>();
+            ArrayList<Badge> badgeList = new ArrayList<>();
             for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
                 String badgeName = badgeSnapshot.child("name").getValue().toString();
                 String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
@@ -279,7 +279,7 @@ public class FirebaseHelper {
             }
             return badgeList;
         }
-        return new ArrayList<Badge>();
+        return new ArrayList<>();
     }
 
     //SETTING METHODS FOR SAVING SCORES
@@ -343,7 +343,7 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
             DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
-            ArrayList<Badge> badgeList = new ArrayList<Badge>();
+            ArrayList<Badge> badgeList = new ArrayList<>();
             for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
                 if (badgeSnapshot.child("name").getValue().toString().equals(badgeName)) {
                     String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
@@ -358,9 +358,9 @@ public class FirebaseHelper {
     }
 
     protected void updateLeaderboard() {
-        ArrayList<CompeteRecord> chuckLeaderboardGlobal = new ArrayList<CompeteRecord>();
-        ArrayList<CompeteRecord> spinLeaderboardGlobal = new ArrayList<CompeteRecord>();
-        ArrayList<CompeteRecord> dropLeaderboardGlobal = new ArrayList<CompeteRecord>();
+        ArrayList<CompeteRecord> chuckLeaderboardGlobal = new ArrayList<>();
+        ArrayList<CompeteRecord> spinLeaderboardGlobal = new ArrayList<>();
+        ArrayList<CompeteRecord> dropLeaderboardGlobal = new ArrayList<>();
 
         //may be possible to query up until the users entry, but that can wait until later
         //Query queryRef = myFirebaseRef.orderByPriority().endAt(??);
@@ -378,7 +378,7 @@ public class FirebaseHelper {
     ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
-            ArrayList<CompeteRecord> chuckRecords = new ArrayList<CompeteRecord>();
+            ArrayList<CompeteRecord> chuckRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
                 String username = (String) subSnapshot.child("username").getValue();
@@ -398,7 +398,7 @@ public class FirebaseHelper {
     ValueEventListener spinLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
-            ArrayList<CompeteRecord> spinRecords = new ArrayList<CompeteRecord>();
+            ArrayList<CompeteRecord> spinRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
                 String username = (String) subSnapshot.child("username").getValue();
@@ -418,7 +418,7 @@ public class FirebaseHelper {
     ValueEventListener dropLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
-            ArrayList<CompeteRecord> dropRecords = new ArrayList<CompeteRecord>();
+            ArrayList<CompeteRecord> dropRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
                 String username = (String) subSnapshot.child("username").getValue();

@@ -4,8 +4,6 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.GpsStatus;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -25,6 +23,8 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public abstract class CompeteFragment extends Fragment implements SensorEventListener {
 
@@ -71,11 +71,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         currentUser = CurrentUser.getInstance();
 
-        badgeUnlockName = "";
-        popupIsUp = false;
-        mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
-
-        badgeUnlockNames = new ArrayList<String>();
+        badgeUnlockNames = new ArrayList<>();
 
         Log.d(TAG, "onCreate() called");
 

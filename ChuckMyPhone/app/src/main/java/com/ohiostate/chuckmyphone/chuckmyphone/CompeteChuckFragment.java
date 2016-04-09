@@ -93,11 +93,10 @@ public class CompeteChuckFragment extends CompeteFragment {
 
                 //if new high scores
                 if (score > currentUser.getChuckScore()) {
-                    currentUser.updateChuckScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getChuckScore()) {
-                        currentUser.updateChuckScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                        currentUser.updateChuckScore(runHighScore, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
                         score = runHighScore;
                     }
 

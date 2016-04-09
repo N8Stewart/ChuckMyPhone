@@ -91,11 +91,10 @@ public class CompeteSpinFragment extends CompeteFragment {
                 lastUpdate = currTime;
 
                 if (score > currentUser.getSpinScore()) {
-                    currentUser.updateSpinScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getSpinScore()) {
-                        currentUser.updateSpinScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                        currentUser.updateSpinScore(runHighScore, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
                         score = runHighScore;
                     }
 

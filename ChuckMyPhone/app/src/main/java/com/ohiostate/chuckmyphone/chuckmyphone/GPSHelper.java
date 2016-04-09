@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by Joao Pedro on 3/24/2016.
@@ -21,23 +20,12 @@ import android.widget.Toast;
 public class GPSHelper {
     private LocationManager locationManager;
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5;
-    private double latitude;
-    private double longitude;
     private boolean nullLocation;
 
-    public GPSHelper(Context context, GpsStatus.Listener listener) {
+    public GPSHelper(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         requestPermissionForGPS(context);
-        attachStatusListener(context, listener);
         nullLocation = true;
-    }
-
-    protected void attachStatusListener(Context context, GpsStatus.Listener listener) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.addGpsStatusListener(listener);
-            return;
-        }
     }
 
     private LocationListener locationListener = new LocationListener() {
@@ -52,15 +40,10 @@ public class GPSHelper {
         public void onProviderDisabled(String provider) {}
     };
 
-    public void setToLastLocation(Context context){
-        setLocation(getLastLocation(context, LocationManager.GPS_PROVIDER));
-    }
-
-    private Location getLastLocation(Context context, String chosenGPS) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+    private Location getLastLocation(Context context, String gpsProvider) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("coordslast", "called");
-            return locationManager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+            return locationManager.getLastKnownLocation(gpsProvider);
         } else {
             Log.d("coordslast", "other");
             Location location = new Location("No provider");
@@ -71,8 +54,7 @@ public class GPSHelper {
     }
 
     public void stopGPS(Context context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.removeUpdates(locationListener);
         }
     }
@@ -85,41 +67,25 @@ public class GPSHelper {
         }
     }
 
-    public void requestLocation(Context context, String chosenGPS) {
-        if(isPreciseGPSEnabled()) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(chosenGPS, 0, 0, locationListener);
+    public void requestLocation(Context context, String gpsProvider) {
+        if(isGPSEnabled(gpsProvider)) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationManager.requestLocationUpdates(gpsProvider, 0, 0, locationListener);
             }
-        } else {
-            setLocation(getLastLocation(context, chosenGPS));
         }
     }
 
     private void setLocation(Location location){
         if(location != null) {
-            latitude = location.getLatitude();
-            longitude = location.getLongitude();
+            CurrentUser.getInstance().updateLatitude(location.getLatitude());
+            CurrentUser.getInstance().updateLongitude(location.getLongitude());
             nullLocation = false;
-        } else {
-            latitude = 0.0;
-            longitude = 0.0;
-            nullLocation = true;
         }
-        Log.d("coordsset", latitude + " " + longitude);
     }
 
-    public boolean isPreciseGPSEnabled(){return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);}
+    public boolean isGPSEnabled(String gpsProvider){return locationManager.isProviderEnabled(gpsProvider);}
 
-    public double getLatitude(){
-        return latitude;
-    }
-
-    public double getLongitude(){
-        return longitude;
-    }
-
-    public boolean cannotUseCoordinates(){
-        return nullLocation && !isPreciseGPSEnabled();
+    public boolean cannotUseCoordinates(String gpsProvider){
+        return nullLocation && !isGPSEnabled(gpsProvider);
     }
 }

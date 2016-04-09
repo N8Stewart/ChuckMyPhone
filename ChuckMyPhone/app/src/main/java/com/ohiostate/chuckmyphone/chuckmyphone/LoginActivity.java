@@ -144,7 +144,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         CurrentUser.getInstance().loadUserBadgeData();
-        CurrentUser.getInstance().loadUserScoreData();
 
         if(!SharedPreferencesHelper.hasSharedData(getApplicationContext())){
             SharedPreferencesHelper.createSharedPreferencesData(getApplicationContext(),
@@ -154,8 +153,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     email, password, CurrentUser.getInstance().getUsername());
         }
 
-        CurrentUser.getInstance().loadSettings(SharedPreferencesHelper.getTutorialMessages(getApplicationContext()),
-                SharedPreferencesHelper.getSoundEnabled(getApplicationContext()), SharedPreferencesHelper.getBadgeNotifications(getApplicationContext()), SharedPreferencesHelper.getGoofySoundEnabled(getApplicationContext()));
+        CurrentUser.getInstance().loadUserSettings(SharedPreferencesHelper.getTutorialMessages(getApplicationContext()),
+                SharedPreferencesHelper.getSoundEnabled(getApplicationContext()), SharedPreferencesHelper.getBadgeNotifications(getApplicationContext()),
+                SharedPreferencesHelper.getGoofySoundEnabled(getApplicationContext()));
+
+        CurrentUser.getInstance().loadUserLocation(SharedPreferencesHelper.getLatitude(getApplicationContext()),
+                SharedPreferencesHelper.getLongitude(getApplicationContext()));
 
         actionPending = false;
 

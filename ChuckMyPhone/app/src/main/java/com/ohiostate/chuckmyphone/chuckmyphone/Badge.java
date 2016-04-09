@@ -12,8 +12,8 @@ public class Badge {
     private String unlockDate;
     private String name;
 
-    public static Map<String, String> badgeNameToDescriptionMap = new HashMap<String, String>();
-    public static Map<String, Integer> badgeNameToDrawableMap = new HashMap<String, Integer>();
+    public static Map<String, String> badgeNameToDescriptionMap = new HashMap<>();
+    public static Map<String, Integer> badgeNameToDrawableMap = new HashMap<>();
 
     public void initializeDescriptionMappings(Context c) {
         badgeNameToDescriptionMap.put(c.getString(R.string.badge_chuck_level_one), "Unlock this by doing your first chuck trial");
