@@ -24,12 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public abstract class CompeteFragment extends Fragment implements SensorEventListener, GpsStatus.Listener {
+public abstract class CompeteFragment extends Fragment implements SensorEventListener {
 
     protected final String TAG = this.getClass().getSimpleName();
 
     SensorManager sensManager;
-    GPSHelper mGPSHelper;
 
     protected boolean userHasSensor;
     protected boolean isRecording;
@@ -70,8 +69,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         super.onCreate(savedInstanceState);
 
         currentUser = CurrentUser.getInstance();
-
-        mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
 
         badgeUnlockName = "";
         popupIsUp = false;
@@ -134,7 +131,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     @Override
     public void onResume() {
         super.onResume();
-        mGPSHelper.requestLocation(getActivity(), LocationManager.GPS_PROVIDER);
         Log.d(TAG, "onResume() called");
     }
 
@@ -161,10 +157,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if(mGPSHelper.cannotUseCoordinates()){
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "You need to enable the GPS to have your scores filterable by distance in leaderboards", Toast.LENGTH_LONG).show();
-            }
             if (userHasSensor) {
                 isRecording = !isRecording;
                 if (isRecording)
@@ -246,26 +238,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 progressBar.setProgress(progress);
             } else {
                 progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
-            }
-        }
-    };
-
-    private GpsStatus.Listener gpsStatusListener = new GpsStatus.Listener() {
-        @Override
-        public void onGpsStatusChanged(int event) {
-            switch(event) {
-                case GpsStatus.GPS_EVENT_STARTED:
-                    Log.d("coordsstatus", "started");
-                    mGPSHelper.setToLastLocation(getActivity());
-                    break;
-                case GpsStatus.GPS_EVENT_STOPPED:
-                    Log.d("coordsstatus", "stopped");
-                    break;
-                case GpsStatus.GPS_EVENT_FIRST_FIX:
-                    mGPSHelper.requestLocation(getActivity(), LocationManager.GPS_PROVIDER);
-                    break;
-                default:
-                    break;
             }
         }
     };

@@ -87,8 +87,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
                 score = (long)((Math.abs(ax) + Math.abs(ay) + Math.abs(az)) * 100);
                 if (score > currentUser.getSpinScore()) {
-                    currentUser.updateSpinScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
-                    Log.d("coordsspin", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
+                    currentUser.updateSpinScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_one)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
                         badgeUnlockName = getString(R.string.badge_spin_level_one);
@@ -145,7 +144,4 @@ public class CompeteSpinFragment extends CompeteFragment {
             }
         };
     }
-
-    @Override
-    public void onGpsStatusChanged(int event) {}
 }

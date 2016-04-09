@@ -110,8 +110,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
                 //if new high score
                 if (score > currentUser.getDropScore()) {
-                    currentUser.updateDropScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
-                    Log.d("coordsdrop", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
+                    currentUser.updateDropScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_one)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
                         badgeUnlockName = getString(R.string.badge_drop_level_one);
@@ -168,7 +167,4 @@ public class CompeteDropFragment extends CompeteFragment {
             }
         };
     }
-
-    @Override
-    public void onGpsStatusChanged(int event) {}
 }

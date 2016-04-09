@@ -91,7 +91,7 @@ public class CompeteChuckFragment extends CompeteFragment {
 
                 //if new high score
                 if (score > currentUser.getChuckScore()) {
-                    currentUser.updateChuckScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                    currentUser.updateChuckScore(score, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
 
                     if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_one)) && !popupIsUp && score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
                         badgeUnlockName = getString(R.string.badge_chuck_level_one);
@@ -146,8 +146,4 @@ public class CompeteChuckFragment extends CompeteFragment {
             }
         };
     }
-
-    @Override
-    public void onGpsStatusChanged(int event) {}
-
 }

@@ -29,6 +29,9 @@ public class CurrentUser {
     private long spinScore;
     private long dropScore;
 
+    private double latitude;
+    private double longitude;
+
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
     private boolean badgeUnlockNotificationsEnabled;
@@ -92,15 +95,23 @@ public class CurrentUser {
         tutorialMessagesEnabled = value;
     }
 
-    public boolean getTutorialMessagesEnabled() {
-        return tutorialMessagesEnabled;
-    }
-
     public void updateSoundEnabled(boolean value) {
         soundEnabled = value;
     }
 
     public void updateBadgeNotificationsEnabled(boolean value) { badgeUnlockNotificationsEnabled = value; }
+
+    public void updateLatitude(double value) {
+        latitude = value;
+    }
+
+    public void updateLongitude(double value) {
+        longitude = value;
+    }
+
+    public boolean getTutorialMessagesEnabled() {
+        return tutorialMessagesEnabled;
+    }
 
     public boolean getSoundEnabled() {
         return soundEnabled;
@@ -127,6 +138,15 @@ public class CurrentUser {
     public long getDropScore() {
         return dropScore;
     }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
 
     public ArrayList<Badge> getBadgeList() {
         return badgeList;
