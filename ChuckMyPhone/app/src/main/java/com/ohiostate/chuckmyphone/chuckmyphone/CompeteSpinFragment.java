@@ -32,7 +32,11 @@ public class CompeteSpinFragment extends CompeteFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        spinSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
+        if (CurrentUser.getInstance().getGoofySoundEnabled()) {
+            spinSound = MediaPlayer.create(getActivity(), R.raw.goofy_scream_sound);
+        } else {
+            spinSound = MediaPlayer.create(getActivity(), R.raw.descending_ufo);
+        }
 
         //max rotation speed is set when the scores are grabbed, no need to initialize here
         //maxRotationSpeed = 0;

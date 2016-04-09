@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         CurrentUser.getInstance().loadSettings(SharedPreferencesHelper.getTutorialMessages(getApplicationContext()),
-                SharedPreferencesHelper.getSoundEnabled(getApplicationContext()), SharedPreferencesHelper.getBadgeNotifications(getApplicationContext()));
+                SharedPreferencesHelper.getSoundEnabled(getApplicationContext()), SharedPreferencesHelper.getBadgeNotifications(getApplicationContext()), SharedPreferencesHelper.getGoofySoundEnabled(getApplicationContext()));
 
         actionPending = false;
 

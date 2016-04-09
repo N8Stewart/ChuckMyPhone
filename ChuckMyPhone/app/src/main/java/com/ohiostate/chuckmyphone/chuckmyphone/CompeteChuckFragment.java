@@ -18,7 +18,7 @@ public class CompeteChuckFragment extends CompeteFragment {
     Sensor linearAccelerometer;
     public CompeteChuckFragment() {}
 
-    MediaPlayer whooshSound;
+    MediaPlayer chuckSound;
 
     public static CompeteFragment newInstance(String param1, String param2) {
         CompeteFragment fragment = new CompeteChuckFragment();
@@ -28,8 +28,11 @@ public class CompeteChuckFragment extends CompeteFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        whooshSound = MediaPlayer.create(getActivity(), R.raw.whoosh_sound);
-
+        if (CurrentUser.getInstance().getGoofySoundEnabled()) {
+            chuckSound = MediaPlayer.create(getActivity(), R.raw.wilhelm_scream);
+        } else {
+            chuckSound = MediaPlayer.create(getActivity(), R.raw.whoosh_sound);
+        }
         score = 0;
     }
 
@@ -82,7 +85,7 @@ public class CompeteChuckFragment extends CompeteFragment {
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
                 if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
-                    whooshSound.start();
+                    chuckSound.start();
                 }
 
                 if (score > runHighScore)

@@ -32,6 +32,7 @@ public class CurrentUser {
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
     private boolean badgeUnlockNotificationsEnabled;
+    private boolean goofySoundEnabled;
 
     private ArrayList<FirebaseHelper.CompeteRecord> chuckLeaderboardGlobal;
     private ArrayList<FirebaseHelper.CompeteRecord> spinLeaderboardGlobal;
@@ -51,6 +52,7 @@ public class CurrentUser {
         soundEnabled = false;
         tutorialMessagesEnabled = true;
         badgeUnlockNotificationsEnabled = true;
+        goofySoundEnabled = false;
 
         chuckScore = 0;
         spinScore = 0;
@@ -105,8 +107,14 @@ public class CurrentUser {
 
     public void updateBadgeNotificationsEnabled(boolean value) { badgeUnlockNotificationsEnabled = value; }
 
+    public void updateGoofySoundEnabled(boolean value) { goofySoundEnabled = value; }
+
     public boolean getSoundEnabled() {
         return soundEnabled;
+    }
+
+    public boolean getGoofySoundEnabled() {
+        return goofySoundEnabled;
     }
 
     public boolean getBadgeNotificationsEnabled() { return badgeUnlockNotificationsEnabled; }
@@ -167,9 +175,10 @@ public class CurrentUser {
         return dropLeaderboardGlobal;
     }
 
-    public void loadSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled) {
+    public void loadSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled, boolean goofySoundEnabled) {
         updateTutorialMessagesEnabled(tutorialEnabled);
         updateSoundEnabled(soundEnabled);
         updateBadgeNotificationsEnabled(badgeUnlockNotificationsEnabled);
+        updateGoofySoundEnabled(goofySoundEnabled);
     }
 }

@@ -3,8 +3,6 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.location.GpsStatus;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +24,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     Sensor linearAccelerometer;
 
-    MediaPlayer explosionSound;
+    MediaPlayer dropSound;
 
     public CompeteDropFragment() {}
 
@@ -42,8 +40,11 @@ public class CompeteDropFragment extends CompeteFragment {
         score = 0;
         acceleration = 0;
         isFalling = false;
-
-        explosionSound = MediaPlayer.create(getActivity(), R.raw.explosion_sound);
+        if (CurrentUser.getInstance().getGoofySoundEnabled()) {
+            dropSound = MediaPlayer.create(getActivity(), R.raw.grenade_sound);
+        } else {
+            dropSound = MediaPlayer.create(getActivity(), R.raw.splat_sound);
+        }
 
         //max falling speed is set when the scores are grabbed, no need to initialize here
         //maxTimeFalling = 0;
@@ -99,7 +100,7 @@ public class CompeteDropFragment extends CompeteFragment {
                     score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
                     if (CurrentUser.getInstance().getSoundEnabled()) {
-                        explosionSound.start();
+                        dropSound.start();
                     }
                 }
 
