@@ -92,16 +92,21 @@ public class CompeteChuckFragment extends CompeteFragment {
                 if (score > currentUser.getChuckScore()) {
                     currentUser.updateChuckScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
 
-                        if (!badgeUnlockNames.contains(getString(R.string.badge_chuck_level_one)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_one)) && score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
-                            badgeUnlockNames.add(getString(R.string.badge_chuck_level_one));
-                        }
-                        if (!badgeUnlockNames.contains(getString(R.string.badge_chuck_level_two)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_two)) && score >= Badge.BADGE_CHUCK_LEVEL_2_SCORE()) {
-                            badgeUnlockNames.add(getString(R.string.badge_chuck_level_two));
-                        }
-                        if (!badgeUnlockNames.contains(getString(R.string.badge_chuck_level_three)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_three)) && score >= Badge.BADGE_CHUCK_LEVEL_3_SCORE()) {
-                            badgeUnlockNames.add(getString(R.string.badge_chuck_level_three));
-                        }
+                    //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
+                    if (runHighScore > currentUser.getChuckScore()) {
+                        currentUser.updateChuckScore(runHighScore, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
+                        score = runHighScore;
+                    }
 
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_chuck_level_one)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_one)) && score >= Badge.BADGE_CHUCK_LEVEL_1_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_chuck_level_one));
+                    }
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_chuck_level_two)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_two)) && score >= Badge.BADGE_CHUCK_LEVEL_2_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_chuck_level_two));
+                    }
+                    if (!badgeUnlockNames.contains(getString(R.string.badge_chuck_level_three)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_chuck_level_three)) && score >= Badge.BADGE_CHUCK_LEVEL_3_SCORE()) {
+                        badgeUnlockNames.add(getString(R.string.badge_chuck_level_three));
+                    }
                 }
             }
         }
