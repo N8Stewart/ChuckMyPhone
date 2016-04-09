@@ -107,7 +107,7 @@ public class ProfileFragment extends Fragment {
 
         ImageView badgeImageView = new ImageView(getActivity());
         if (isUnlocked) {
-            badgeImageView.setImageResource(R.drawable.badge_unlocked);
+            badgeImageView.setImageResource(Badge.badgeNameToDrawableMap.get(badge.getName()));
         } else {
             badgeImageView.setImageResource(R.drawable.badge_locked);
         }
