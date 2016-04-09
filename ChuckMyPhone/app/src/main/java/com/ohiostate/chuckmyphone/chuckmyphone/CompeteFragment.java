@@ -26,6 +26,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public abstract class CompeteFragment extends Fragment implements SensorEventListener, GpsStatus.Listener {
 
     protected final String TAG = this.getClass().getSimpleName();
@@ -36,8 +38,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected boolean userHasSensor;
     protected boolean isRecording;
     protected long lastUpdate;
-    protected boolean popupIsUp;
-    protected String badgeUnlockName;
+    protected ArrayList<String> badgeUnlockNames;
 
     // Control the progress of the progress bar
     protected int progress;
@@ -75,8 +76,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         mGPSHelper = new GPSHelper(getActivity(), gpsStatusListener);
 
-        badgeUnlockName = "";
-        popupIsUp = false;
+        badgeUnlockNames = new ArrayList<String>();
 
         Log.d(TAG, "onCreate() called");
 
@@ -217,10 +217,16 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             isRecording = false;
 
             //if a badge was unlocked during the run
-            if (!badgeUnlockName.equals("")) {
-                FirebaseHelper.getInstance().unlockBadge(badgeUnlockName);
-                initiatePopupWindow(badgeUnlockName);
-                badgeUnlockName = "";
+            if (badgeUnlockNames.size() != 0) {
+                //to avoid concurrency issues, clone the list of badges to unlock
+                ArrayList<String> tempBadges = (ArrayList<String>) badgeUnlockNames.clone();
+                for (String badgeName : tempBadges) {
+                    FirebaseHelper.getInstance().unlockBadge(badgeName);
+                }
+                //only display pop up for most impressive badge
+                initiatePopupWindow(tempBadges.get(tempBadges.size()-1));
+
+                badgeUnlockNames.clear();
             }
 
             //This code updates the UI, needs to be separate because on the original thread can touch the views
@@ -301,8 +307,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
                         Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
                         cancelButton.setOnClickListener(cancel_button_click_listener);
-
-                        popupIsUp = true;
                     }
                 });
             } catch (Exception e) {
@@ -314,7 +318,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
-            popupIsUp = false;
         }
     };
 

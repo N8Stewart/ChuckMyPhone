@@ -111,15 +111,16 @@ public class CompeteDropFragment extends CompeteFragment {
                     currentUser.updateDropScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     Log.d("coordsdrop", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
 
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_one)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_drop_level_one);
-                    }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_two)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_2_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_drop_level_two);
-                    }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_three)) && !popupIsUp && score >= Badge.BADGE_DROP_LEVEL_3_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_drop_level_three);
-                    }
+                        if (!badgeUnlockNames.contains(getString(R.string.badge_drop_level_one)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_one)) && score >= Badge.BADGE_DROP_LEVEL_1_SCORE()) {
+                            badgeUnlockNames.add(getString(R.string.badge_drop_level_one));
+                        }
+                        if (!badgeUnlockNames.contains(getString(R.string.badge_drop_level_two)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_two)) && score >= Badge.BADGE_DROP_LEVEL_2_SCORE()) {
+                            badgeUnlockNames.add(getString(R.string.badge_drop_level_two));
+                        }
+                        if (!badgeUnlockNames.contains(getString(R.string.badge_drop_level_three)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_drop_level_three)) && score >= Badge.BADGE_DROP_LEVEL_3_SCORE()) {
+                            badgeUnlockNames.add(getString(R.string.badge_drop_level_three));
+                        }
+
                 }
             }
         }

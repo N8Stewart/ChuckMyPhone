@@ -90,15 +90,15 @@ public class CompeteSpinFragment extends CompeteFragment {
                     currentUser.updateSpinScore(score, mGPSHelper.getLatitude(), mGPSHelper.getLongitude());
                     Log.d("coordsspin", mGPSHelper.getLatitude() + " " + mGPSHelper.getLongitude());
 
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_one)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_spin_level_one);
-                    }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_two)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_2_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_spin_level_two);
-                    }
-                    if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_three)) && !popupIsUp && score >= Badge.BADGE_SPIN_LEVEL_3_SCORE()) {
-                        badgeUnlockName = getString(R.string.badge_spin_level_three);
-                    }
+                        if (!badgeUnlockNames.contains(getString(R.string.badge_spin_level_one)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_one)) && score >= Badge.BADGE_SPIN_LEVEL_1_SCORE()) {
+                            badgeUnlockNames.add(getString(R.string.badge_spin_level_one));
+                        }
+                        if (!badgeUnlockNames.contains(getString(R.string.badge_spin_level_two)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_two)) && score >= Badge.BADGE_SPIN_LEVEL_2_SCORE()) {
+                            badgeUnlockNames.add(getString(R.string.badge_spin_level_two));
+                        }
+                        if (!badgeUnlockNames.contains(getString(R.string.badge_spin_level_three)) && !FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_spin_level_three)) && score >= Badge.BADGE_SPIN_LEVEL_3_SCORE()) {
+                            badgeUnlockNames.add(getString(R.string.badge_spin_level_three));
+                        }
                 }
 
                 //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
