@@ -6,7 +6,7 @@ Chuck my phone, for Android, will provide users the ability to compete with thei
 * ANY PARTICIPATION IN THIS APPLICATION WILL CONSTITUTE ACCEPTANCE OF THIS AGREEMENT. IF YOU DO NOT AGREE TO ABIDE BY THE ABOVE, PLEASE DO NOT USE THIS APPLICATION.
 * This application and its components are offered for entertainment purposes only; this application shall not be responsible or liable for any damages such as, but not limited to, cracked screens, destroyed mobile devices, physical harm to any objects hit while throwing the mobile device, emotional instability or hurt pride.
 This application and its components shall not be responsible or liable for the accuracy, usefullness or availability of any information transmitted or made available via the application, and shall not be responsible or liable for any error or omissions in that information.
-* If you feel a third-party or owner of this copyright has infringed on the intellectual property rights of this application, you can contact us at ChuckMyPhone@gmail.com.
+* If you feel a third-party or owner of this copyright has infringed on the intellectual property rights of this application, you can contact us at ChuckMyPhoneTeam@gmail.com.
 * Under no circumstances will advertisements be displayed on this application. The creators of this application are not getting paid to provide endorsement whatsoever.
 * No sensitive information is being held or processed by this application. We highly recommend against reusing a common password with use of this site.
 
