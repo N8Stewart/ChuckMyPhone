@@ -162,10 +162,12 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if(CurrentUser.getInstance().cannotUseCoordinates()){
+            if(!CurrentUser.getInstance().isGPSEnabled() && !CurrentUser.getInstance().havePlayedOnceWithoutGps()){
                 Toast.makeText(getActivity(), "Please, enable the GPS to make new scores filterable by distance", Toast.LENGTH_LONG).show();
-            } else if(CurrentUser.getInstance().needToUpdateLocation()){
-                Toast.makeText(getActivity(), "Please, enable the GPS to update your location", Toast.LENGTH_LONG).show();
+                CurrentUser.getInstance().updatePlayedOnceWithoutGps();
+            } else if(CurrentUser.getInstance().needToUpdateLocation() && !CurrentUser.getInstance().havePlayedOnceWithGps()){
+                Toast.makeText(getActivity(), "Please, wait the GPS update your location", Toast.LENGTH_LONG).show();
+                CurrentUser.getInstance().updatePlayedOnceWithGps();
             }
 
             if (userHasSensor) {

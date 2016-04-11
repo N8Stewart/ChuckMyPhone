@@ -19,6 +19,9 @@ public class GPSHelper {
     private LocationManager locationManager;
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5;
 
+    private final long MINIMUM_TIME = 100;
+    private final float MINIMUM_DISTANCE = 10;
+
     public GPSHelper(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         requestPermissionForGPS(context);
@@ -43,7 +46,7 @@ public class GPSHelper {
             CurrentUser.getInstance().updateGPSEnabled(true);
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Log.d("coords", "requesting");
-                locationManager.requestLocationUpdates(gpsProvider, 0, 0, (LocationListener) context);
+                locationManager.requestLocationUpdates(gpsProvider, MINIMUM_TIME, MINIMUM_DISTANCE, (LocationListener) context);
             }
         } else {
             CurrentUser.getInstance().updateGPSEnabled(false);

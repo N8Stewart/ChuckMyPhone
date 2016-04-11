@@ -34,6 +34,11 @@ public class CurrentUser {
     private boolean gpsEnabled;
     private boolean locationUpdated;
 
+    private boolean sawBoardOnceWithoutGps;
+    private boolean sawBoardOnceWithGps;
+    private boolean playedOnceWithoutGps;
+    private boolean playedOnceWithGps;
+
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
     private boolean badgeUnlockNotificationsEnabled;
@@ -68,6 +73,11 @@ public class CurrentUser {
 
         gpsEnabled = false;
         locationUpdated = false;
+
+        sawBoardOnceWithoutGps = false;
+        sawBoardOnceWithGps = false;
+        playedOnceWithoutGps = false;
+        playedOnceWithGps = false;
 
         loadUserScoreData();
     }
@@ -162,6 +172,38 @@ public class CurrentUser {
         return isLoaded;
     }
 
+    public boolean havePlayedOnceWithoutGps() {
+        return playedOnceWithoutGps;
+    }
+
+    public void updatePlayedOnceWithoutGps(){
+        playedOnceWithoutGps = true;
+    }
+
+    public void updatePlayedOnceWithGps(){
+        playedOnceWithGps = true;
+    }
+
+    public void updateSawBoardOnceWithoutGps(){
+        sawBoardOnceWithoutGps = true;
+    }
+
+    public void updateSawBoardOnceWithGps(){
+        sawBoardOnceWithGps = true;
+    }
+
+    public boolean havePlayedOnceWithGps() {
+        return playedOnceWithGps;
+    }
+
+    public boolean sawBoardOnceWithoutGps() {
+        return sawBoardOnceWithoutGps;
+    }
+
+    public boolean sawBoardOnceWithGps() {
+        return sawBoardOnceWithGps;
+    }
+
     public long getChuckScore() {
         return chuckScore;
     }
@@ -218,12 +260,8 @@ public class CurrentUser {
         return dropLeaderboardGlobal;
     }
 
-    public boolean cannotUseCoordinates(){
-        return Double.compare(latitude, 0.0)==0 && Double.compare(latitude, 0.0)==0;
-    }
-
     public boolean needToUpdateLocation(){
-        return !locationUpdated && !gpsEnabled;
+        return !locationUpdated && gpsEnabled;
     }
 
     public void loadUserSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled, boolean goofySoundEnabled) {

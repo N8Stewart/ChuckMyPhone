@@ -255,6 +255,13 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
+        if(!CurrentUser.getInstance().sawBoardOnceWithoutGps() && !CurrentUser.getInstance().isGPSEnabled()){
+            Toast.makeText(getActivity(), "Please, enable the GPS to update your location", Toast.LENGTH_LONG).show();
+            CurrentUser.getInstance().updateSawBoardOnceWithoutGps();
+        } else if(!CurrentUser.getInstance().sawBoardOnceWithGps() && CurrentUser.getInstance().needToUpdateLocation()){
+            Toast.makeText(getActivity(), "Please, wait the GPS update your location", Toast.LENGTH_LONG).show();
+            CurrentUser.getInstance().updateSawBoardOnceWithGps();
+        }
         Log.d(TAG, "onResume() called");
     }
 
