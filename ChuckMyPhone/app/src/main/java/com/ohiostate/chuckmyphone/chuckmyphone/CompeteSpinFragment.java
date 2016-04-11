@@ -3,8 +3,6 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
-import android.location.GpsStatus;
-import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;

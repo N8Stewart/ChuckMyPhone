@@ -2,7 +2,6 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -11,14 +10,11 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * Created by Tim on 3/11/2016.
@@ -465,6 +461,3 @@ public class FirebaseHelper {
     }
 
 }
-
-
-

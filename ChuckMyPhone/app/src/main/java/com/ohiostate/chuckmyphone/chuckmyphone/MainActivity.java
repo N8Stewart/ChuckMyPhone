@@ -1,11 +1,14 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener,
@@ -32,6 +35,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
 
     private NavigationView mNavigationView;
+
+    private GPSHelper mGPSHelper;
+    //private AsyncTask<Runnable, Void, Void> gpsRequester;
+
+    boolean gpsRequest;
+
+    private static MainActivity main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +62,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavigationView = (NavigationView) findViewById(R.id.activity_main_nav_view);
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        NavigationHelper.getInstance().addNextFragmentTag("Chuck My Phone");
+        mGPSHelper = new GPSHelper(this);
+        //gpsRequester = new GPSRequester();
 
+        NavigationHelper.getInstance().addNextFragmentTag("Chuck My Phone");
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment(), "Chuck My Phone").commit();
         mNavigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
 
         getSupportActionBar().setTitle("Chuck My Phone");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        main = this;
+        Thread t = new Thread(updateGPSRequestRunnable);
+        t.start();
+        //gpsRequester.execute(updateGPSRequestRunnable);
+        Log.d(TAG, "onResume() called");
     }
 
     @Override
@@ -71,16 +93,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop() called");
+        mGPSHelper.stopGPS(this);
         SharedPreferencesHelper.setLatitude(getApplicationContext(), CurrentUser.getInstance().getLatitude());
         SharedPreferencesHelper.setLongitude(getApplicationContext(), CurrentUser.getInstance().getLongitude());
-        Log.d(TAG, "onStop() called");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
+    protected Runnable updateGPSRequestRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.d("coords", "thread begin");
+            gpsRequest = false;
+            Looper.prepare();
+            while (!CurrentUser.getInstance().isLocationUpdated()) {
+                    Log.d("coords", "thread loop");
+                    if (mGPSHelper.isGPSEnabled(LocationManager.NETWORK_PROVIDER) && !gpsRequest) {
+                        Log.d("coords", "thread if");
+                        mGPSHelper.requestLocation(main, LocationManager.NETWORK_PROVIDER);
+                        gpsRequest = true;
+                        break;
+                    }
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+            }
+            Looper.loop();
+            Log.d("coords", "thread end");
+        }
+    };
 
     @Override
     public void onBackPressed() {
@@ -234,4 +276,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onFragmentInteraction(Uri uri) {}
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mGPSHelper.setLocation(location);
+        Log.d("coords", "changed");
+        CurrentUser.getInstance().updateLocationUpdated(true);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.d("coords", provider + " status");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.d("coords", provider + " enabled");
+        CurrentUser.getInstance().updateGPSEnabled(true);
+        mGPSHelper.setToLastLocation(this, provider);
+        //gpsRequestHandler.post(updateGPSRequestRunnable);
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.d("coords", provider + " disabled");
+        CurrentUser.getInstance().updateGPSEnabled(false);
+        //gpsRequestHandler.removeCallbacks(updateGPSRequestRunnable);
+    }
 }

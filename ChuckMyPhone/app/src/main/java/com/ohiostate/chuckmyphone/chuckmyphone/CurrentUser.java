@@ -31,6 +31,8 @@ public class CurrentUser {
 
     private double latitude;
     private double longitude;
+    private boolean gpsEnabled;
+    private boolean locationUpdated;
 
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
@@ -63,6 +65,9 @@ public class CurrentUser {
 
         latitude = 0.0;
         longitude = 0.0;
+
+        gpsEnabled = false;
+        locationUpdated = false;
 
         loadUserScoreData();
     }
@@ -119,6 +124,14 @@ public class CurrentUser {
         longitude = value;
     }
 
+    public void updateGPSEnabled(boolean value){
+        gpsEnabled = value;
+    }
+
+    public void updateLocationUpdated(boolean value){
+        locationUpdated = value;
+    }
+
     public boolean getTutorialMessagesEnabled() {
         return tutorialMessagesEnabled;
     }
@@ -132,6 +145,14 @@ public class CurrentUser {
     }
 
     public boolean getBadgeNotificationsEnabled() { return badgeUnlockNotificationsEnabled; }
+
+    public boolean isGPSEnabled(){
+        return gpsEnabled;
+    }
+
+    public boolean isLocationUpdated(){
+        return locationUpdated;
+    }
 
     public String getUserId() {
         return this.userId;
@@ -160,7 +181,6 @@ public class CurrentUser {
     public double getLongitude() {
         return longitude;
     }
-
 
     public ArrayList<Badge> getBadgeList() {
         return badgeList;
@@ -198,6 +218,14 @@ public class CurrentUser {
         return dropLeaderboardGlobal;
     }
 
+    public boolean cannotUseCoordinates(){
+        return Double.compare(latitude, 0.0)==0 && Double.compare(latitude, 0.0)==0;
+    }
+
+    public boolean needToUpdateLocation(){
+        return !locationUpdated && !gpsEnabled;
+    }
+
     public void loadUserSettings(boolean tutorialEnabled, boolean soundEnabled, boolean badgeUnlockNotificationsEnabled, boolean goofySoundEnabled) {
         updateTutorialMessagesEnabled(tutorialEnabled);
         updateSoundEnabled(soundEnabled);
@@ -206,7 +234,7 @@ public class CurrentUser {
     }
 
     public void loadUserLocation(double latitude, double longitude) {
-        updateLongitude(latitude);
+        updateLatitude(latitude);
         updateLongitude(longitude);
     }
 }

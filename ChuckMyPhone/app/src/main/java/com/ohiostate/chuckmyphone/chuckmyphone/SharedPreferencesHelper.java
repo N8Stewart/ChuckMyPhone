@@ -72,7 +72,7 @@ public class SharedPreferencesHelper {
     }
 
     public static void setLongitude(Context context, double longitude) {
-        setStringValue(context, Keys.keyLatitude, longitude + "");
+        setStringValue(context, Keys.keyLongitude, longitude + "");
     }
 
     private static String getStringValue(Context context, String key){
