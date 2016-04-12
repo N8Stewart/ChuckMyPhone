@@ -233,6 +233,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Class fragmentClass = null;
 
+        //don't let pop ups from previous fragment appear in new fragment
+        CompeteFragment.userNavigatedAway();
+
         switch(id) {
             case R.id.menu_hamburger_item_profile:
                 fragmentClass = ProfileFragment.class;

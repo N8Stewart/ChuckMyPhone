@@ -18,7 +18,9 @@ import android.widget.Toast;
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
-    
+
+    protected int NUM_SECONDS_BADGE_POPUP_DISMISS = 6;
+
     private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - Idea creator, Software Eng.\n\n" +
             "Nate Stewart - Lead Software Engineer\n\nJoao Magalhaes - Lead Software Eng.";
 
@@ -133,9 +135,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                         // create a 300px width and 470px height PopupWindow
                         pw = new PopupWindow(layout, 800, 800, true);
 
-                        // display the popup in the center
-                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
-
                         TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
                         TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
 
@@ -144,6 +143,13 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
                         Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
                         cancelButton.setOnClickListener(cancel_button_click_listener);
+
+                        // display the popup in the center
+                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+
+                        //countdown to timeout
+                        Thread badgeTimeoutThread = new Thread(badgeTimeoutRunnable);
+                        badgeTimeoutThread.start();
                     }
                 });
             } catch (Exception e) {
@@ -155,6 +161,23 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
+        }
+    };
+
+    private Runnable badgeTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(NUM_SECONDS_BADGE_POPUP_DISMISS*1000, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pw.dismiss();
+                }
+            });
         }
     };
 }

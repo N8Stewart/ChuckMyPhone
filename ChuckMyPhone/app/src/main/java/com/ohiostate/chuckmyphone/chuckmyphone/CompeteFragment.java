@@ -37,6 +37,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     protected long lastUpdate;
     protected ArrayList<String> badgeUnlockNames;
 
+    protected static boolean userNavigatedAway;
+
     // Control the progress of the progress bar
     protected int progress;
 
@@ -47,6 +49,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
     protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
+    protected int NUM_SECONDS_BADGE_POPUP_DISMISS = 6;
 
     ProgressBar progressBar;
     Animation progressBarAnimation;
@@ -174,6 +177,9 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 isRecording = !isRecording;
                 if (isRecording)
                     runHighScore = 0;
+
+                userNavigatedAway = false;
+
                 getActivity().runOnUiThread(updateViewSubRunnableImage);
                 updateViewRunnableThread.start();
             }
@@ -271,11 +277,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                     public void run() {
                         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-                        // create a 300px width and 470px height PopupWindow
+                        // 800 px by 800 px
                         pw = new PopupWindow(layout, 800, 800, true);
-
-                        // display the popup in the center
-                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
                         TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
                         TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
@@ -285,6 +288,16 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
                         Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
                         cancelButton.setOnClickListener(cancel_button_click_listener);
+
+                        // display the popup in the center if user didn't navigate away quickly via hamburger menu
+                        if (!userNavigatedAway) {
+                            pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                        }
+
+                        userNavigatedAway = false;
+
+                        Thread badgeTimeoutThread = new Thread(badgeTimeoutRunnable);
+                        badgeTimeoutThread.start();
                     }
                 });
             } catch (Exception e) {
@@ -292,6 +305,31 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             }
         }
     }
+
+    public static void userNavigatedAway() {
+        userNavigatedAway = true;
+    }
+
+    public static void initializeUserNavigationTracking() {
+        userNavigatedAway = false;
+    }
+
+    private Runnable badgeTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(NUM_SECONDS_BADGE_POPUP_DISMISS*1000, 0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    pw.dismiss();
+                }
+            });
+        }
+    };
 
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
