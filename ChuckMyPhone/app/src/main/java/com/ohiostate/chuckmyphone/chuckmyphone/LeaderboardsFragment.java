@@ -130,8 +130,8 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
                         // Grab user's location
                         Location userLocation = new Location("No provider");
-                        userLocation.setLatitude(0.0);
-                        userLocation.setLongitude(0.0);
+                        userLocation.setLatitude(CurrentUser.getInstance().getLatitude());
+                        userLocation.setLongitude(CurrentUser.getInstance().getLongitude());
                         int i = 0;
                         for (FirebaseHelper.CompeteRecord record : records) {
                             // For each record, grab record location
