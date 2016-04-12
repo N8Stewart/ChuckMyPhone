@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +64,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         dropRecords = CurrentUser.getInstance().getDropLeaderboard();
 
         for (int i = 0; i < chuckRecords.size(); i++) {
-            addEntryToLeaderboard(i+1, "Tim Taylor", chuckRecords.get(i).score, view, "m/s^2");
+            addEntryToLeaderboard(i+1, "Tim Taylor", chuckRecords.get(i).score, view);
         }
 
         if (!isNetworkAvailable()) {
@@ -91,8 +93,8 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //clear leaderboard entries to make room for new entries
-                LinearLayout leaderboardRow = (LinearLayout) getActivity().findViewById(R.id.leaderboards_row_record_linear_layout);
-                leaderboardRow.removeAllViews();
+                TableLayout leaderboardTable = (TableLayout) getActivity().findViewById(R.id.leaderboards_table_layout);
+                leaderboardTable.removeAllViews();
 
                 String distanceOption = distanceSpinner.getSelectedItem().toString();
 
@@ -116,7 +118,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                 if (records != null) {
                     if (distanceOption.equals("Global")) {
                         for (int i = 0; i < records.size(); i++) {
-                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v, "");
+                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v);
                         }
                     } else {
                         // Grab out target distance
@@ -143,7 +145,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;
-                                addEntryToLeaderboard(i, record.username, record.score, v, "");
+                                addEntryToLeaderboard(i, record.username, record.score, v);
                             }
                         }
                     }
@@ -199,45 +201,47 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         void onFragmentInteraction(Uri uri);
     }
 
-    public void addEntryToLeaderboard(int rank, String name, long score, View view, String units) {
+    public void addEntryToLeaderboard(int rank, String name, long score, View view) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
-        LinearLayout leaderboardRow = (LinearLayout) view.findViewById(R.id.leaderboards_row_record_linear_layout);
+        TableLayout leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
 
-        LinearLayout leaderboardRowLayout = new LinearLayout(getActivity());
-        leaderboardRowLayout.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout.LayoutParams LLParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 3);
-        leaderboardRowLayout.setLayoutParams(LLParams);
+        TableRow leaderboardRow = new TableRow(getActivity());
+        TableLayout.LayoutParams LLParams = new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        leaderboardRow.setLayoutParams(LLParams);
+        leaderboardRow.setWeightSum(2);
 
         TextView leaderboardRank = new TextView(getActivity());
         leaderboardRank.setText(String.valueOf(rank));
-        leaderboardRank.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        leaderboardRank.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
         leaderboardRank.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+
+        //should have a constant buffer, since it may vary in size
+        leaderboardRank.getLayoutParams().width = 150;
 
         TextView leaderboardName = new TextView(getActivity());
         leaderboardName.setText(name);
         leaderboardName.setGravity(Gravity.LEFT);
-        leaderboardName.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        leaderboardName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
         leaderboardName.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
         TextView leaderboardScore = new TextView(getActivity());
-        leaderboardScore.setText(String.valueOf(score) + " " + units);
+        leaderboardScore.setText(String.valueOf(score));
         leaderboardScore.setGravity(Gravity.RIGHT);
-        leaderboardScore.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1));
+        leaderboardScore.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
         leaderboardScore.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
-        leaderboardRowLayout.addView(leaderboardRank);
-        leaderboardRowLayout.addView(leaderboardName);
-        leaderboardRowLayout.addView(leaderboardScore);
+        leaderboardRow.addView(leaderboardRank);
+        leaderboardRow.addView(leaderboardName);
+        leaderboardRow.addView(leaderboardScore);
 
         View dividerView = new View(getActivity());
         dividerView.setBackgroundColor(Color.GRAY);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 6);
         dividerView.setLayoutParams(lp);
 
-        LinearLayout leaderboardScrollViewRows = (LinearLayout) view.findViewById(R.id.leaderboards_row_record_linear_layout);
-        leaderboardScrollViewRows.addView(leaderboardRowLayout);
-        leaderboardScrollViewRows.addView(dividerView);
+        leaderboardTable.addView(leaderboardRow);
+        leaderboardTable.addView(dividerView);
     }
 
     @Override

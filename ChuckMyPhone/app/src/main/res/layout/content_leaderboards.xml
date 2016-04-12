@@ -15,17 +15,15 @@
     android:layout_centerHorizontal="true">
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="322dp"
         android:id="@+id/leaderboards_table_records_scroll_view" >
 
-        <LinearLayout
-            android:orientation="vertical"
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/leaderboards_row_record_linear_layout">
-
-        </LinearLayout>
+            android:id="@+id/leaderboards_table_layout">
+        </TableLayout>
     </ScrollView>
 
     <TextView

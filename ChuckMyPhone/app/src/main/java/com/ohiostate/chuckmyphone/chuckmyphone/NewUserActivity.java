@@ -19,7 +19,7 @@ import android.widget.Toast;
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
     public final int USERNAME_LENGTH_MIN = 3;
-    public final int USERNAME_lENGTH_MAX = 12;
+    public final int USERNAME_lENGTH_MAX = 13;
 
     private final String TAG = this.getClass().getSimpleName();
 
