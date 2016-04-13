@@ -63,9 +63,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         signUpButton = (Button) findViewById(R.id.new_user_sign_up_button);
         signUpButton.setOnClickListener(this);
 
-        fbButton = (Button) findViewById(R.id.new_user_facebook_button);
-        fbButton.setOnClickListener(this);
-
         usernameEditText = (EditText) findViewById(R.id.new_user_username_edit_text);
         passwordEditText = (EditText) findViewById(R.id.new_user_password_edit_text);
         passwordConfirmationEditText = (EditText) findViewById(R.id.new_user_password_confirmation_edit_text);
