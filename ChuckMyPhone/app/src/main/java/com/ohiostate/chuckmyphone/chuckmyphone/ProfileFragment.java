@@ -123,7 +123,7 @@ public class ProfileFragment extends Fragment {
         horzLayout.addView(podLayout);
 
         View dividerView = new View(getActivity());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(15, ViewGroup.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(50, ViewGroup.LayoutParams.MATCH_PARENT);
         dividerView.setLayoutParams(lp);
 
         horzLayout.addView(dividerView);
