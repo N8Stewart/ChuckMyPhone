@@ -139,6 +139,13 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     @Override
     public void onResume() {
         super.onResume();
+
+        if (!CurrentUser.getInstance().isGPSEnabled()){
+            Toast.makeText(getActivity(), "Please, enable the GPS", Toast.LENGTH_SHORT).show();
+        } else if (CurrentUser.getInstance().needToUpdateLocation()){
+            Toast.makeText(getActivity(), "Please wait for the GPS update your location", Toast.LENGTH_LONG).show();
+        }
+
         Log.d(TAG, "onResume() called");
     }
 
@@ -165,14 +172,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if(!CurrentUser.getInstance().isGPSEnabled() && !CurrentUser.getInstance().havePlayedOnceWithoutGps()){
-                Toast.makeText(getActivity(), "Please, enable the GPS to make new scores filterable by distance", Toast.LENGTH_LONG).show();
-                CurrentUser.getInstance().updatePlayedOnceWithoutGps();
-            } else if(CurrentUser.getInstance().needToUpdateLocation() && !CurrentUser.getInstance().havePlayedOnceWithGps()){
-                Toast.makeText(getActivity(), "Please, wait the GPS update your location", Toast.LENGTH_LONG).show();
-                CurrentUser.getInstance().updatePlayedOnceWithGps();
-            }
-
             if (userHasSensor) {
                 isRecording = !isRecording;
                 if (isRecording)

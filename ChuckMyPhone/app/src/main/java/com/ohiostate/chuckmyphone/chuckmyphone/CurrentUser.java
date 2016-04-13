@@ -160,29 +160,12 @@ public class CurrentUser {
         return this.userId;
     }
 
-
-    public boolean havePlayedOnceWithoutGps() {
-        return playedOnceWithoutGps;
-    }
-
-    public void updatePlayedOnceWithoutGps(){
-        playedOnceWithoutGps = true;
-    }
-
-    public void updatePlayedOnceWithGps(){
-        playedOnceWithGps = true;
-    }
-
     public void updateSawBoardOnceWithoutGps(){
         sawBoardOnceWithoutGps = true;
     }
 
     public void updateSawBoardOnceWithGps(){
         sawBoardOnceWithGps = true;
-    }
-
-    public boolean havePlayedOnceWithGps() {
-        return playedOnceWithGps;
     }
 
     public boolean sawBoardOnceWithoutGps() {
