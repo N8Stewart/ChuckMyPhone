@@ -97,11 +97,5 @@
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.31" />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Connect with Facebook"
-            android:id="@+id/new_user_facebook_button" />
-
     </LinearLayout>
 </RelativeLayout>

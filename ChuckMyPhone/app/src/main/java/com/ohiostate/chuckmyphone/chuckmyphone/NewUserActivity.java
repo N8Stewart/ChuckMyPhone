@@ -78,10 +78,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if (!actionPending) {
             switch (v.getId()) {
-                case R.id.new_user_facebook_button:
-                    //Facebook login logic goes here
-
-                    break;
                 case R.id.new_user_sign_up_button:
                     if (isReadyToCreateAccount()) {
                         //Account creation works asynchronously
