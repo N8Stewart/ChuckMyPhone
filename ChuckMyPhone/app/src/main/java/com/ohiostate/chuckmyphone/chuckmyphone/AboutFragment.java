@@ -146,10 +146,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
                         // display the popup in the center
                         pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
-
-                        //countdown to timeout
-                        Thread badgeTimeoutThread = new Thread(badgeTimeoutRunnable);
-                        badgeTimeoutThread.start();
                     }
                 });
             } catch (Exception e) {
@@ -161,23 +157,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
-        }
-    };
-
-    private Runnable badgeTimeoutRunnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(NUM_SECONDS_BADGE_POPUP_DISMISS*1000, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pw.dismiss();
-                }
-            });
         }
     };
 }
