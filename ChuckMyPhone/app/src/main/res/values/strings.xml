@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ChuckMyPhone</string>
+    <string name="app_name">Chuck My Phone</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
