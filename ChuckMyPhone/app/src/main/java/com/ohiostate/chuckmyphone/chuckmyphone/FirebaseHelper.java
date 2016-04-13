@@ -201,7 +201,7 @@ public class FirebaseHelper {
                     System.out.println("User logged into existing account, no data was changed");
                 }
                 System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-                CurrentUser.getInstance().loadUserMetaData(authData.getUid(), authData.getProvider());
+                CurrentUser.getInstance().loadUserMetaData(authData.getUid());
                 loginActivity.onSuccessfulLogin(loginEmail, loginPassword, authData.getUid());
             } else {
                 //TODO

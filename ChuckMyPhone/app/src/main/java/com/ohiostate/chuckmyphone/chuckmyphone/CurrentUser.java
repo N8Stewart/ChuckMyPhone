@@ -20,10 +20,8 @@ public class CurrentUser {
         dropLeaderboardGlobal = new ArrayList<>();
     }
 
-    private boolean isLoaded = false;
     private String userId;
     private String username;
-    private String provider;
 
     private long chuckScore;
     private long spinScore;
@@ -51,13 +49,11 @@ public class CurrentUser {
     private ArrayList<Badge> badgeList;
 
     //load userID, high scores
-    public void loadUserMetaData(String userId, String provider) {
+    public void loadUserMetaData(String userId) {
         this.userId = userId;
-        this.provider = provider;
         if (this.username == null) {
             this.username = "USERNAME NOT ASSIGNED";
         }
-        isLoaded = true;
 
         soundEnabled = false;
         tutorialMessagesEnabled = true;
@@ -90,10 +86,6 @@ public class CurrentUser {
 
     public void loadUserBadgeData() {
         badgeList = FirebaseHelper.getInstance().getBadges();
-    }
-
-    public void unloadData() {
-        isLoaded = false;
     }
 
     //updates high score in firebase
@@ -168,9 +160,6 @@ public class CurrentUser {
         return this.userId;
     }
 
-    public boolean isDataLoaded() {
-        return isLoaded;
-    }
 
     public boolean havePlayedOnceWithoutGps() {
         return playedOnceWithoutGps;
