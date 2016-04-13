@@ -24,6 +24,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean actionPending;
     private static boolean loginFromNewUserScreen;
 
+    private Toast loggingInToast;
+
     private TextView forgotPasswordTextView;
 
     private EditText passwordEditText;
@@ -37,6 +39,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "onCreate() called");
 
         actionPending = false;
+
+        loggingInToast = Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT);
 
         if (SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
             attemptLogin(SharedPreferencesHelper.getEmail(getApplicationContext()),
@@ -118,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (!password.equals("")) {
                     actionPending = true;
                     if (!loginFromNewUserScreen) {
-                        Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
+                        loggingInToast.show();
                     }
                     boolean firebaseWasLoaded = FirebaseHelper.getInstance().login(email, password, this);
                     if (!firebaseWasLoaded) {
@@ -139,6 +143,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     protected void onSuccessfulLogin(String email, String password, String userID) {
+        loggingInToast.cancel();
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
         }
@@ -168,6 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
     protected void onUnsuccessfulLogin(String error) {
+        loggingInToast.cancel();
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
     }

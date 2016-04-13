@@ -36,6 +36,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private EditText passwordConfirmationEditText;
     private EditText emailEditText;
 
+    private Toast creatingAccountToast;
+
     private CheckBox termsOfServiceCheckBox;
 
     @Override
@@ -44,6 +46,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_new_user);
 
         actionPending = false;
+
+        creatingAccountToast = Toast.makeText(this.getApplicationContext(), "Creating Account...", Toast.LENGTH_SHORT);
 
         firebaseHelper = FirebaseHelper.getInstance();
         Log.d(TAG, "onCreate() called");
@@ -135,7 +139,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         String password = passwordEditText.getText().toString();
         String email = emailEditText.getText().toString();
 
-        Toast.makeText(this.getApplicationContext(), "Creating account, please wait", Toast.LENGTH_SHORT).show();
+        creatingAccountToast.show();
 
         //Deal with Firebase user creation
         firebaseHelper.createUser(email, password, username, this);
@@ -143,6 +147,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
     protected void accountWasCreated() {
+        creatingAccountToast.cancel();
+
         //update shared preferences
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
         SharedPreferencesHelper.createSharedPreferencesData(this, emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
@@ -156,6 +162,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     //called by Firebase helper when an account is not successfully created. Don't call from anywhere else
     protected void accountWasNotCreated(String error) {
+        creatingAccountToast.cancel();
+
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
     }
