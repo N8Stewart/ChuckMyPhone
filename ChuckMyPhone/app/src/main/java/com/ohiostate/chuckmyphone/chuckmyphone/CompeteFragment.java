@@ -284,7 +284,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                         TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
 
                         badgeTitle.setText(Html.fromHtml("<i>" + bName + "</i>"));
-                        badgeDescription.setText("\n" + "Description:\n" + Badge.badgeNameToDescriptionMap.get(bName));
+                        badgeDescription.setText("\n" + Badge.badgeNameToDescriptionMap.get(bName));
 
                         Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
                         cancelButton.setOnClickListener(cancel_button_click_listener);
