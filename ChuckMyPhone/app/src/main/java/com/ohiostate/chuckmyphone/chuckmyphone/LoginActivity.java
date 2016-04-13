@@ -22,6 +22,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button loginButton;
 
     private boolean actionPending;
+    private static boolean loginFromNewUserScreen;
 
     private TextView forgotPasswordTextView;
 
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     break;
             }
         } else {
-            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -116,17 +117,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if (!email.equals("")) {
                 if (!password.equals("")) {
                     actionPending = true;
-                    Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
+                    if (!loginFromNewUserScreen) {
+                        Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT).show();
+                    }
                     boolean firebaseWasLoaded = FirebaseHelper.getInstance().login(email, password, this);
                     if (!firebaseWasLoaded) {
                         actionPending = false;
                         Toast.makeText(this.getApplicationContext(), "App is still loading, please try to login again in a second", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this.getApplicationContext(), "Please enter your username", Toast.LENGTH_LONG).show();
+                Toast.makeText(this.getApplicationContext(), "Please enter your username", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_LONG).show();
@@ -136,9 +139,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     protected void onSuccessfulLogin(String email, String password, String userID) {
-
-        Toast.makeText(this.getApplicationContext(), "Login Successful!", Toast.LENGTH_SHORT).show();
-
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
         }
@@ -176,5 +176,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static void setLoginFromNewUserScreen(boolean value) {
+        loginFromNewUserScreen = value;
     }
 }

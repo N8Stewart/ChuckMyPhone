@@ -91,7 +91,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
                     break;
             }
         } else {
-            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -135,7 +135,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         String password = passwordEditText.getText().toString();
         String email = emailEditText.getText().toString();
 
-        Toast.makeText(this.getApplicationContext(), "Creating account, please wait", Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), "Creating account, please wait", Toast.LENGTH_SHORT).show();
 
         //Deal with Firebase user creation
         firebaseHelper.createUser(email, password, username, this);
@@ -145,8 +145,9 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     protected void accountWasCreated() {
         //update shared preferences
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
-        SharedPreferencesHelper.createSharedPreferencesData(this,emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
+        SharedPreferencesHelper.createSharedPreferencesData(this, emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
         actionPending = false;
+        LoginActivity.setLoginFromNewUserScreen(true);
 
         //account was created successfully, navigate back to login page
         Toast.makeText(this.getApplicationContext(), "Account was successfully created, logging in now!", Toast.LENGTH_SHORT).show();
