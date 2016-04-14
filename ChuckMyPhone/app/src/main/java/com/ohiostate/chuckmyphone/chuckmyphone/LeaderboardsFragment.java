@@ -63,10 +63,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         spinRecords = CurrentUser.getInstance().getSpinLeaderboard();
         dropRecords = CurrentUser.getInstance().getDropLeaderboard();
 
-        for (int i = 0; i < chuckRecords.size(); i++) {
-            addEntryToLeaderboard(i+1, "Tim Taylor", chuckRecords.get(i).score, view);
-        }
-
         if (!isNetworkAvailable()) {
             Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nThis leaderboard may be out of date", Toast.LENGTH_LONG).show();
         }
