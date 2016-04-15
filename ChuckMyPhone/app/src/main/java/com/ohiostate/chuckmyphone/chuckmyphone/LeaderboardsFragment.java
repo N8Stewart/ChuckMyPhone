@@ -135,9 +135,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                             recordLocation.setLatitude(record.latitude);
                             recordLocation.setLongitude(record.longitude);
                             // Compute distance to target in miles
-                            double scalingFactor = 0.0006213711923;
-                            double distance = userLocation.distanceTo(recordLocation);
-                            distance = distance * scalingFactor;
+                            double distance = getDistance(userLocation, recordLocation);
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;
@@ -156,6 +154,12 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         competitionSpinner.setOnItemSelectedListener(filterResults);
         distanceSpinner.setOnItemSelectedListener(filterResults);
+    }
+
+    private double getDistance(Location loc1, Location loc2) {
+        double scalingFactor = 0.0006213711923;
+        double distance = loc1.distanceTo(loc2);
+        return distance * scalingFactor;
     }
 
     public void onButtonPressed(Uri uri) {
