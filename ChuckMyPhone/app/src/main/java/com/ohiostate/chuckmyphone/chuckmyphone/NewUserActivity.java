@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -91,6 +92,10 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
                     startActivity(new Intent(getApplication(), LoginActivity.class));
                     finish();
                     break;
+                case R.id.new_user_terms_of_service_text :
+                    Uri uri = Uri.parse(this.getApplicationContext().getString(R.string.terms_of_service));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
                 default:
                     break;
             }
