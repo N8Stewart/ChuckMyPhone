@@ -9,4 +9,4 @@ This application and its components shall not be responsible or liable for the a
 * If you feel a third-party or owner of this copyright has infringed on the intellectual property rights of this application, you can contact us at ChuckMyPhoneTeam@gmail.com.
 * Under no circumstances will advertisements be displayed on this application. The creators of this application are not getting paid to provide endorsement whatsoever.
 * No sensitive information is being held or processed by this application. We highly recommend against reusing a common password with use of this site.
-
+* Other user's usernames may contain lewd content. By using this application, you accept that seeing this lewd content is possible 
