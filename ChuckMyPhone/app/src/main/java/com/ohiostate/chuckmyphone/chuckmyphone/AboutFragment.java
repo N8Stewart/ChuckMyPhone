@@ -108,6 +108,9 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                     FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
                     initiatePopupWindow();
                 }
+
+                //FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard();
+
                 break;
         }
     }

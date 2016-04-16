@@ -67,6 +67,14 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         initializeViews(view);
 
+        if (!CurrentUser.getInstance().sawBoardOnceWithoutGps() && !CurrentUser.getInstance().isGPSEnabled()) {
+            Toast.makeText(getActivity(), "Please, enable the GPS to update your location", Toast.LENGTH_LONG).show();
+            CurrentUser.getInstance().updateSawBoardOnceWithoutGps();
+        } else if (!CurrentUser.getInstance().sawBoardOnceWithGps() && CurrentUser.getInstance().needToUpdateLocation()) {
+            Toast.makeText(getActivity(), "Please, wait the GPS update your location", Toast.LENGTH_LONG).show();
+            CurrentUser.getInstance().updateSawBoardOnceWithGps();
+        }
+
         chuckRecords = CurrentUser.getInstance().getChuckLeaderboard();
         spinRecords = CurrentUser.getInstance().getSpinLeaderboard();
         dropRecords = CurrentUser.getInstance().getDropLeaderboard();
@@ -123,11 +131,10 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                     long score = 0;
                     if (distanceOption.equals("Global")) {
                         for (int i = 0; i < records.size(); i++) {
-                            //don't allow more than 100 entries (with zero offset)
+                            //don't have more than 100 entries
                             if (i > 99) {
                                 break;
                             }
-
                             addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v);
                             if (CurrentUser.getInstance().getUsername().equals(records.get(i).username)) {
                                 rank = i + 1;
@@ -163,7 +170,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                                 rank = i;
                                 score = record.score;
                             }
-
                             //don't have more than 100 entries
                             if (i > 100) {
                                 break;
@@ -193,27 +199,11 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
     public void checkToUnlockOnePercentBadge(int rank) {
         int numRecords = leaderboardTable.getChildCount() / 2;
-        Log.d(TAG, "found " + numRecords + " records^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         if (numRecords > 99 && rank < 11 && rank > 0 && !FirebaseHelper.getInstance().hasBadge(getActivity().getString(R.string.badge_one_percent))) {
             FirebaseHelper.getInstance().unlockBadge(getActivity().getString(R.string.badge_one_percent));
-            initiatePopupWindow(getActivity().getString(R.string.badge_one_percent));
+            //initiatePopupWindow(getActivity().getString(R.string.badge_one_percent));
+            Log.d(TAG, "UNLOCKING BADGE");
         }
-    }
-
-    /**
-     * Return the rank of the user in the CompeteRecords with the username 'username'
-     * @param records - An arraylist of CompeteRecords to search for username
-     * @param username - The username of the user for which we want the global rank
-     * @return rank of the user with username 'username' or -1 if unranked
-     */
-    public static int getUserGlobalRank(ArrayList<FirebaseHelper.CompeteRecord> records, String username) {
-        int rank = -1;
-        for (int i = 0; i < records.size(); i++) {
-            if (username.equals(records.get(i).username)) {
-                rank = i + 1;
-            }
-        }
-        return rank;
     }
 
     private double getDistance(Location loc1, Location loc2) {
@@ -356,13 +346,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     @Override
     public void onResume() {
         super.onResume();
-        if(!CurrentUser.getInstance().sawBoardOnceWithoutGps() && !CurrentUser.getInstance().isGPSEnabled()){
-            Toast.makeText(getActivity(), "Please, enable the GPS to update your location", Toast.LENGTH_LONG).show();
-            CurrentUser.getInstance().updateSawBoardOnceWithoutGps();
-        } else if(!CurrentUser.getInstance().sawBoardOnceWithGps() && CurrentUser.getInstance().needToUpdateLocation()){
-            Toast.makeText(getActivity(), "Please, wait the GPS update your location", Toast.LENGTH_LONG).show();
-            CurrentUser.getInstance().updateSawBoardOnceWithGps();
-        }
         Log.d(TAG, "onResume() called");
     }
 
@@ -382,9 +365,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                     public void run() {
                         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-                        // 800 px by 800 px
                         pw = new PopupWindow(layout, 1000, 1000, true);
-
                         TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
                         TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
 
@@ -407,6 +388,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
+            Log.d(TAG, "Cancel button pressed");
         }
     };
 }

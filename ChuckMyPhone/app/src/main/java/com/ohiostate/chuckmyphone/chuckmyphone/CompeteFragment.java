@@ -276,7 +276,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                     public void run() {
                         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-                        // 800 px by 800 px
                         pw = new PopupWindow(layout, 1000, 1000, true);
 
                         TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);

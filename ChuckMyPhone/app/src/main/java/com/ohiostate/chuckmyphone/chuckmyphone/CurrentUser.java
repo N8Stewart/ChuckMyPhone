@@ -1,6 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Tim on 3/13/2016.
@@ -208,16 +209,19 @@ public class CurrentUser {
         return this.username;
     }
 
-    protected void updateChuckLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
-        chuckLeaderboardGlobal = newLeaderboard; //pass by reference problems?
+    protected void updateGlobalChuckLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
+        chuckLeaderboardGlobal = newLeaderboard;
+        Collections.reverse(chuckLeaderboardGlobal);
     }
 
-    protected void updateSpinLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
-        spinLeaderboardGlobal = newLeaderboard; //pass by reference problems?
+    protected void updateGlobalSpinLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
+        spinLeaderboardGlobal = newLeaderboard;
+        Collections.reverse(spinLeaderboardGlobal);
     }
 
-    protected void updateDropLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
-        dropLeaderboardGlobal = newLeaderboard; //pass by reference problems?
+    protected void updateGlobalDropLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
+        dropLeaderboardGlobal = newLeaderboard;
+        Collections.reverse(dropLeaderboardGlobal);
     }
 
     protected ArrayList<FirebaseHelper.CompeteRecord> getChuckLeaderboard() {
