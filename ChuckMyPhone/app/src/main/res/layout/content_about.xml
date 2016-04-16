@@ -25,60 +25,52 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="&quot;The best app ever invented!&quot;"
-            android:id="@+id/about_phrase_one_textview"
+            android:text="Tips:"
             android:layout_gravity="center_horizontal"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="The New York Times"
-            android:textStyle="italic"
-            android:id="@+id/about_source_one_textview"
-            android:layout_gravity="center_horizontal"/>
+            android:text="For better chuck scores, try throwing your phone into a pillow as hard as you can"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="&quot;It will get you fit and in shape!&quot;"
-            android:layout_marginTop="20dp"
-            android:id="@+id/about_phrase_two_textview"
-            android:layout_gravity="center_horizontal"/>
+            android:text="New Text"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Arnold Schwarzenegger"
-            android:textStyle="italic"
-            android:id="@+id/about_source_two_textview"
-            android:layout_gravity="center_horizontal"/>
+            android:text="For better spin scores, try to flip your phone across all axis of orientation"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="&quot;It will be part of Rio 2016!&quot;"
-            android:layout_marginTop="20dp"
-            android:id="@+id/about_phrase_three_textview"
-            android:layout_gravity="center_horizontal"/>
+            android:text="New Text"
+            android:visibility="invisible" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="The Olympic Committee"
-            android:textStyle="italic"
-            android:id="@+id/about_source_three_textview"
-            android:layout_gravity="center_horizontal"/>
+            android:text="For better drop scores, make sure you drop from as high as possible, and allow the phone to come to a complete stop before picking it up" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:visibility="invisible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Random tip"
+            android:id="@+id/about_random_tip_textview" />
 
         <TextView
             android:layout_width="43dp"
             android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:layout_weight="0.32" />
+            android:layout_weight="0.48" />
 
         <Button
             android:layout_width="wrap_content"

@@ -16,6 +16,30 @@
         <item>Drop</item>
         <item>Spin</item>
     </string-array>
+    <string-array name="about_random_tips">
+        <item>"Make sure you tell your phone you love it before you ruthlessly throw it"</item>
+        <item>"You might forget it after playing this for a while, but phones are used to call people too. Don't forget to call home every once and a while"</item>
+        <item>"Don't try to drop your phone on the moon. This app was designed for Earth use only"</item>
+        <item>"This app is rated 'R' for radical, user discretion is advised"</item>
+        <item>"While it may yield a very high score, don't use a blender to spin your phone"</item>
+        <item>"If phones weren't meant to be chucked, they wouldn't fit so nicely in our hands"</item>
+        <item>"Make sure you pick up your phone after dropping it, otherwise you won't have a phone anymore"</item>
+        <item>"Phones respond well to sarcasm. After dropping yours, be sure to ask 'How's the weather down there?'"</item>
+        <item>"In the somewhat likely event that your phone becomes sentient, deny ever using this app with it"</item>
+        <item>"The 'Chuck Your Phone' team thanks your phone for its valiant sacrifices made in the name of fun"</item>
+        <item>"This app can also be loaded onto phone booths if you like challenges"</item>
+        <item>"There is a hidden setting you can unlock by getting the hidden badge. I can't tell you how to get it though. On a totally unrelated note, have you checked out the credits below yet?"</item>
+        <item>"If you have any problems with this app, please drop your phone anywhere outside and we will return it to you at our earliest convenience"</item>
+        <item>"Try to chuck your phone into a soft surface like a pillow, your bed, or soft serve ice cream"</item>
+        <item>"Don't worry about breaking your phone. Phones may be expensive, but entertainment is priceless"</item>
+        <item>"The 'Chuck My Phone' team is developing new phone cases with better grips, airbags, all-terrain drive, and luxury seating for five. Be sure to check out your local car dealer for it soon"</item>
+        <item>"Don't tell your parents about this app. We only want cool kids playing it and grown ups are poopyheads"</item>
+        <item>"This app has a built in dating functionality. To use it, just throw your phone at someone you think is cute"</item>
+        <item>"Please use this app irresponsibly"</item>
+        <item>"The 'Chuck Your Phone' team is totally happy with how this app came out. We have no passive aggressive tensions remaining whatsoever\n*glares at Nate >:( *"</item>
+        <item>"Remember to get your phone a healthy amount of milk in its diet so its bones stand up to this app's shenanigans"</item>
+        <item>"Try to drop your phone onto a soft surface like a pile of clothes, a piece of rubber, or on your pets tummy"</item>
+    </string-array>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_personal_profile">PersonalProfileActivity</string>
     <string name="title_activity_new_user">NewUserActivity</string>
@@ -27,7 +51,7 @@
     <string name="title_activity_tutorial">TutorialActivity</string>
     <string name="action_change_password">Change password</string>
     <string name="action_about">About</string>
-    <string name="action_logout">Log out</string>
+    <string name="action_logout">Logout</string>
     <string name="title_menu_competitions">Competitions</string>
     <string name="action_drop">Drop my phone</string>
     <string name="action_spin">Spin my phone</string>

@@ -1,10 +1,12 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Random;
 
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
@@ -28,6 +32,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     // Views
     private TextView termsOfService;
+    private TextView randomizedTip;
+
     private Button creditsButton;
 
     public AboutFragment() {}
@@ -59,6 +65,9 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
         creditsButton = (Button) view.findViewById(R.id.about_credits_button);
         creditsButton.setOnClickListener(this);
+
+        randomizedTip = (TextView) view.findViewById(R.id.about_random_tip_textview);
+        randomizedTip.setText(getRandomTip());
     }
 
     public void onButtonPressed(Uri uri) {
@@ -159,4 +168,18 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             pw.dismiss();
         }
     };
+
+    private String getRandomTip() {
+        String tip = "";
+        Resources res = getResources();
+        String[] randomTips = res.getStringArray(R.array.about_random_tips);
+
+        Random r = new Random();
+        r.setSeed(System.currentTimeMillis());
+        int val = r.nextInt(randomTips.length);
+
+        tip = randomTips[val];
+
+        return tip;
+    }
 }
