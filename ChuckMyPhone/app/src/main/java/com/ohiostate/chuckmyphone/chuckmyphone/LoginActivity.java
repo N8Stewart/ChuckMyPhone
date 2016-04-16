@@ -174,6 +174,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //called by firebase when login is not successfully performed. Don't call from anywhere else
     protected void onUnsuccessfulLogin(String error) {
         loggingInToast.cancel();
+        SharedPreferencesHelper.clearSharedData(getApplicationContext());
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
     }
