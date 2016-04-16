@@ -171,7 +171,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                                 score = record.score;
                             }
                             //don't have more than 100 entries
-                            if (i > 100) {
+                            if (i > 99) {
                                 break;
                             }
                         }

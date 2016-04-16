@@ -299,13 +299,13 @@ public class FirebaseHelper {
     }
 
     protected void addFakeChuckScoresToLeaderboard() {
-        for (int j = 0; j < 2; j++) {
+        for (int j = 0; j < 1; j++) {
             for (int i = 0; i < 100; i++) {
-                String userID = "userC"+j+"_"+ i;
-                String username = "usernameC"+j+"_"+ i;
+                String userID = "userGlob"+j+"_"+ i;
+                String username = "usernameGlob"+j+"_"+ i;
                 int score = i;
-                int latitude = 40;
-                int longitude = 84;
+                int latitude = 0;
+                double longitude = 2;
                 myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, username), score);
             }
         }
