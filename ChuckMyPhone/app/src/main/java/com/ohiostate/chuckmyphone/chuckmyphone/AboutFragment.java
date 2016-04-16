@@ -2,6 +2,7 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -96,8 +97,10 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch(v.getId()){
-            case R.id.about_terms_of_service_textview:
-                // open webview to show terms of service
+            case R.id.about_terms_of_service_textview :
+                Uri uri = Uri.parse(getContext().getString(R.string.terms_of_service));
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
                 break;
             default:
                 Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();

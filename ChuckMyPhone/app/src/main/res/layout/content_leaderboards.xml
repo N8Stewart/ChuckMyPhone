@@ -33,37 +33,11 @@
         android:id="@+id/textView26"
         android:background="@color/colorPrimary" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="3"
-        android:id="@+id/leaderboards_user_record_linear_layout">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="16"
-            android:id="@+id/leaderboards_user_position_textview"
-            style="@android:style/TextAppearance.DeviceDefault.Large"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tim Taylor (My best)"
-            android:id="@+id/leaderboards_user_username_textview"
-            style="@android:style/TextAppearance.DeviceDefault.Large"
-            android:layout_weight="1"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/leaderboards_user_record_textview"
-            android:text="4 mph"
-            style="@android:style/TextAppearance.DeviceDefault.Large"
-            android:layout_weight="1"/>
-    </LinearLayout>
+        android:layout_height="30dp"
+        android:id="@+id/leaderboards_user_record">
+    </TableLayout>
 
     <TextView
         android:layout_width="match_parent"

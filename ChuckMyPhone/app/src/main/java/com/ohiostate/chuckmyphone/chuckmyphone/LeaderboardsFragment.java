@@ -22,6 +22,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class LeaderboardsFragment extends Fragment implements View.OnClickListener {
@@ -67,7 +69,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
             Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nThis leaderboard may be out of date", Toast.LENGTH_LONG).show();
         }
 
-
         return view;
     }
 
@@ -112,12 +113,18 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                         break;
                 }
                 if (records != null) {
+                    int rank = -1;
+                    long score = 0;
                     if (distanceOption.equals("Global")) {
                         for (int i = 0; i < records.size(); i++) {
                             addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v);
+                            if (CurrentUser.getInstance().getUsername().equals(records.get(i).username)) {
+                                rank = i + 1;
+                                score = records.get(i).score;
+                            }
                         }
                     } else {
-                        // Grab out target distance
+                        // Grab the target distance
                         double targetDistance;
                         if (distanceOption.equals("Within 10 miles"))
                             targetDistance = 10.0;
@@ -135,15 +142,24 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                             recordLocation.setLatitude(record.latitude);
                             recordLocation.setLongitude(record.longitude);
                             // Compute distance to target in miles
-                            double scalingFactor = 0.0006213711923;
-                            double distance = userLocation.distanceTo(recordLocation);
-                            distance = distance * scalingFactor;
+                            double distance = getDistance(userLocation, recordLocation);
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;
                                 addEntryToLeaderboard(i, record.username, record.score, v);
                             }
+                            if (CurrentUser.getInstance().getUsername().equals(record.username)) {
+                                rank = i;
+                                score = record.score;
+                            }
+
                         }
+
+                    }
+                    if (rank == -1) {
+                        addUserStaticRankToLeaderboard("N/A", CurrentUser.getInstance().getUsername(), 0 + "", v);
+                    } else {
+                        addUserStaticRankToLeaderboard(rank + "", CurrentUser.getInstance().getUsername(), score + "", v);
                     }
                 }
             }
@@ -156,6 +172,28 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         competitionSpinner.setOnItemSelectedListener(filterResults);
         distanceSpinner.setOnItemSelectedListener(filterResults);
+    }
+
+    /**
+     * Return the rank of the user in the CompeteRecords with the username 'username'
+     * @param records - An arraylist of CompeteRecords to search for username
+     * @param username - The username of the user for which we want the global rank
+     * @return rank of the user with username 'username' or -1 if unranked
+     */
+    public static int getUserGlobalRank(ArrayList<FirebaseHelper.CompeteRecord> records, String username) {
+        int rank = -1;
+        for (int i = 0; i < records.size(); i++) {
+            if (username.equals(records.get(i).username)) {
+                rank = i + 1;
+            }
+        }
+        return rank;
+    }
+
+    private double getDistance(Location loc1, Location loc2) {
+        double scalingFactor = 0.0006213711923;
+        double distance = loc1.distanceTo(loc2);
+        return distance * scalingFactor;
     }
 
     public void onButtonPressed(Uri uri) {
@@ -195,6 +233,43 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
+        final float scale = this.getResources().getDisplayMetrics().density;
+
+        TableLayout leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
+
+        TableRow userRow = new TableRow(getActivity());
+        TableLayout.LayoutParams LLParams = new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+        userRow.setLayoutParams(LLParams);
+        userRow.setWeightSum(2);
+
+        TextView leaderboardRank = new TextView(getActivity());
+        leaderboardRank.setText(rank);
+        leaderboardRank.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+        leaderboardRank.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+
+        //should have a constant buffer, since it may vary in size
+        leaderboardRank.getLayoutParams().width = 150;
+
+        TextView leaderboardName = new TextView(getActivity());
+        leaderboardName.setText(name);
+        leaderboardName.setGravity(Gravity.LEFT);
+        leaderboardName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
+        leaderboardName.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+
+        TextView leaderboardScore = new TextView(getActivity());
+        leaderboardScore.setText(score);
+        leaderboardScore.setGravity(Gravity.RIGHT);
+        leaderboardScore.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
+        leaderboardScore.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
+
+        userRow.addView(leaderboardRank);
+        userRow.addView(leaderboardName);
+        userRow.addView(leaderboardScore);
+
+        leaderboardTable.addView(userRow);
     }
 
     public void addEntryToLeaderboard(int rank, String name, long score, View view) {
