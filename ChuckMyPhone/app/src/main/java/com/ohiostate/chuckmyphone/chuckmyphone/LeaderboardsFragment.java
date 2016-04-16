@@ -6,8 +6,10 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -15,7 +17,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -39,6 +43,8 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     private ArrayList<FirebaseHelper.CompeteRecord> chuckRecords;
     private ArrayList<FirebaseHelper.CompeteRecord> spinRecords;
     private ArrayList<FirebaseHelper.CompeteRecord> dropRecords;
+
+    private TableLayout leaderboardTable;
 
     public LeaderboardsFragment() {}
 
@@ -90,7 +96,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //clear leaderboard entries to make room for new entries
-                TableLayout leaderboardTable = (TableLayout) getActivity().findViewById(R.id.leaderboards_table_layout);
+                leaderboardTable = (TableLayout) getActivity().findViewById(R.id.leaderboards_table_layout);
                 leaderboardTable.removeAllViews();
 
                 String distanceOption = distanceSpinner.getSelectedItem().toString();
@@ -117,6 +123,11 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                     long score = 0;
                     if (distanceOption.equals("Global")) {
                         for (int i = 0; i < records.size(); i++) {
+                            //don't allow more than 100 entries (with zero offset)
+                            if (i > 99) {
+                                break;
+                            }
+
                             addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v);
                             if (CurrentUser.getInstance().getUsername().equals(records.get(i).username)) {
                                 rank = i + 1;
@@ -153,6 +164,10 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                                 score = record.score;
                             }
 
+                            //don't have more than 100 entries
+                            if (i > 100) {
+                                break;
+                            }
                         }
 
                     }
@@ -161,6 +176,8 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                     } else {
                         addUserStaticRankToLeaderboard(rank + "", CurrentUser.getInstance().getUsername(), score + "", v);
                     }
+
+                    checkToUnlockOnePercentBadge(rank);
                 }
             }
 
@@ -172,6 +189,15 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
 
         competitionSpinner.setOnItemSelectedListener(filterResults);
         distanceSpinner.setOnItemSelectedListener(filterResults);
+    }
+
+    public void checkToUnlockOnePercentBadge(int rank) {
+        int numRecords = leaderboardTable.getChildCount() / 2;
+        Log.d(TAG, "found " + numRecords + " records^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        if (numRecords > 99 && rank < 11 && rank > 0 && !FirebaseHelper.getInstance().hasBadge(getActivity().getString(R.string.badge_one_percent))) {
+            FirebaseHelper.getInstance().unlockBadge(getActivity().getString(R.string.badge_one_percent));
+            initiatePopupWindow(getActivity().getString(R.string.badge_one_percent));
+        }
     }
 
     /**
@@ -238,7 +264,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     public void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
-        TableLayout leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
+        TableLayout leaderboardUserRecordTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
 
         TableRow userRow = new TableRow(getActivity());
         TableLayout.LayoutParams LLParams = new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -269,13 +295,13 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         userRow.addView(leaderboardName);
         userRow.addView(leaderboardScore);
 
-        leaderboardTable.addView(userRow);
+        leaderboardUserRecordTable.addView(userRow);
     }
 
     public void addEntryToLeaderboard(int rank, String name, long score, View view) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
-        TableLayout leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
+        leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
 
         TableRow leaderboardRow = new TableRow(getActivity());
         TableLayout.LayoutParams LLParams = new TableLayout.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
@@ -345,4 +371,42 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
+
+    protected PopupWindow pw;
+    protected void initiatePopupWindow(String badgeName) {
+        if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
+            try {
+                final String bName = badgeName;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
+                        // 800 px by 800 px
+                        pw = new PopupWindow(layout, 1000, 1000, true);
+
+                        TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
+                        TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
+
+                        badgeTitle.setText(Html.fromHtml("<i>" + bName + "</i>"));
+                        badgeDescription.setText("\n" + Badge.badgeNameToDescriptionMap.get(bName));
+
+                        Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
+                        cancelButton.setOnClickListener(cancel_button_click_listener);
+
+                        // display the popup in the center if user didn't navigate away quickly via hamburger menu
+                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
+        public void onClick(View v) {
+            pw.dismiss();
+        }
+    };
 }
