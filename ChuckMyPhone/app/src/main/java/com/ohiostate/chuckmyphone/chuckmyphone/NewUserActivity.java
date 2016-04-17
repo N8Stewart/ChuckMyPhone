@@ -181,7 +181,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    private boolean isValidUsername(String username) {
+    protected boolean isValidUsername(String username) {
         boolean isValidUsername = true;
         for (int i = 0; i < username.length(); i++) {
             char c = username.charAt(i);

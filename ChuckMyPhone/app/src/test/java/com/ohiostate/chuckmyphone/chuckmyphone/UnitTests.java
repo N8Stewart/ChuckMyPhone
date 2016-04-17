@@ -16,13 +16,15 @@ import static org.junit.Assert.*;
  */
 public class UnitTests {
     @Test
-    public void isUsernameAvailableOnTakenUsername() throws Exception {
+    public void isUsernameAvailableWhenDataNotLoaded() throws Exception {
         assertEquals(FirebaseHelper.getInstance().isUsernameAvailable("tim"), false);
     }
 
     @Test
-    public void isUsernameAvailableOnAvailableUsername() throws Exception {
-        assertEquals(FirebaseHelper.getInstance().isUsernameAvailable("thisisnotavalidusername%%%%%"), false);
+    public void isValidUsernameOnInvalidUsername() throws Exception {
+        NewUserActivity a = new NewUserActivity();
+        boolean actual = a.isValidUsername("$$$$$$$$$$$$$$$$$$$$$$$$");
+        assertEquals(actual, false);
     }
 
     @Test

@@ -154,6 +154,8 @@ public class FirebaseHelper {
                     }
                 }
             }
+        } else {
+            usernameIsAvailable = false;
         }
         return usernameIsAvailable;
     }
