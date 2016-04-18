@@ -6,7 +6,6 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -35,6 +34,8 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     private final String TAG = this.getClass().getSimpleName();
 
     private OnFragmentInteractionListener mListener;
+
+    private static final int earthRadius = 6371;
 
     // views
     private Spinner distanceSpinner;
@@ -149,18 +150,11 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
                         else
                             targetDistance = 100.0;
 
-                        // Grab user's location
-                        Location userLocation = new Location("No provider");
-                        userLocation.setLatitude(CurrentUser.getInstance().getLatitude());
-                        userLocation.setLongitude(CurrentUser.getInstance().getLongitude());
+                        CurrentUser user = CurrentUser.getInstance();
                         int i = 0;
                         for (FirebaseHelper.CompeteRecord record : records) {
                             // For each record, grab record location
-                            Location recordLocation = new Location("No provider");
-                            recordLocation.setLatitude(record.latitude);
-                            recordLocation.setLongitude(record.longitude);
-                            // Compute distance to target in miles
-                            double distance = getDistance(userLocation, recordLocation);
+                            double distance = calculateDistance(user.getLatitude(), user.getLongitude(), record.latitude, record.longitude);
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;
@@ -206,10 +200,15 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private double getDistance(Location loc1, Location loc2) {
-        double scalingFactor = 0.0006213711923;
-        double distance = loc1.distanceTo(loc2);
-        return distance * scalingFactor;
+    protected static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        double a =(Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
+                        * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2));
+        double c = (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+        double d = earthRadius * c;
+        double conversion = 0.6213711923; // convert km to mile
+        return d * conversion;
     }
 
     public void onButtonPressed(Uri uri) {

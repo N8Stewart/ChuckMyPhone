@@ -1,13 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
-import android.test.ServiceTestCase;
-
-import com.firebase.client.Firebase;
-
 import org.junit.Test;
-
-import java.lang.reflect.Method;
 
 import static org.junit.Assert.*;
 
@@ -17,19 +10,19 @@ import static org.junit.Assert.*;
 public class UnitTests {
     @Test
     public void isUsernameAvailableWhenDataNotLoaded() throws Exception {
-        assertEquals(FirebaseHelper.getInstance().isUsernameAvailable("tim"), false);
+        assertFalse(FirebaseHelper.getInstance().isUsernameAvailable("tim"));
     }
 
     @Test
     public void isValidUsernameOnInvalidUsername() throws Exception {
         NewUserActivity a = new NewUserActivity();
         boolean actual = a.isValidUsername("$$$$$$$$$$$$$$$$$$$$$$$$");
-        assertEquals(actual, false);
+        assertFalse(actual);
     }
 
     @Test
     public void initialFirebaseSnapshotNotLoadedByDefault() throws Exception {
-        assertEquals(FirebaseHelper.getInstance().hasLoadedInitialSnapshot, false);
+        assertFalse(FirebaseHelper.getInstance().hasLoadedInitialSnapshot);
     }
 
 }
