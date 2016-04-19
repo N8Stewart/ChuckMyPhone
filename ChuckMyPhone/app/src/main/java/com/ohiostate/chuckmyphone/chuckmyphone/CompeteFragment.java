@@ -103,7 +103,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_compete, container, false);
 
-        if (!isNetworkAvailable()) {
+        if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
             Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nScores will only be saved locally until an internet connection is re-established", Toast.LENGTH_LONG).show();
         }
 
@@ -334,10 +334,4 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             pw.dismiss();
         }
     };
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
 }
