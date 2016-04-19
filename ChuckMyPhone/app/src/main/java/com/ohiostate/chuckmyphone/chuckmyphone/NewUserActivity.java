@@ -128,7 +128,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
             Toast.makeText(this.getApplicationContext(), "Enter a valid email to create an account.", Toast.LENGTH_SHORT).show();
         } else if (!termsOfServiceCheckBox.isChecked()) {
             Toast.makeText(this.getApplicationContext(), "Please read the terms of service and check the box saying you agree to them", Toast.LENGTH_SHORT).show();
-        } else if (!isNetworkAvailable()) {
+        } else if (!MiscHelperMethods.isNetworkAvailable(this)) {
             Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_SHORT).show();
         } else if (!FirebaseHelper.getInstance().isUsernameAvailable(username)) {
             Toast.makeText(this.getApplicationContext(), "That username is taken, please try another", Toast.LENGTH_SHORT).show();
@@ -173,12 +173,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     protected boolean isValidUsername(String username) {

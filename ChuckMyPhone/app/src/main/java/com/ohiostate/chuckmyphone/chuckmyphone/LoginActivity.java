@@ -94,11 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (!actionPending) {
             switch (v.getId()) {
                 case R.id.login_login_button:
-                    if (FirebaseHelper.getInstance().hasLoadedInitialSnapshot) {
-                        attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
-                    } else {
-                        Toast.makeText(this.getApplicationContext(), "Still loading, please try again in a second\nIf this persists for more than a minute, check your internet connection", Toast.LENGTH_LONG).show();
-                    }
+                    attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                     break;
                 case R.id.login_forgot_password_textview:
                     intent = new Intent(getApplication(), ForgotPasswordActivity.class);
@@ -117,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public boolean attemptLogin(String email, String password) {
         boolean loginSuccessful = false;
-        if (isNetworkAvailable()) {
+        if (MiscHelperMethods.isNetworkAvailable(this)) {
             if (!email.equals("")) {
                 if (!password.equals("")) {
                     actionPending = true;
@@ -177,12 +173,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public static void setLoginFromNewUserScreen(boolean value) {
