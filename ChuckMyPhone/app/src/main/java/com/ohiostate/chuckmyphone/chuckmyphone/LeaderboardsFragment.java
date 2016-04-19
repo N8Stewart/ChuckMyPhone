@@ -80,7 +80,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         spinRecords = CurrentUser.getInstance().getSpinLeaderboard();
         dropRecords = CurrentUser.getInstance().getDropLeaderboard();
 
-        if (!isNetworkAvailable()) {
+        if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
             Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nThis leaderboard may be out of date", Toast.LENGTH_LONG).show();
         }
 
@@ -346,12 +346,6 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
     public void onResume() {
         super.onResume();
         Log.d(TAG, "onResume() called");
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     protected PopupWindow pw;

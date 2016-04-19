@@ -68,7 +68,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         if (!actionPending) {
             switch (v.getId()) {
                 case R.id.activity_forgot_password_reset_button:
-                    if (isNetworkAvailable()) {
+                    if (MiscHelperMethods.isNetworkAvailable(this)) {
                         if (!emailEditText.getText().toString().equals("")) {
                             actionPending = true;
                             Toast.makeText(this.getApplicationContext(), "Changing password, please wait", Toast.LENGTH_SHORT).show();
@@ -99,11 +99,5 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     public void onPasswordUnsuccessfullyReset(FirebaseError error) {
         actionPending = false;
         Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ error.getMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

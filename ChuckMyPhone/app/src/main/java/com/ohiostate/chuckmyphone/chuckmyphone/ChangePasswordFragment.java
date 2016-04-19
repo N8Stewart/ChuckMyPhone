@@ -96,7 +96,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         if (!actionPending) {
             switch (v.getId()) {
                 case R.id.change_password_confirm_button:
-                    if (isNetworkAvailable()) {
+                    if (MiscHelperMethods.isNetworkAvailable(getActivity())) {
                         if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
                             //TODO
                             //is it bad to use the shared preferences as the check here for the password?
@@ -163,11 +163,5 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     public void onUnsuccessfulPasswordChange(FirebaseError firebaseError) {
         actionPending = false;
         Toast.makeText(getActivity().getApplicationContext(), "Password was not changed: " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
