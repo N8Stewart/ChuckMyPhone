@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import java.util.Stack;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
@@ -147,10 +149,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Object choice = NavigationHelper.getInstance().lastMenuChoice();
         if(choice!=null){
             int c = (Integer) choice;
-            if(c < 10){
+            if(c < 2){
                 mNavigationView.getMenu().getItem(c).setChecked(true);
             } else {
-                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%10).setChecked(true);
+                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%2).setChecked(true);
             }
         }
     }
@@ -169,6 +171,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.menu_dot, menu);
         return true;
     }
+/*
+    public void rebuildStack(int position){
+        if(position==-1) return;
+        Stack<Fragment> fragmentStack = new Stack<>();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        for(int i = fragmentManager.getBackStackEntryCount()-1; i >= position; i--){
+            fragmentStack.push((Fragment) fragmentManager.getBackStackEntryAt(i));
+            fragmentManager.popBackStack();
+        }
+        Stack<String> tags = NavigationHelper.getInstance().getStringStack();
+        while(!fragmentStack.empty()){
+            tags.pop();
+            Fragment fragment = fragmentStack.lastElement();
+            fragmentManager.beginTransaction().addToBackStack(tags.lastElement()).replace(R.id.activity_main_fragment_content, fragment).commit();
+            fragmentStack.pop();
+        }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -183,40 +202,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Class fragmentClass = null;
 
-        switch(id) {
-            case R.id.menu_dot_item_about:
-                fragmentClass = AboutFragment.class;
-                nextFragmentTag = "About";
-                break;
-            case R.id.menu_dot_item_change_password:
-                fragmentClass = ChangePasswordFragment.class;
-                nextFragmentTag = "Change Password";
-                break;
-            case R.id.menu_dot_item_settings:
-                fragmentClass = SettingsFragment.class;
-                nextFragmentTag = "Settings";
-                break;
-            default: // logout button
-                //wipe shared preferences so it doesn't auto login on this account anymore
-                SharedPreferencesHelper.clearSharedData(getApplicationContext());
+        if((int)NavigationHelper.getInstance().lastFragmentIDChoice() != id) {
+            switch (id) {
+                case R.id.menu_dot_item_about:
+                    fragmentClass = AboutFragment.class;
+                    nextFragmentTag = "About";
+                    break;
+                case R.id.menu_dot_item_change_password:
+                    fragmentClass = ChangePasswordFragment.class;
+                    nextFragmentTag = "Change Password";
+                    break;
+                case R.id.menu_dot_item_settings:
+                    fragmentClass = SettingsFragment.class;
+                    nextFragmentTag = "Settings";
+                    break;
+                default: // logout button
+                    //wipe shared preferences so it doesn't auto login on this account anymore
+                    SharedPreferencesHelper.clearSharedData(getApplicationContext());
 
-                //go back to login screen
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-                return super.onOptionsItemSelected(item);
-        }
+                    //go back to login screen
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                    return super.onOptionsItemSelected(item);
+            }
 
-        getSupportActionBar().setTitle(nextFragmentTag);
+            getSupportActionBar().setTitle(nextFragmentTag);
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
-                    replace(R.id.activity_main_fragment_content, fragment).commit();
-            unmarkAllItemsOnMenu();
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                //rebuildStack(NavigationHelper.getInstance().getFragmentPositionInStack(nextFragmentTag));
+                fragment = (Fragment) fragmentClass.newInstance();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
+                        replace(R.id.activity_main_fragment_content, fragment).commit();
+                unmarkAllItemsOnMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -233,44 +255,47 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Class fragmentClass = null;
 
-        //don't let pop ups from previous fragment appear in new fragment
-        CompeteFragment.userNavigatedAway();
+        if((int)NavigationHelper.getInstance().lastFragmentIDChoice()!=id) {
+            //don't let pop ups from previous fragment appear in new fragment
+            CompeteFragment.userNavigatedAway();
 
-        switch(id) {
-            case R.id.menu_hamburger_item_profile:
-                fragmentClass = ProfileFragment.class;
-                nextFragmentTag = "'s Profile";
-                getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername()+ nextFragmentTag);
-                break;
-            case R.id.menu_hamburger_item_leaderboards:
-                fragmentClass = LeaderboardsFragment.class;
-                nextFragmentTag = "Leaderboards";
-                getSupportActionBar().setTitle(nextFragmentTag);
-                break;
-            case R.id.menu_hamburger_item_drop:
-                fragmentClass = CompeteDropFragment.class;
-                nextFragmentTag = "Drop My Phone";
-                getSupportActionBar().setTitle(nextFragmentTag);
-                break;
-            case R.id.menu_hamburger_item_spin:
-                fragmentClass = CompeteSpinFragment.class;
-                nextFragmentTag = "Spin My Phone";
-                getSupportActionBar().setTitle(nextFragmentTag);
-                break;
-            default:
-                fragmentClass = CompeteChuckFragment.class;
-                nextFragmentTag = "Chuck My Phone";
-                getSupportActionBar().setTitle(nextFragmentTag);
-        }
+            switch (id) {
+                case R.id.menu_hamburger_item_profile:
+                    fragmentClass = ProfileFragment.class;
+                    nextFragmentTag = "'s Profile";
+                    getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + nextFragmentTag);
+                    break;
+                case R.id.menu_hamburger_item_leaderboards:
+                    fragmentClass = LeaderboardsFragment.class;
+                    nextFragmentTag = "Leaderboards";
+                    getSupportActionBar().setTitle(nextFragmentTag);
+                    break;
+                case R.id.menu_hamburger_item_drop:
+                    fragmentClass = CompeteDropFragment.class;
+                    nextFragmentTag = "Drop My Phone";
+                    getSupportActionBar().setTitle(nextFragmentTag);
+                    break;
+                case R.id.menu_hamburger_item_spin:
+                    fragmentClass = CompeteSpinFragment.class;
+                    nextFragmentTag = "Spin My Phone";
+                    getSupportActionBar().setTitle(nextFragmentTag);
+                    break;
+                default:
+                    fragmentClass = CompeteChuckFragment.class;
+                    nextFragmentTag = "Chuck My Phone";
+                    getSupportActionBar().setTitle(nextFragmentTag);
+            }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
-                    replace(R.id.activity_main_fragment_content, fragment).commit();
-            markHamburgerMenu();
-        } catch (Exception e) {
-            e.printStackTrace();
+            try {
+                //rebuildStack(NavigationHelper.getInstance().getFragmentPositionInStack(nextFragmentTag));
+                fragment = (Fragment) fragmentClass.newInstance();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
+                        replace(R.id.activity_main_fragment_content, fragment).commit();
+                markHamburgerMenu();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
