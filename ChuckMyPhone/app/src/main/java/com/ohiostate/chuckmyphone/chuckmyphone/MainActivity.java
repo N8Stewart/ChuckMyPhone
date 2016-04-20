@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private GPSHelper mGPSHelper;
     //private AsyncTask<Runnable, Void, Void> gpsRequester;
 
-    boolean gpsRequest;
+    private boolean gpsRequest;
 
     private static MainActivity main;
 
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferencesHelper.setLongitude(getApplicationContext(), CurrentUser.getInstance().getLongitude());
     }
 
-    protected Runnable updateGPSRequestRunnable = new Runnable() {
+    private Runnable updateGPSRequestRunnable = new Runnable() {
         @Override
         public void run() {
             Log.d("coords", "thread begin");

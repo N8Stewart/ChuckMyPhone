@@ -29,7 +29,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class LeaderboardsFragment extends Fragment implements View.OnClickListener {
+public class LeaderboardsFragment extends Fragment {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -87,7 +87,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         return view;
     }
 
-    public void initializeViews(View view) {
+    private void initializeViews(View view) {
         competitionSpinner = (Spinner) view.findViewById(R.id.leaderboards_competition_filter_dropdown);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Competition_spinner_labels, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -191,7 +191,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         distanceSpinner.setOnItemSelectedListener(filterResults);
     }
 
-    public void checkToUnlockOnePercentBadge(int rank) {
+    private void checkToUnlockOnePercentBadge(int rank) {
         int numRecords = leaderboardTable.getChildCount() / 2;
         if (numRecords > 99 && rank < 11 && rank > 0 && !FirebaseHelper.getInstance().hasBadge(getActivity().getString(R.string.badge_one_percent))) {
             FirebaseHelper.getInstance().unlockBadge(getActivity().getString(R.string.badge_one_percent));
@@ -200,7 +200,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    protected static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a =(Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
@@ -234,23 +234,11 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         mListener = null;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.leaderboards_competition_filter_dropdown:
-                // change competition filter and update leaderboards
-                break;
-            default:
-                // change distance filter and update leaderboards
-                break;
-        }
-    }
-
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
+    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
         TableLayout leaderboardUserRecordTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
@@ -287,7 +275,7 @@ public class LeaderboardsFragment extends Fragment implements View.OnClickListen
         leaderboardUserRecordTable.addView(userRow);
     }
 
-    public void addEntryToLeaderboard(int rank, String name, long score, View view) {
+    private void addEntryToLeaderboard(int rank, String name, long score, View view) {
         final float scale = this.getResources().getDisplayMetrics().density;
 
         leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);

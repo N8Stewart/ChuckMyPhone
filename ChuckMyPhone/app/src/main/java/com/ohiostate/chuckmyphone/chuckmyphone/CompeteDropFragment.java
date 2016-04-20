@@ -22,9 +22,9 @@ public class CompeteDropFragment extends CompeteFragment {
     private long fallingStartTime;
     private long fallingEndTime;
 
-    Sensor linearAccelerometer;
+    private Sensor linearAccelerometer;
 
-    MediaPlayer dropSound;
+    private MediaPlayer dropSound;
 
     public CompeteDropFragment() {}
 
@@ -130,7 +130,7 @@ public class CompeteDropFragment extends CompeteFragment {
         }
     }
 
-    public void initializeSensors() {
+    private void initializeSensors() {
         //set up sensor overhead
         sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
         linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);

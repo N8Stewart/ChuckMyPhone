@@ -15,10 +15,10 @@ public class CompeteChuckFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
     private final int SCORE_THRESHOLD_FOR_SOUND = 1500;
 
-    Sensor linearAccelerometer;
+    private Sensor linearAccelerometer;
     public CompeteChuckFragment() {}
 
-    MediaPlayer chuckSound;
+    private MediaPlayer chuckSound;
 
     public static CompeteFragment newInstance(String param1, String param2) {
         CompeteFragment fragment = new CompeteChuckFragment();
@@ -114,7 +114,7 @@ public class CompeteChuckFragment extends CompeteFragment {
         }
     }
 
-    public void initializeSensors() {
+    private void initializeSensors() {
         //set up sensor overhead
         sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE) ;
         linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);

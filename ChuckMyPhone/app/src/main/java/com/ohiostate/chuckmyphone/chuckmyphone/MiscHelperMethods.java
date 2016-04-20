@@ -8,10 +8,12 @@ import android.net.NetworkInfo;
 /**
  * Created by Tim on 4/18/2016.
  */
-public final class MiscHelperMethods {
+final class MiscHelperMethods {
     private MiscHelperMethods () { // private constructor
     }
-    private static int myStaticMember;
+
+    protected int NUM_SECONDS_BADGE_POPUP_DISMISS = 6;
+    private static boolean userNavigatedAway;
 
     public static boolean isNetworkAvailable(Activity a) {
         ConnectivityManager connectivityManager = (ConnectivityManager) a.getSystemService(Context.CONNECTIVITY_SERVICE);

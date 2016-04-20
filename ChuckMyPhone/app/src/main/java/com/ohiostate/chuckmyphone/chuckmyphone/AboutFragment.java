@@ -60,7 +60,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void initializeViews(View view) {
+    private void initializeViews(View view) {
         termsOfService = (TextView) view.findViewById(R.id.about_terms_of_service_textview);
         termsOfService.setOnClickListener(this);
 
