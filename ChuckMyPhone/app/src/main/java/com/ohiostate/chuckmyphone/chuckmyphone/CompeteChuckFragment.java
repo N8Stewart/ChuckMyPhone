@@ -20,7 +20,7 @@ public class CompeteChuckFragment extends CompeteFragment {
 
     private MediaPlayer chuckSound;
 
-    public static CompeteFragment newInstance(String param1, String param2) {
+    public static CompeteFragment newInstance() {
         CompeteFragment fragment = new CompeteChuckFragment();
         return fragment;
     }
@@ -34,16 +34,6 @@ public class CompeteChuckFragment extends CompeteFragment {
             chuckSound = MediaPlayer.create(getActivity(), R.raw.whoosh_sound);
         }
         score = 0;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
@@ -96,7 +86,7 @@ public class CompeteChuckFragment extends CompeteFragment {
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getChuckScore()) {
-                        currentUser.updateChuckScore(runHighScore, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
+                        currentUser.updateChuckScore(runHighScore, CurrentUser.getInstance().getLatitude(), CurrentUser.getInstance().getLongitude());
                         score = runHighScore;
                     }
 

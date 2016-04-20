@@ -28,43 +28,40 @@ import java.util.ArrayList;
 
 public abstract class CompeteFragment extends Fragment implements SensorEventListener {
 
-    protected final String TAG = this.getClass().getSimpleName();
+    final String TAG = this.getClass().getSimpleName();
 
     SensorManager sensManager;
 
-    protected boolean userHasSensor;
-    protected boolean isRecording;
-    protected long lastUpdate;
-    protected ArrayList<String> badgeUnlockNames;
+    boolean userHasSensor;
+    boolean isRecording;
+    long lastUpdate;
+    ArrayList<String> badgeUnlockNames;
 
-    protected static boolean userNavigatedAway;
 
     // Control the progress of the progress bar
-    protected int progress;
+    private int progress;
 
     // Score of the different compete screens
-    protected long score;
-    // Largest score achieved in the past run
-    protected long runHighScore;
+    long score;
+    long runHighScore;
 
-    protected long NUM_MILLISECONDS_FOR_ACTION = 5000;
-    protected long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
-    protected int NUM_SECONDS_BADGE_POPUP_DISMISS = 6;
+    private long NUM_MILLISECONDS_FOR_ACTION = 5000;
+    private long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
 
-    ProgressBar progressBar;
-    Animation progressBarAnimation;
+    private ProgressBar progressBar;
+    private Animation progressBarAnimation;
     TextView yourBestScoreTextView;
     TextView currentScoreTextView;
-    ImageButton competeButton;
+    private ImageButton competeButton;
 
     Thread updateViewRunnableThread;
 
-    protected Runnable updateViewSubRunnableScore;
-    protected Runnable showTutorialToastRunnable;
+    Runnable updateViewSubRunnableScore;
+    Runnable showTutorialToastRunnable;
 
-    protected CurrentUser currentUser;
+    CurrentUser currentUser;
 
-    protected OnFragmentInteractionListener mListener;
+    private OnFragmentInteractionListener mListener;
 
     public CompeteFragment() {}
 
@@ -82,7 +79,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         lastUpdate = 0;
     }
 
-    public void initializeViews(View view) {
+    void initializeViews(View view) {
         currentScoreTextView = (TextView) view.findViewById(R.id.compete_measure_textview);
         yourBestScoreTextView = (TextView) view.findViewById(R.id.compete_best_score_textview);
         competeButton = (ImageButton) view.findViewById(R.id.compete_button);
@@ -170,7 +167,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         sensManager.unregisterListener(this);
     }
 
-    View.OnClickListener buttonListener = new View.OnClickListener() {
+    private View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
             if (userHasSensor) {
                 isRecording = !isRecording;
@@ -185,6 +182,11 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         }
     };
+
+    private void triggerPopUp(String badgeName) {
+        Fragment f = this;
+        MiscHelperMethods.initiatePopupWindow(badgeName, f);
+    }
 
     //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
     Runnable updateViewRunnable = new Runnable() {
@@ -227,8 +229,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                     FirebaseHelper.getInstance().unlockBadge(badgeName);
                 }
                 //only display pop up for most impressive badge
-                initiatePopupWindow(tempBadges.get(tempBadges.size()-1));
-
+                String badgeName = tempBadges.get(tempBadges.size()-1);
+                triggerPopUp(badgeName);
                 badgeUnlockNames.clear();
             }
 
@@ -243,7 +245,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         }
     };
 
-    protected Runnable updateViewSubRunnableImage = new Runnable() {
+    private Runnable updateViewSubRunnableImage = new Runnable() {
         @Override
         public void run() {
             if (isRecording) {
@@ -254,7 +256,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         }
     };
 
-    protected Runnable updateProgressBar = new Runnable() {
+    private Runnable updateProgressBar = new Runnable() {
 
         @Override
         public void run() {
@@ -263,75 +265,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             } else {
                 progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
             }
-        }
-    };
-
-    protected PopupWindow pw;
-    protected void initiatePopupWindow(String badgeName) {
-        if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
-            try {
-                final String bName = badgeName;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-                        pw = new PopupWindow(layout, 1000, 1000, true);
-
-                        TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
-                        TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
-
-                        badgeTitle.setText(Html.fromHtml("<i>" + bName + "</i>"));
-                        badgeDescription.setText("\n" + Badge.badgeNameToDescriptionMap.get(bName));
-
-                        Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
-                        cancelButton.setOnClickListener(cancel_button_click_listener);
-
-                        // display the popup in the center if user didn't navigate away quickly via hamburger menu
-                        if (!userNavigatedAway) {
-                            pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
-                        }
-
-                        userNavigatedAway = false;
-
-                        Thread badgeTimeoutThread = new Thread(badgeTimeoutRunnable);
-                        badgeTimeoutThread.start();
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void userNavigatedAway() {
-        userNavigatedAway = true;
-    }
-
-    public static void initializeUserNavigationTracking() {
-        userNavigatedAway = false;
-    }
-
-    private Runnable badgeTimeoutRunnable = new Runnable() {
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(NUM_SECONDS_BADGE_POPUP_DISMISS*1000, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    pw.dismiss();
-                }
-            });
-        }
-    };
-
-    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            pw.dismiss();
         }
     };
 }

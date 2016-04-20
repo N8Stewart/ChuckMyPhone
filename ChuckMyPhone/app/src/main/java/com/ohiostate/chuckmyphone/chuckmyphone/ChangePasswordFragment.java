@@ -34,7 +34,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     public ChangePasswordFragment() {}
 
-    public static ChangePasswordFragment newInstance(String param1, String param2) {
+    public static ChangePasswordFragment newInstance() {
         ChangePasswordFragment fragment = new ChangePasswordFragment();
         return fragment;
     }

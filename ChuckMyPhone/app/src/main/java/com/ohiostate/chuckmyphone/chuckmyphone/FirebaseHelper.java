@@ -43,7 +43,7 @@ public class FirebaseHelper {
 
     public enum competitionType {
         CHUCK, DROP, SPIN
-    };
+    }
 
     public class User {
         public ArrayList<Badge> badgeList;

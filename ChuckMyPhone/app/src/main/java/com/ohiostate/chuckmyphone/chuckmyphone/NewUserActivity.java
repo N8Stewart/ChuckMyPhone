@@ -29,7 +29,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseHelper firebaseHelper;
 
     private Button cancelButton;
-    private Button fbButton;
     private Button signUpButton;
 
     private EditText usernameEditText;

@@ -21,7 +21,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
     public CompeteSpinFragment() {}
 
-    public static CompeteSpinFragment newInstance(String param1, String param2) {
+    public static CompeteSpinFragment newInstance() {
         CompeteSpinFragment fragment = new CompeteSpinFragment();
         return fragment;
     }
@@ -92,7 +92,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getSpinScore()) {
-                        currentUser.updateSpinScore(runHighScore, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
+                        currentUser.updateSpinScore(runHighScore, CurrentUser.getInstance().getLatitude(), CurrentUser.getInstance().getLongitude());
                         score = runHighScore;
                     }
 

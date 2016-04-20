@@ -28,7 +28,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     public CompeteDropFragment() {}
 
-    public static CompeteDropFragment newInstance(String param1, String param2) {
+    public static CompeteDropFragment newInstance() {
         CompeteDropFragment fragment = new CompeteDropFragment();
         return fragment;
     }
@@ -112,7 +112,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getDropScore()) {
-                        currentUser.updateDropScore(runHighScore, currentUser.getInstance().getLatitude(), currentUser.getInstance().getLongitude());
+                        currentUser.updateDropScore(runHighScore, CurrentUser.getInstance().getLatitude(), CurrentUser.getInstance().getLongitude());
                         score = runHighScore;
                     }
 
