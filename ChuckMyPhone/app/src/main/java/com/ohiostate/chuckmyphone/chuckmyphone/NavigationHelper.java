@@ -16,7 +16,7 @@ public class NavigationHelper {
     private Stack<String> fragmentTags;
     private Map<String, Integer> fragmentTagsToID;
     
-    public NavigationHelper(){
+    private NavigationHelper(){
         fragmentTags = new Stack<>();
         fragmentTagsToID = new HashMap<>(5);
         fillMap();

@@ -119,11 +119,11 @@ public class CurrentUser {
 
     public void updateGoofySoundEnabled(boolean value) { goofySoundEnabled = value; }
 
-    public void updateLatitude(double value) {
+    private void updateLatitude(double value) {
         latitude = value;
     }
 
-    public void updateLongitude(double value) {
+    private void updateLongitude(double value) {
         longitude = value;
     }
 
@@ -201,38 +201,38 @@ public class CurrentUser {
         return badgeList;
     }
 
-    protected void assignUsername(String username) {
+    void assignUsername(String username) {
         this.username = username;
     }
 
-    protected String getUsername() {
+    String getUsername() {
         return this.username;
     }
 
-    protected void updateGlobalChuckLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
+    void updateGlobalChuckLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
         chuckLeaderboardGlobal = newLeaderboard;
         Collections.reverse(chuckLeaderboardGlobal);
     }
 
-    protected void updateGlobalSpinLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
+    void updateGlobalSpinLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
         spinLeaderboardGlobal = newLeaderboard;
         Collections.reverse(spinLeaderboardGlobal);
     }
 
-    protected void updateGlobalDropLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
+    void updateGlobalDropLeaderboard(ArrayList<FirebaseHelper.CompeteRecord> newLeaderboard) {
         dropLeaderboardGlobal = newLeaderboard;
         Collections.reverse(dropLeaderboardGlobal);
     }
 
-    protected ArrayList<FirebaseHelper.CompeteRecord> getChuckLeaderboard() {
+    ArrayList<FirebaseHelper.CompeteRecord> getChuckLeaderboard() {
         return chuckLeaderboardGlobal;
     }
 
-    protected ArrayList<FirebaseHelper.CompeteRecord> getSpinLeaderboard() {
+    ArrayList<FirebaseHelper.CompeteRecord> getSpinLeaderboard() {
         return spinLeaderboardGlobal;
     }
 
-    protected ArrayList<FirebaseHelper.CompeteRecord> getDropLeaderboard() {
+    ArrayList<FirebaseHelper.CompeteRecord> getDropLeaderboard() {
         return dropLeaderboardGlobal;
     }
 

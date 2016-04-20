@@ -19,14 +19,14 @@ import android.widget.Toast;
 
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
-    public final int USERNAME_LENGTH_MIN = 3;
-    public final int USERNAME_lENGTH_MAX = 13;
+    private final int USERNAME_LENGTH_MIN = 3;
+    private final int USERNAME_lENGTH_MAX = 13;
 
     private final String TAG = this.getClass().getSimpleName();
 
     private boolean actionPending;
 
-    FirebaseHelper firebaseHelper;
+    private FirebaseHelper firebaseHelper;
 
     private Button cancelButton;
     private Button fbButton;
@@ -153,7 +153,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
-    protected void accountWasCreated() {
+    void accountWasCreated() {
         creatingAccountToast.cancel();
 
         //update shared preferences
@@ -168,14 +168,14 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //called by Firebase helper when an account is not successfully created. Don't call from anywhere else
-    protected void accountWasNotCreated(String error) {
+    void accountWasNotCreated(String error) {
         creatingAccountToast.cancel();
 
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
         actionPending = false;
     }
 
-    protected boolean isValidUsername(String username) {
+    boolean isValidUsername(String username) {
         boolean isValidUsername = true;
         for (int i = 0; i < username.length(); i++) {
             char c = username.charAt(i);

@@ -15,7 +15,7 @@ import android.util.Log;
  * Created by Joao Pedro on 3/24/2016.
  */
 
-public class GPSHelper {
+class GPSHelper {
     private LocationManager locationManager;
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5;
 

@@ -31,14 +31,14 @@ public class FirebaseHelper {
     }
 
     private DataSnapshot dataSnapshot;
-    protected boolean hasLoadedInitialSnapshot;
+    boolean hasLoadedInitialSnapshot;
 
 
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
     private LoginActivity loginActivity;
     private ForgotPasswordActivity forgotPasswordActivity;
-    ChangePasswordFragment changePasswordFragment;
+    private ChangePasswordFragment changePasswordFragment;
     private String loginEmail, loginPassword;
 
     public enum competitionType {
@@ -172,7 +172,7 @@ public class FirebaseHelper {
         return firebaseWasLoaded;
     }
 
-    Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
+    private Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
         //Event driven: called when user creation succeeds
         @Override
         public void onSuccess(Map<String, Object> result) {
@@ -188,7 +188,7 @@ public class FirebaseHelper {
         }
     };
 
-   Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
+   private Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
        //Event driven: called when user login succeeds
        @Override
        public void onAuthenticated(AuthData authData) {
@@ -234,7 +234,7 @@ public class FirebaseHelper {
     }
 
     //Need user to be logged in before this may be called
-    protected long getBestSpinScore() {
+    long getBestSpinScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestSpinRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestSpinRecord/score");
@@ -243,7 +243,7 @@ public class FirebaseHelper {
         return 0;
     }
 
-    protected long getBestChuckScore() {
+    long getBestChuckScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestChuckRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestChuckRecord/score");
@@ -252,7 +252,7 @@ public class FirebaseHelper {
         return 0;
     }
 
-    protected long getBestDropScore() {
+    long getBestDropScore() {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID + "/bestDropRecord/score")) {
             DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestDropRecord/score");
@@ -261,7 +261,7 @@ public class FirebaseHelper {
         return 0;
     }
 
-    protected ArrayList<Badge> getBadges() {
+    ArrayList<Badge> getBadges() {
         Log.d("tag", "GETTING USERS BADGES##################");
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
@@ -279,21 +279,21 @@ public class FirebaseHelper {
     }
 
     //SETTING METHODS FOR SAVING SCORES
-    protected void updateBestChuckScore(long score, double latitude, double longitude) {
+    void updateBestChuckScore(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         myFirebaseRef.child("users/" + userID + "/bestChuckRecord/score").setValue(score);
 
         addChuckScoreToLeaderboard(score, latitude, longitude);
     }
 
-    protected void updateBestSpinScore(long score, double latitude, double longitude) {
+    void updateBestSpinScore(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         myFirebaseRef.child("users/" + userID + "/bestSpinRecord/score").setValue(score);
 
         addSpinScoreToLeaderboard(score, latitude, longitude);
     }
 
-    protected void updateBestDropScore(long score, double latitude, double longitude) {
+    void updateBestDropScore(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         myFirebaseRef.child("users/" + userID + "/bestDropRecord/score").setValue(score);
 
@@ -314,7 +314,7 @@ public class FirebaseHelper {
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
-    protected void addChuckScoreToLeaderboard(long score, double latitude, double longitude) {
+    private void addChuckScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         String username = CurrentUser.getInstance().getUsername();
         //priority set as inverse of the score, should order entries automatically
@@ -322,20 +322,20 @@ public class FirebaseHelper {
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
-    protected void addSpinScoreToLeaderboard(long score, double latitude, double longitude) {
+    private void addSpinScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
         myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.SPIN, CurrentUser.getInstance().getUsername()), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
-    protected void addDropScoreToLeaderboard(long score, double latitude, double longitude) {
+    private void addDropScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
         myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.DROP, CurrentUser.getInstance().getUsername()), score);
     }
 
-    protected void unlockBadge(String badgeName) {
+    void unlockBadge(String badgeName) {
         String userID = CurrentUser.getInstance().getUserId();
         for (int i = 0; i < 11; i++) {
             if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
@@ -347,7 +347,7 @@ public class FirebaseHelper {
         }
     }
 
-    protected boolean hasBadge(String badgeName) {
+    boolean hasBadge(String badgeName) {
         boolean hasBadge = false;
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
@@ -366,7 +366,7 @@ public class FirebaseHelper {
         return hasBadge;
     }
 
-    protected void updateLeaderboard() {
+    private void updateLeaderboard() {
         ArrayList<CompeteRecord> chuckLeaderboardGlobal = new ArrayList<>();
         ArrayList<CompeteRecord> spinLeaderboardGlobal = new ArrayList<>();
         ArrayList<CompeteRecord> dropLeaderboardGlobal = new ArrayList<>();
@@ -384,7 +384,7 @@ public class FirebaseHelper {
         top100Drop.addListenerForSingleValueEvent(dropLeaderboardValueEventListener);
     }
 
-    ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
+    private ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
             ArrayList<CompeteRecord> chuckRecords = new ArrayList<>();
@@ -404,7 +404,7 @@ public class FirebaseHelper {
         }
     };
 
-    ValueEventListener spinLeaderboardValueEventListener = new ValueEventListener() {
+    private ValueEventListener spinLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
             ArrayList<CompeteRecord> spinRecords = new ArrayList<>();
@@ -424,7 +424,7 @@ public class FirebaseHelper {
         }
     };
 
-    ValueEventListener dropLeaderboardValueEventListener = new ValueEventListener() {
+    private ValueEventListener dropLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
             ArrayList<CompeteRecord> dropRecords = new ArrayList<>();

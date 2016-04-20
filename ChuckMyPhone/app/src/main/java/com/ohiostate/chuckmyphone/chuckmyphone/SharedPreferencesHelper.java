@@ -8,7 +8,7 @@ import android.content.SharedPreferences;
  * Created by Joao Pedro on 3/11/2016.
  */
 
-public class SharedPreferencesHelper {
+class SharedPreferencesHelper {
 
     private static final String PREFS_USER = "chuckmyphone.PREFS_USER";
     private static final String MSG_KEY = "The user does not have this key";
@@ -39,11 +39,11 @@ public class SharedPreferencesHelper {
         editor.putBoolean(key, value).commit();
     }
 
-    public static void setEmail(Context context, String email){
+    private static void setEmail(Context context, String email){
         setStringValue(context, Keys.keyEmail, email);
     }
 
-    public static void setUsername(Context context, String username){
+    private static void setUsername(Context context, String username){
         setStringValue(context, Keys.keyUsername, username);
     }
 
@@ -121,12 +121,12 @@ public class SharedPreferencesHelper {
         return Double.parseDouble(getStringValue(context, Keys.keyLongitude));
     }
 
-    protected static boolean hasSharedData(Context context){
+    static boolean hasSharedData(Context context){
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.contains(Keys.keyEmail);
     }
 
-    protected static boolean clearSharedData(Context context){
+    static boolean clearSharedData(Context context){
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
         return editor.clear().commit();

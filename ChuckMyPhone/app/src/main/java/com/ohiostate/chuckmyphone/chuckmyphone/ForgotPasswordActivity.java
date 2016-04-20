@@ -35,7 +35,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         initializeViews();
     }
 
-    public void initializeViews() {
+    private void initializeViews() {
         cancelButton = (Button) findViewById(R.id.activity_forgot_password_cancel_button);
         cancelButton.setOnClickListener(this);
 

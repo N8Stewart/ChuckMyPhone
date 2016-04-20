@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 public class CompeteSpinFragment extends CompeteFragment {
-    Sensor gyroscope;
+    private Sensor gyroscope;
 
-    MediaPlayer spinSound;
+    private MediaPlayer spinSound;
 
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
     private final int SCORE_THRESHOLD_FOR_SOUND = 2500;
@@ -110,7 +110,7 @@ public class CompeteSpinFragment extends CompeteFragment {
         }
     }
 
-    public void initializeSensors() {
+    private void initializeSensors() {
         //set up sensor overhead
         sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
         gyroscope = sensManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);

@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * Created by Tim on 3/25/2016.
  */
-public class Badge {
+class Badge {
     private String unlockDate;
     private String name;
 

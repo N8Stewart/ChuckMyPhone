@@ -88,7 +88,7 @@ public class ProfileFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void addBadge(View view, final Badge badge) {
+    private void addBadge(View view, final Badge badge) {
         boolean isUnlocked = badge.unlocked();
 
         LinearLayout horzLayout = (LinearLayout) view.findViewById(R.id.profile_trophies_linear_layout);

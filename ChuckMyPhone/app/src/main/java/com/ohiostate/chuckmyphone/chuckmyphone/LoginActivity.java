@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //connect all views to view instances
-    public void initializeViews() {
+    private void initializeViews() {
         newUserButton = (Button) findViewById(R.id.login_new_user_button);
         newUserButton.setOnClickListener(this);
 
@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public boolean attemptLogin(String email, String password) {
+    private boolean attemptLogin(String email, String password) {
         boolean loginSuccessful = false;
         if (MiscHelperMethods.isNetworkAvailable(this)) {
             if (!email.equals("")) {
@@ -138,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
-    protected void onSuccessfulLogin(String email, String password, String userID) {
+    void onSuccessfulLogin(String email, String password, String userID) {
         loggingInToast.cancel();
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
-    protected void onUnsuccessfulLogin(String error) {
+    void onUnsuccessfulLogin(String error) {
         loggingInToast.cancel();
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
