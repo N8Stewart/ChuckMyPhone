@@ -177,7 +177,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 if (isRecording)
                     runHighScore = 0;
 
-                userNavigatedAway = false;
+                MiscHelperMethods.setUserNavigatedAway(false);
 
                 getActivity().runOnUiThread(updateViewSubRunnableImage);
                 updateViewRunnableThread.start();

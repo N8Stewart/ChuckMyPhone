@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
         Badge b = new Badge("");
         b.initializeDescriptionMappings(getApplicationContext());
         b.initializeDrawableMappings(getApplicationContext());
-        CompeteFragment.initializeUserNavigationTracking();
+        MiscHelperMethods.initializeUserNavigationTracking();
         LoginActivity.setLoginFromNewUserScreen(false);
 
 

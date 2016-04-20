@@ -49,7 +49,7 @@ public class LeaderboardsFragment extends Fragment {
 
     public LeaderboardsFragment() {}
 
-    public static LeaderboardsFragment newInstance(String param1, String param2) {
+    public static LeaderboardsFragment newInstance() {
         LeaderboardsFragment fragment = new LeaderboardsFragment();
         return fragment;
     }
@@ -335,41 +335,4 @@ public class LeaderboardsFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume() called");
     }
-
-    protected PopupWindow pw;
-    protected void initiatePopupWindow(String badgeName) {
-        if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
-            try {
-                final String bName = badgeName;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                        View layout = inflater.inflate(R.layout.popup, (ViewGroup) getActivity().findViewById(R.id.popup_element));
-                        pw = new PopupWindow(layout, 1000, 1000, true);
-                        TextView badgeTitle = (TextView) layout.findViewById(R.id.popup_BadgeTitleTextView);
-                        TextView badgeDescription = (TextView) layout.findViewById(R.id.popup_BadgeDescriptionTextView);
-
-                        badgeTitle.setText(Html.fromHtml("<i>" + bName + "</i>"));
-                        badgeDescription.setText("\n" + Badge.badgeNameToDescriptionMap.get(bName));
-
-                        Button cancelButton = (Button) layout.findViewById(R.id.popup_cancel_button);
-                        cancelButton.setOnClickListener(cancel_button_click_listener);
-
-                        // display the popup in the center if user didn't navigate away quickly via hamburger menu
-                        pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
-        public void onClick(View v) {
-            pw.dismiss();
-            Log.d(TAG, "Cancel button pressed");
-        }
-    };
 }
