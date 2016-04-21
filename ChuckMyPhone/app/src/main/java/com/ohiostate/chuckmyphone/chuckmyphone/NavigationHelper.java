@@ -1,6 +1,9 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.support.v4.app.Fragment;
+
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Stack;
 
@@ -13,16 +16,14 @@ public class NavigationHelper {
 
     public static NavigationHelper getInstance(){ return ourInstance;}
 
-    private int[] fragmentPositions;
     private Map<String, Integer> fragmentTagsToMenuID;
     private Map<String, Integer> fragmentTagsToID;
-    private Stack<String> fragmentTags;
+    private LinkedList<String> fragmentTags;
 
     private NavigationHelper(){
-        fragmentTags = new Stack<>();
+        fragmentTags = new LinkedList<>();
         fragmentTagsToMenuID = new HashMap<>(8);
         fragmentTagsToID = new HashMap<>(8);
-        fragmentPositions = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
         fillMaps();
     }
 
@@ -45,57 +46,66 @@ public class NavigationHelper {
         fragmentTagsToID.put("Settings", R.id.menu_dot_item_settings);
     }
 
-    public String previousFragmentTag(){
-        if(noFragmentsLeft()) return null;
-        String current = fragmentTags.lastElement();
-        fragmentTags.pop();
-        fragmentPositions[fragmentTagsToMenuID.get(current)] = -1;
-        if(noFragmentsLeft()) return null;
-        return fragmentTags.lastElement();
+    public Fragment translateTagToFragment(String tag){
+        int id = fragmentTagsToMenuID.get(tag);
+
+        Fragment resultantFragment = null;
+
+        switch(id){
+            case 0:
+                resultantFragment = ProfileFragment.newInstance();
+                break;
+            case 1:
+                resultantFragment =LeaderboardsFragment.newInstance();
+                break;
+            case 2:
+                resultantFragment = CompeteSpinFragment.newInstance();
+                break;
+            case 3:
+                resultantFragment = CompeteChuckFragment.newInstance();
+                break;
+            case 4:
+                resultantFragment = CompeteDropFragment.newInstance();
+                break;
+            case 5:
+                resultantFragment = SettingsFragment.newInstance();
+                break;
+            case 6:
+                resultantFragment = AboutFragment.newInstance();
+                break;
+            case 7:
+                resultantFragment = ChangePasswordFragment.newInstance();
+                break;
+            default:
+                break;
+        }
+        return resultantFragment;
     }
 
-    public Stack<String> getStringStack(){
-        return fragmentTags;
+    public String previousFragmentTag(){
+        if(noFragmentsLeft()) return null;
+        fragmentTags.removeLast();
+        if(noFragmentsLeft()) return null;
+        return fragmentTags.getLast();
     }
 
     public boolean noFragmentsLeft(){
         return fragmentTags.isEmpty();
     }
 
-    public void rebuildStack(String fragmentTag){
-        int position = fragmentPositions[fragmentTagsToMenuID.get(fragmentTag)];
-        Stack<String> auxStack = new Stack<>();
-        for(int i = fragmentTags.size()-1; i > position; i--){
-            auxStack.push(fragmentTags.lastElement());
-            fragmentTags.pop();
-        }
-        fragmentTags.pop();
-        while(!auxStack.empty()){
-            String lastTag = auxStack.lastElement();
-            fragmentTags.push(lastTag);
-            fragmentPositions[fragmentTagsToMenuID.get(lastTag)]-=1;
-            auxStack.pop();
-        }
-    }
-
-    public int getFragmentPositionInStack(String tag){
-        return fragmentPositions[fragmentTagsToMenuID.get(tag)];
-    }
-
     public String addNextFragmentTag (String nextFragmentTag){
-        //if(fragmentTags.contains(nextFragmentTag)) rebuildStack(nextFragmentTag);
-        fragmentTags.push(nextFragmentTag);
-        //fragmentPositions[fragmentTagsToMenuID.get(nextFragmentTag)] = fragmentTags.size()-1;
-        return fragmentTags.lastElement();
+        if(fragmentTags.contains(nextFragmentTag)) fragmentTags.remove(nextFragmentTag);
+        fragmentTags.addLast(nextFragmentTag);
+        return fragmentTags.getLast();
     }
 
     public Object lastMenuChoice(){
         if(noFragmentsLeft()) return null;
-        return fragmentTagsToMenuID.get(fragmentTags.lastElement());
+        return fragmentTagsToMenuID.get(fragmentTags.getLast());
     }
 
     public Object lastFragmentIDChoice(){
         if(noFragmentsLeft()) return null;
-        return fragmentTagsToID.get(fragmentTags.lastElement());
+        return fragmentTagsToID.get(fragmentTags.getLast());
     }
 }

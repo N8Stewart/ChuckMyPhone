@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavigationView.setNavigationItemSelectedListener(this);
 
         mGPSHelper = new GPSHelper(this);
-        //gpsRequester = new GPSRequester();
 
         NavigationHelper.getInstance().addNextFragmentTag("Chuck My Phone");
 
@@ -148,7 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
+                NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag);
+                fragmentManager.beginTransaction().
                         replace(R.id.activity_main_fragment_content, fragment).commit();
                 unmarkAllItemsOnMenu();
             } catch (Exception e) {
@@ -205,7 +205,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
+                NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag);
+                fragmentManager.beginTransaction().
                         replace(R.id.activity_main_fragment_content, fragment).commit();
                 markHamburgerMenu();
             } catch (Exception e) {
@@ -223,15 +224,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
             if(!NavigationHelper.getInstance().noFragmentsLeft()) {
                 String previousTag = NavigationHelper.getInstance().previousFragmentTag();
                 if (previousTag != null){
                     if (previousTag.equals("'s Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
                     else getSupportActionBar().setTitle(previousTag);
+                    Fragment fragment = NavigationHelper.getInstance().translateTagToFragment(previousTag);
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().
+                            replace(R.id.activity_main_fragment_content, fragment).commit();
                     markHamburgerMenu();
                 }
             }
+
+            if(NavigationHelper.getInstance().noFragmentsLeft()) super.onBackPressed();
         }
     }
 
@@ -242,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int c = (Integer) choice;
             if(c < 2){
                 mNavigationView.getMenu().getItem(c).setChecked(true);
-            } else {
+            } else if(c < 5) {
                 mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%3).setChecked(true);
             }
         }
@@ -260,7 +266,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Runnable updateGPSRequestRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.d("coords", "thread begin");
             gpsRequest = false;
             Looper.prepare();
             while (!CurrentUser.getInstance().isLocationUpdated()) {
