@@ -30,38 +30,41 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     final String TAG = this.getClass().getSimpleName();
 
-    SensorManager sensManager;
-
     boolean userHasSensor;
     boolean isRecording;
+
     long lastUpdate;
-    ArrayList<String> badgeUnlockNames;
-
-
-    // Control the progress of the progress bar
-    private int progress;
-
     // Score of the different compete screens
     long score;
     long runHighScore;
 
+    ArrayList<String> badgeUnlockNames;
+
+    CurrentUser currentUser;
+
+    SensorManager sensManager;
+
+    private OnFragmentInteractionListener mListener;
+
+    // Control the progress of the progress bar
+    private int progress;
+
     private long NUM_MILLISECONDS_FOR_ACTION = 5000;
     private long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
 
-    private ProgressBar progressBar;
     private Animation progressBarAnimation;
-    TextView yourBestScoreTextView;
-    TextView currentScoreTextView;
+
     private ImageButton competeButton;
 
-    Thread updateViewRunnableThread;
+    private ProgressBar progressBar;
+
+    TextView yourBestScoreTextView;
+    TextView currentScoreTextView;
 
     Runnable updateViewSubRunnableScore;
     Runnable showTutorialToastRunnable;
 
-    CurrentUser currentUser;
-
-    private OnFragmentInteractionListener mListener;
+    Thread updateViewRunnableThread;
 
     public CompeteFragment() {}
 
@@ -105,27 +108,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         }
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 
     @Override
@@ -267,4 +249,25 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             }
         }
     };
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+    }
 }

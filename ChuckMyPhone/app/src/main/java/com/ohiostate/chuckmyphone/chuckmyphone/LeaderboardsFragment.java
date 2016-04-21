@@ -37,13 +37,13 @@ public class LeaderboardsFragment extends Fragment {
 
     private static final int earthRadius = 6371;
 
-    // views
-    private Spinner distanceSpinner;
-    private Spinner competitionSpinner;
-
     private ArrayList<FirebaseHelper.CompeteRecord> chuckRecords;
     private ArrayList<FirebaseHelper.CompeteRecord> spinRecords;
     private ArrayList<FirebaseHelper.CompeteRecord> dropRecords;
+
+    // views
+    private Spinner distanceSpinner;
+    private Spinner competitionSpinner;
 
     private TableLayout leaderboardTable;
 
@@ -191,6 +191,24 @@ public class LeaderboardsFragment extends Fragment {
         distanceSpinner.setOnItemSelectedListener(filterResults);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
     private void checkToUnlockOnePercentBadge(int rank) {
         int numRecords = leaderboardTable.getChildCount() / 2;
         if (numRecords > 99 && rank < 11 && rank > 0 && !FirebaseHelper.getInstance().hasBadge(getActivity().getString(R.string.badge_one_percent))) {
@@ -209,33 +227,6 @@ public class LeaderboardsFragment extends Fragment {
         double d = earthRadius * c;
         double conversion = 0.6213711923; // convert km to mile
         return d * conversion;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
     }
 
     private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
@@ -319,20 +310,23 @@ public class LeaderboardsFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
     }
 }

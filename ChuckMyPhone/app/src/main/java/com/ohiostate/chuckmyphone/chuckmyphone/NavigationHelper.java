@@ -13,11 +13,10 @@ public class NavigationHelper {
 
     public static NavigationHelper getInstance(){ return ourInstance;}
 
-    private Stack<String> fragmentTags;
+    private int[] fragmentPositions;
     private Map<String, Integer> fragmentTagsToMenuID;
     private Map<String, Integer> fragmentTagsToID;
-
-    private int[] fragmentPositions;
+    private Stack<String> fragmentTags;
 
     private NavigationHelper(){
         fragmentTags = new Stack<>();

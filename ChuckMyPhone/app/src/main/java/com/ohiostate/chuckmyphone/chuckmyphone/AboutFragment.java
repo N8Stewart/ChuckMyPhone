@@ -25,10 +25,10 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     // Views
+    private Button creditsButton;
+
     private TextView termsOfService;
     private TextView randomizedTip;
-
-    private Button creditsButton;
 
     public AboutFragment() {}
 

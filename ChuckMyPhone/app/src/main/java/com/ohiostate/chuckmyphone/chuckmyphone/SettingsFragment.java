@@ -19,10 +19,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     private Button saveButton;
+
     private CheckBox soundEnabledCheckbox;
     private CheckBox goofySoundEnabledCheckbox;
     private CheckBox tutorialMessagesEnabledCheckbox;
     private CheckBox badgeNotificationsCheckbox;
+
     public SettingsFragment() {}
 
     public static SettingsFragment newInstance() {
@@ -41,6 +43,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_settings, container, false);
         initializeViews(view);
+        loadSettings();
         return view;
     }
 
@@ -68,7 +71,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        loadSettings();
         Log.d(TAG, "onResume() called");
     }
 

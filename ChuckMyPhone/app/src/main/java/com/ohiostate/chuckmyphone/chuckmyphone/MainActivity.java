@@ -34,16 +34,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private DrawerLayout mDrawerLayout;
-
-    private NavigationView mNavigationView;
-
-    private GPSHelper mGPSHelper;
-    //private AsyncTask<Runnable, Void, Void> gpsRequester;
+    private static MainActivity main;
 
     private boolean gpsRequest;
 
-    private static MainActivity main;
+    private GPSHelper mGPSHelper;
+
+    private DrawerLayout mDrawerLayout;
+
+    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         main = this;
         Thread t = new Thread(updateGPSRequestRunnable);
         t.start();
-        //gpsRequester.execute(updateGPSRequestRunnable);
         Log.d(TAG, "onResume() called");
     }
 
@@ -101,93 +99,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferencesHelper.setLongitude(getApplicationContext(), CurrentUser.getInstance().getLongitude());
     }
 
-    private Runnable updateGPSRequestRunnable = new Runnable() {
-        @Override
-        public void run() {
-            Log.d("coords", "thread begin");
-            gpsRequest = false;
-            Looper.prepare();
-            while (!CurrentUser.getInstance().isLocationUpdated()) {
-                    Log.d("coords", "thread loop");
-                    if (mGPSHelper.isGPSEnabled(LocationManager.NETWORK_PROVIDER) && !gpsRequest) {
-                        Log.d("coords", "thread if");
-                        mGPSHelper.requestLocation(main, LocationManager.NETWORK_PROVIDER);
-                        gpsRequest = true;
-                        break;
-                    }
-                    try {
-                        Thread.sleep(4000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-            }
-            Looper.loop();
-            Log.d("coords", "thread end");
-        }
-    };
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-            if(!NavigationHelper.getInstance().noFragmentsLeft()) {
-                String previousTag = NavigationHelper.getInstance().previousFragmentTag();
-                if (previousTag != null){
-                    if (previousTag.equals("'s Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
-                    else getSupportActionBar().setTitle(previousTag);
-                    markHamburgerMenu();
-                }
-            }
-        }
-    }
-
-    private void markHamburgerMenu(){
-        unmarkAllItemsOnMenu();
-        Object choice = NavigationHelper.getInstance().lastMenuChoice();
-        if(choice!=null){
-            int c = (Integer) choice;
-            if(c < 2){
-                mNavigationView.getMenu().getItem(c).setChecked(true);
-            } else {
-                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%2).setChecked(true);
-            }
-        }
-    }
-
-    private void unmarkAllItemsOnMenu(){
-        mNavigationView.getMenu().getItem(0).setChecked(false);
-        mNavigationView.getMenu().getItem(1).setChecked(false);
-        SubMenu subMenu = mNavigationView.getMenu().getItem(2).getSubMenu();
-        subMenu.getItem(0).setChecked(false);
-        subMenu.getItem(1).setChecked(false);
-        subMenu.getItem(2).setChecked(false);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dot, menu);
         return true;
     }
-/*
-    public void rebuildStack(int position){
-        if(position==-1) return;
-        Stack<Fragment> fragmentStack = new Stack<>();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        for(int i = fragmentManager.getBackStackEntryCount()-1; i >= position; i--){
-            fragmentStack.push((Fragment) fragmentManager.getBackStackEntryAt(i));
-            fragmentManager.popBackStack();
-        }
-        Stack<String> tags = NavigationHelper.getInstance().getStringStack();
-        while(!fragmentStack.empty()){
-            tags.pop();
-            Fragment fragment = fragmentStack.lastElement();
-            fragmentManager.beginTransaction().addToBackStack(tags.lastElement()).replace(R.id.activity_main_fragment_content, fragment).commit();
-            fragmentStack.pop();
-        }
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -230,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setTitle(nextFragmentTag);
 
             try {
-                //rebuildStack(NavigationHelper.getInstance().getFragmentPositionInStack(nextFragmentTag));
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
@@ -288,7 +203,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             try {
-                //rebuildStack(NavigationHelper.getInstance().getFragmentPositionInStack(nextFragmentTag));
                 fragment = (Fragment) fragmentClass.newInstance();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().addToBackStack(NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag)).
@@ -304,7 +218,69 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {}
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+            if(!NavigationHelper.getInstance().noFragmentsLeft()) {
+                String previousTag = NavigationHelper.getInstance().previousFragmentTag();
+                if (previousTag != null){
+                    if (previousTag.equals("'s Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
+                    else getSupportActionBar().setTitle(previousTag);
+                    markHamburgerMenu();
+                }
+            }
+        }
+    }
+
+    private void markHamburgerMenu(){
+        unmarkAllItemsOnMenu();
+        Object choice = NavigationHelper.getInstance().lastMenuChoice();
+        if(choice!=null){
+            int c = (Integer) choice;
+            if(c < 2){
+                mNavigationView.getMenu().getItem(c).setChecked(true);
+            } else {
+                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%2).setChecked(true);
+            }
+        }
+    }
+
+    private void unmarkAllItemsOnMenu(){
+        mNavigationView.getMenu().getItem(0).setChecked(false);
+        mNavigationView.getMenu().getItem(1).setChecked(false);
+        SubMenu subMenu = mNavigationView.getMenu().getItem(2).getSubMenu();
+        subMenu.getItem(0).setChecked(false);
+        subMenu.getItem(1).setChecked(false);
+        subMenu.getItem(2).setChecked(false);
+    }
+
+    private Runnable updateGPSRequestRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Log.d("coords", "thread begin");
+            gpsRequest = false;
+            Looper.prepare();
+            while (!CurrentUser.getInstance().isLocationUpdated()) {
+                Log.d("coords", "thread loop");
+                if (mGPSHelper.isGPSEnabled(LocationManager.NETWORK_PROVIDER) && !gpsRequest) {
+                    Log.d("coords", "thread if");
+                    mGPSHelper.requestLocation(main, LocationManager.NETWORK_PROVIDER);
+                    gpsRequest = true;
+                    break;
+                }
+                try {
+                    Thread.sleep(4000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Looper.loop();
+            Log.d("coords", "thread end");
+        }
+    };
 
     @Override
     public void onLocationChanged(Location location) {
@@ -314,22 +290,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.d("coords", provider + " status");
-    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {}
 
     @Override
     public void onProviderEnabled(String provider) {
         Log.d("coords", provider + " enabled");
         CurrentUser.getInstance().updateGPSEnabled(true);
         mGPSHelper.setToLastLocation(this, provider);
-        //gpsRequestHandler.post(updateGPSRequestRunnable);
     }
 
     @Override
     public void onProviderDisabled(String provider) {
         Log.d("coords", provider + " disabled");
         CurrentUser.getInstance().updateGPSEnabled(false);
-        //gpsRequestHandler.removeCallbacks(updateGPSRequestRunnable);
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {}
 }

@@ -1,9 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +11,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
-
-
 
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -31,14 +26,14 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private Button cancelButton;
     private Button signUpButton;
 
+    private CheckBox termsOfServiceCheckBox;
+
     private EditText usernameEditText;
     private EditText passwordEditText;
     private EditText passwordConfirmationEditText;
     private EditText emailEditText;
 
     private Toast creatingAccountToast;
-
-    private CheckBox termsOfServiceCheckBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +46,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
         firebaseHelper = FirebaseHelper.getInstance();
         Log.d(TAG, "onCreate() called");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_new_user_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("New User");
 
         initializeViews();
     }
@@ -73,6 +64,10 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         emailEditText = (EditText) findViewById(R.id.new_user_email_edit_text);
 
         termsOfServiceCheckBox = (CheckBox) findViewById(R.id.new_user_terms_of_service_checkbox);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_new_user_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("New User");
     }
 
     @Override

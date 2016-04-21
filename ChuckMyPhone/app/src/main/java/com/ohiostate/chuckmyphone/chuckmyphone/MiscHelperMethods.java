@@ -83,5 +83,4 @@ final class MiscHelperMethods {
     public static void initializeUserNavigationTracking() {
         userNavigatedAway = false;
     }
-
 }

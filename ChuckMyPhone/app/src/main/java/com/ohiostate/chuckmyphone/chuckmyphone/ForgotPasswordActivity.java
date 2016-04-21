@@ -14,11 +14,12 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private boolean actionPending;
+
     private Button cancelButton;
     private Button resetButton;
-    private EditText emailEditText;
 
-    private boolean actionPending;
+    private EditText emailEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +61,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         super.onStop();
         Log.d(TAG, "onStop() called");
     }
-
 
     @Override
     public void onClick(View v) {

@@ -21,16 +21,17 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private boolean actionPending;
+
     private OnFragmentInteractionListener mListener;
 
     // views
     private Button confirmButton;
     private Button cancelButton;
+
     private EditText oldPasswordEditText;
     private EditText newPasswordEditText;
     private EditText newPasswordConfirmationEditText;
-
-    private boolean actionPending;
 
     public ChangePasswordFragment() {}
 
@@ -68,27 +69,23 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         cancelButton.setOnClickListener(this);
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
     }
 
     @Override
@@ -128,28 +125,6 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
     public void onSuccessfulPasswordChange() {
         Toast.makeText(getActivity().getApplicationContext(), "Password was changed!", Toast.LENGTH_LONG).show();
         SharedPreferencesHelper.clearSharedData(getActivity().getApplicationContext());
@@ -163,5 +138,26 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     public void onUnsuccessfulPasswordChange(FirebaseError firebaseError) {
         actionPending = false;
         Toast.makeText(getActivity().getApplicationContext(), "Password was not changed: " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
     }
 }

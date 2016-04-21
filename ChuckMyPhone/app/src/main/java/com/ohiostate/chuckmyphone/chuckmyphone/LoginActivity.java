@@ -1,9 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,18 +15,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private static boolean loginFromNewUserScreen;
+
+    private boolean actionPending;
+
     private Button newUserButton;
     private Button loginButton;
 
-    private boolean actionPending;
-    private static boolean loginFromNewUserScreen;
-
-    private Toast loggingInToast;
+    private EditText passwordEditText;
+    private EditText emailEditText;
 
     private TextView forgotPasswordTextView;
 
-    private EditText passwordEditText;
-    private EditText emailEditText;
+    private Toast loggingInToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +45,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SharedPreferencesHelper.getPassword(getApplicationContext()));
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Login");
-
         initializeViews();
     }
 
@@ -67,6 +61,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         passwordEditText = (EditText) findViewById(R.id.login_password_edit_text);
         emailEditText = (EditText) findViewById(R.id.login_email_edit_text);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.activity_login_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Login");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
     }
 
     @Override
@@ -79,12 +83,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop() called");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
     }
 
     @Override

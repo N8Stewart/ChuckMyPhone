@@ -27,28 +27,28 @@ class SharedPreferencesHelper {
 
     public SharedPreferencesHelper(){}
 
-    private static void setStringValue(Context context, String key, String value){
-        SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedData.edit();
-        editor.putString(key, value).commit();
-    }
-
     private static void setBooleanValue(Context context, String key, boolean value){
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
         editor.putBoolean(key, value).commit();
     }
 
+    private static void setStringValue(Context context, String key, String value){
+        SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedData.edit();
+        editor.putString(key, value).commit();
+    }
+
     private static void setEmail(Context context, String email){
         setStringValue(context, Keys.keyEmail, email);
     }
 
-    private static void setUsername(Context context, String username){
-        setStringValue(context, Keys.keyUsername, username);
-    }
-
     public static void setPassword(Context context, String password){
         setStringValue(context, Keys.keyPassword, password);
+    }
+
+    private static void setUsername(Context context, String username){
+        setStringValue(context, Keys.keyUsername, username);
     }
 
     public static void setSoundEnabled(Context context, boolean value){
@@ -75,22 +75,26 @@ class SharedPreferencesHelper {
         setStringValue(context, Keys.keyLongitude, longitude + "");
     }
 
-    private static String getStringValue(Context context, String key){
-        SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
-        return sharedData.getString(key, MSG_KEY);
-    }
-
     private static boolean getBooleanValue(Context context, String key, boolean defValue){
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.getBoolean(key, defValue);
     }
 
-    public static String getUsername(Context context){
-        return getStringValue(context, Keys.keyUsername);
+    private static String getStringValue(Context context, String key){
+        SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
+        return sharedData.getString(key, MSG_KEY);
+    }
+
+    public static String getEmail(Context context) {
+        return getStringValue(context, Keys.keyEmail);
     }
 
     public static String getPassword(Context context){
         return getStringValue(context, Keys.keyPassword);
+    }
+
+    public static String getUsername(Context context){
+        return getStringValue(context, Keys.keyUsername);
     }
 
     public static boolean getSoundEnabled(Context context){
@@ -99,10 +103,6 @@ class SharedPreferencesHelper {
 
     public static boolean getGoofySoundEnabled(Context context){
         return getBooleanValue(context, Keys.keyGoofySound, false);
-    }
-
-    public static String getEmail(Context context) {
-        return getStringValue(context, Keys.keyEmail);
     }
 
     public static boolean getTutorialMessages(Context context) {

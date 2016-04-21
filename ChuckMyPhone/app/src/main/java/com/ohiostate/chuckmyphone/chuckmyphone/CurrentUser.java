@@ -30,14 +30,13 @@ public class CurrentUser {
 
     private double latitude;
     private double longitude;
+
     private boolean gpsEnabled;
     private boolean locationUpdated;
-
     private boolean sawBoardOnceWithoutGps;
     private boolean sawBoardOnceWithGps;
     private boolean playedOnceWithoutGps;
     private boolean playedOnceWithGps;
-
     private boolean tutorialMessagesEnabled;
     private boolean soundEnabled;
     private boolean badgeUnlockNotificationsEnabled;

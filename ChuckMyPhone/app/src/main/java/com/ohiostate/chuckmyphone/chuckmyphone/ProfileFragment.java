@@ -20,11 +20,11 @@ public class ProfileFragment extends Fragment {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private OnFragmentInteractionListener mListener;
+
     private TextView bestChuckScoreTextView;
     private TextView bestDropScoreTextView;
     private TextView bestSpinScoreTextView;
-
-    private OnFragmentInteractionListener mListener;
 
     public ProfileFragment() {}
 
@@ -61,31 +61,14 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+    private void initializeViews(View view) {
+        bestChuckScoreTextView = (TextView) view.findViewById(R.id.profile_fastest_thrown_record_textview);
+        bestDropScoreTextView = (TextView) view.findViewById(R.id.profile_furthest_drop_record_textview);
+        bestSpinScoreTextView = (TextView) view.findViewById(R.id.profile_most_spins_record_textview);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+        bestChuckScoreTextView.setText(""+FirebaseHelper.getInstance().getBestChuckScore());
+        bestDropScoreTextView.setText(""+FirebaseHelper.getInstance().getBestDropScore());
+        bestSpinScoreTextView.setText(""+FirebaseHelper.getInstance().getBestSpinScore());
     }
 
     private void addBadge(View view, final Badge badge) {
@@ -130,6 +113,12 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause() called");
@@ -142,18 +131,23 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
-    private void initializeViews(View view) {
-        bestChuckScoreTextView = (TextView) view.findViewById(R.id.profile_fastest_thrown_record_textview);
-        bestDropScoreTextView = (TextView) view.findViewById(R.id.profile_furthest_drop_record_textview);
-        bestSpinScoreTextView = (TextView) view.findViewById(R.id.profile_most_spins_record_textview);
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
 
-        bestChuckScoreTextView.setText(""+FirebaseHelper.getInstance().getBestChuckScore());
-        bestDropScoreTextView.setText(""+FirebaseHelper.getInstance().getBestDropScore());
-        bestSpinScoreTextView.setText(""+FirebaseHelper.getInstance().getBestSpinScore());
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
     }
 }

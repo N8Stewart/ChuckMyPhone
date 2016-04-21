@@ -16,23 +16,15 @@ import android.util.Log;
  */
 
 class GPSHelper {
-    private LocationManager locationManager;
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5;
-
     private final long MINIMUM_TIME = 100;
     private final float MINIMUM_DISTANCE = 10;
+
+    private LocationManager locationManager;
 
     public GPSHelper(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         requestPermissionForGPS(context);
-    }
-
-    private void requestPermissionForGPS(Context context) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-        }
     }
 
     public void stopGPS(Context context) {
@@ -67,6 +59,14 @@ class GPSHelper {
     public void setToLastLocation(Context context, String gpsProvider) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             setLocation(locationManager.getLastKnownLocation(gpsProvider));
+        }
+    }
+
+    private void requestPermissionForGPS(Context context) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 }
