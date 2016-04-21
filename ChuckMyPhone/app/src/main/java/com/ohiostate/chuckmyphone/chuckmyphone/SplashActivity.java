@@ -42,6 +42,12 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         Log.d(TAG, "onPause() called");
@@ -51,11 +57,5 @@ public class SplashActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         Log.d(TAG, "onStop() called");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
     }
 }

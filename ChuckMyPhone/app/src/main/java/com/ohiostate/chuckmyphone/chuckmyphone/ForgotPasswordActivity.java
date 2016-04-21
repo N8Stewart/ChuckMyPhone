@@ -1,8 +1,5 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,7 +27,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
         Log.d(TAG, "onCreate() called");
         actionPending = false;
-        getSupportActionBar().setTitle("Forgot Password");
 
         initializeViews();
     }
@@ -43,6 +39,14 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         resetButton.setOnClickListener(this);
 
         emailEditText = (EditText) findViewById(R.id.activity_forgot_password_email_edit_text);
+
+        getSupportActionBar().setTitle("Forgot Password");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
     }
 
     @Override
@@ -57,11 +61,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         Log.d(TAG, "onStop() called");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
 
     @Override
     public void onClick(View v) {

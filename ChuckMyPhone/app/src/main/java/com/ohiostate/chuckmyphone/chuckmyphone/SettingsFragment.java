@@ -41,7 +41,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_settings, container, false);
         initializeViews(view);
-        loadSettings();
         return view;
     }
 
@@ -66,10 +65,54 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadSettings();
+        Log.d(TAG, "onResume() called");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause() called");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop() called");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.settings_save_button:
+                saveSettings();
+                Toast.makeText(getActivity().getApplicationContext(), "Saved successfully!", Toast.LENGTH_LONG).show();
+                getActivity().onBackPressed();
+            default:
+                break;
         }
+    }
+
+    private void loadSettings(){
+        soundEnabledCheckbox.setChecked(CurrentUser.getInstance().getSoundEnabled());
+        tutorialMessagesEnabledCheckbox.setChecked(CurrentUser.getInstance().getTutorialMessagesEnabled());
+        badgeNotificationsCheckbox.setChecked(CurrentUser.getInstance().getBadgeNotificationsEnabled());
+        goofySoundEnabledCheckbox.setChecked(CurrentUser.getInstance().getGoofySoundEnabled());
+    }
+
+    private void saveSettings(){
+        CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
+        CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
+        CurrentUser.getInstance().updateBadgeNotificationsEnabled(badgeNotificationsCheckbox.isChecked());
+        CurrentUser.getInstance().updateGoofySoundEnabled(goofySoundEnabledCheckbox.isChecked());
+
+        SharedPreferencesHelper.setSoundEnabled(getActivity().getApplicationContext(), soundEnabledCheckbox.isChecked());
+        SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(), tutorialMessagesEnabledCheckbox.isChecked());
+        SharedPreferencesHelper.setBadgeNotificationsEnabled(getActivity().getApplicationContext(), badgeNotificationsCheckbox.isChecked());
+        SharedPreferencesHelper.setGoofySoundEnabled(getActivity().getApplicationContext(), goofySoundEnabledCheckbox.isChecked());
     }
 
     @Override
@@ -89,56 +132,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         mListener = null;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.settings_save_button:
-                saveSettings();
-                Toast.makeText(getActivity().getApplicationContext(), "Saved successfully!", Toast.LENGTH_LONG).show();
-            default:
-                break;
-        }
-    }
-
-    private void saveSettings(){
-        CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
-        CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
-        CurrentUser.getInstance().updateBadgeNotificationsEnabled(badgeNotificationsCheckbox.isChecked());
-        CurrentUser.getInstance().updateGoofySoundEnabled(goofySoundEnabledCheckbox.isChecked());
-
-
-        SharedPreferencesHelper.setSoundEnabled(getActivity().getApplicationContext(), soundEnabledCheckbox.isChecked());
-        SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(), tutorialMessagesEnabledCheckbox.isChecked());
-        SharedPreferencesHelper.setBadgeNotificationsEnabled(getActivity().getApplicationContext(), badgeNotificationsCheckbox.isChecked());
-        SharedPreferencesHelper.setGoofySoundEnabled(getActivity().getApplicationContext(), goofySoundEnabledCheckbox.isChecked());
-    }
-
-    private void loadSettings(){
-        soundEnabledCheckbox.setChecked(CurrentUser.getInstance().getSoundEnabled());
-        tutorialMessagesEnabledCheckbox.setChecked(CurrentUser.getInstance().getTutorialMessagesEnabled());
-        badgeNotificationsCheckbox.setChecked(CurrentUser.getInstance().getBadgeNotificationsEnabled());
-        goofySoundEnabledCheckbox.setChecked(CurrentUser.getInstance().getGoofySoundEnabled());
-    }
-
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
     }
 }
