@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -16,8 +17,8 @@ public class CompeteSpinFragment extends CompeteFragment {
 
     private MediaPlayer spinSound;
 
-    private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
     private final int SCORE_THRESHOLD_FOR_SOUND = 2500;
+    private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
 
     public CompeteSpinFragment() {}
 
@@ -112,7 +113,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
     private void initializeSensors() {
         //set up sensor overhead
-        sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
+        sensManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         gyroscope = sensManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
         //make the sensor start listening, don't want this here later

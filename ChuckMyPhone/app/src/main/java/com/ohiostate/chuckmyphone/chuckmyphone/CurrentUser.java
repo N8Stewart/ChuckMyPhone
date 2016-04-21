@@ -176,6 +176,22 @@ public class CurrentUser {
         return sawBoardOnceWithGps;
     }
 
+    public void updatePlayedOnceWithoutGps(){
+        playedOnceWithoutGps = true;
+    }
+
+    public void updatePlayedOnceWithGps(){
+        playedOnceWithGps = true;
+    }
+
+    public boolean playedOnceWithoutGps() {
+        return playedOnceWithoutGps;
+    }
+
+    public boolean playedOnceWithGps() {
+        return playedOnceWithGps;
+    }
+
     public long getChuckScore() {
         return chuckScore;
     }

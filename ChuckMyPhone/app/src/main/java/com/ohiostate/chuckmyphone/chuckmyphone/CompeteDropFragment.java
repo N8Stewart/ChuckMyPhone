@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -132,7 +133,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     private void initializeSensors() {
         //set up sensor overhead
-        sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE);
+        sensManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         //make the sensor start listening

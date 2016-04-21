@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
     private final int USERNAME_LENGTH_MIN = 3;
-    private final int USERNAME_lENGTH_MAX = 13;
+    private final int USERNAME_LENGTH_MAX = 13;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -110,8 +110,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         boolean isReady = false;
 
         // Ensure username length is restricted
-        if (username.length() < USERNAME_LENGTH_MIN || username.length() > USERNAME_lENGTH_MAX) {
-            Toast.makeText(this.getApplicationContext(), String.format("Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_lENGTH_MAX), Toast.LENGTH_SHORT).show();
+        if (username.length() < USERNAME_LENGTH_MIN || username.length() > USERNAME_LENGTH_MAX) {
+            Toast.makeText(this.getApplicationContext(), String.format("Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_LENGTH_MAX), Toast.LENGTH_SHORT).show();
         } else if (!isValidUsername(username)) {
             Toast.makeText(this.getApplicationContext(), "Only digits and letters are allowed in a username", Toast.LENGTH_SHORT).show();
         } else if (password.isEmpty()) {

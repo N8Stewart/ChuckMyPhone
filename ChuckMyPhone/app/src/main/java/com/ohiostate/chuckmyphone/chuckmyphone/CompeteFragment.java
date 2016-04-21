@@ -4,26 +4,19 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 public abstract class CompeteFragment extends Fragment implements SensorEventListener {
@@ -119,10 +112,12 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onResume() {
         super.onResume();
 
-        if (!CurrentUser.getInstance().isGPSEnabled()){
+        if (!CurrentUser.getInstance().isGPSEnabled() && CurrentUser.getInstance().playedOnceWithoutGps()){
             Toast.makeText(getActivity(), "Please, enable the GPS", Toast.LENGTH_SHORT).show();
-        } else if (CurrentUser.getInstance().needToUpdateLocation()){
+            CurrentUser.getInstance().updatePlayedOnceWithoutGps();
+        } else if (CurrentUser.getInstance().needToUpdateLocation() && CurrentUser.getInstance().playedOnceWithGps()){
             Toast.makeText(getActivity(), "Please wait for the GPS update your location", Toast.LENGTH_LONG).show();
+            CurrentUser.getInstance().updatePlayedOnceWithGps();
         }
 
         Log.d(TAG, "onResume() called");

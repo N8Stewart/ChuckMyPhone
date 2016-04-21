@@ -5,9 +5,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -22,8 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
-import java.util.Stack;
-
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
@@ -32,11 +28,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SettingsFragment.OnFragmentInteractionListener,
         ChangePasswordFragment.OnFragmentInteractionListener {
 
+    private static final long GPS_THREAD_SLEEP_TIME = 4000;
+
     private final String TAG = this.getClass().getSimpleName();
 
     private static MainActivity main;
-
-    private boolean gpsRequest;
 
     private GPSHelper mGPSHelper;
 
@@ -266,18 +262,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Runnable updateGPSRequestRunnable = new Runnable() {
         @Override
         public void run() {
-            gpsRequest = false;
             Looper.prepare();
             while (!CurrentUser.getInstance().isLocationUpdated()) {
                 Log.d("coords", "thread loop");
-                if (mGPSHelper.isGPSEnabled(LocationManager.NETWORK_PROVIDER) && !gpsRequest) {
+                if (mGPSHelper.isGPSEnabled(LocationManager.NETWORK_PROVIDER)) {
                     Log.d("coords", "thread if");
                     mGPSHelper.requestLocation(main, LocationManager.NETWORK_PROVIDER);
-                    gpsRequest = true;
                     break;
                 }
                 try {
-                    Thread.sleep(4000);
+                    Thread.sleep(GPS_THREAD_SLEEP_TIME);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

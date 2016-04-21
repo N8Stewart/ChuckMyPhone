@@ -2,7 +2,6 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Html;

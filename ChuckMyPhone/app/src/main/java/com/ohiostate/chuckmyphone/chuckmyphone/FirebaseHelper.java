@@ -27,12 +27,10 @@ public class FirebaseHelper {
         return ourInstance;
     }
 
-    private FirebaseHelper() {
-    }
+    private FirebaseHelper() {}
 
     private DataSnapshot dataSnapshot;
     boolean hasLoadedInitialSnapshot;
-
 
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
@@ -129,7 +127,6 @@ public class FirebaseHelper {
                 }
 
                 updateLeaderboard();
-
             }
 
             @Override

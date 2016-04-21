@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
@@ -15,10 +16,10 @@ public class CompeteChuckFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
     private final int SCORE_THRESHOLD_FOR_SOUND = 1500;
 
-    private Sensor linearAccelerometer;
-    public CompeteChuckFragment() {}
-
     private MediaPlayer chuckSound;
+    private Sensor linearAccelerometer;
+
+    public CompeteChuckFragment() {}
 
     public static CompeteFragment newInstance() {
         CompeteFragment fragment = new CompeteChuckFragment();
@@ -106,7 +107,7 @@ public class CompeteChuckFragment extends CompeteFragment {
 
     private void initializeSensors() {
         //set up sensor overhead
-        sensManager = (SensorManager) getActivity().getSystemService(getActivity().SENSOR_SERVICE) ;
+        sensManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE) ;
         linearAccelerometer = sensManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         //make the sensor start listening, don't want this here later
         userHasSensor = sensManager.registerListener(this, linearAccelerometer, SensorManager.SENSOR_DELAY_GAME);

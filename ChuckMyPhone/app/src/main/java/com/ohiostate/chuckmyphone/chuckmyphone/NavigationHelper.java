@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Stack;
 
 /**
  * Created by Joao Pedro on 4/2/2016.
