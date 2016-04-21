@@ -20,7 +20,7 @@ public class NavigationHelper {
 
     private NavigationHelper(){
         fragmentTags = new Stack<>();
-        fragmentTagsToMenuID = new HashMap<>(5);
+        fragmentTagsToMenuID = new HashMap<>(8);
         fragmentTagsToID = new HashMap<>(8);
         fragmentPositions = new int[]{-1,-1,-1,-1,-1,-1,-1,-1};
         fillMaps();
@@ -29,9 +29,9 @@ public class NavigationHelper {
     private void fillMaps(){
         fragmentTagsToMenuID.put("'s Profile", 0);
         fragmentTagsToMenuID.put("Leaderboards", 1);
-        fragmentTagsToMenuID.put("Chuck My Phone", 2);
-        fragmentTagsToMenuID.put("Drop My Phone", 3);
-        fragmentTagsToMenuID.put("Spin My Phone", 4);
+        fragmentTagsToMenuID.put("Chuck My Phone", 3);
+        fragmentTagsToMenuID.put("Drop My Phone", 4);
+        fragmentTagsToMenuID.put("Spin My Phone", 2);
         fragmentTagsToMenuID.put("Settings", 5);
         fragmentTagsToMenuID.put("About", 6);
         fragmentTagsToMenuID.put("Change Password", 7);

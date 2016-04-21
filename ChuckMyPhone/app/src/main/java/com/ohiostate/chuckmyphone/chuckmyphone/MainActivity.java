@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(c < 2){
                 mNavigationView.getMenu().getItem(c).setChecked(true);
             } else {
-                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%2).setChecked(true);
+                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%3).setChecked(true);
             }
         }
     }
