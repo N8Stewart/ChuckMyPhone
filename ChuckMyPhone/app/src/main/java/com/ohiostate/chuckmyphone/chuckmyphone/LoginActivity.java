@@ -19,6 +19,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean actionPending;
 
+    // Views
     private Button newUserButton;
     private Button loginButton;
 

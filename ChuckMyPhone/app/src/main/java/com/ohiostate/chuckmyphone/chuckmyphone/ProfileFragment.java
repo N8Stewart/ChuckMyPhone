@@ -21,6 +21,7 @@ public class ProfileFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+    // Views
     private TextView bestChuckScoreTextView;
     private TextView bestDropScoreTextView;
     private TextView bestSpinScoreTextView;

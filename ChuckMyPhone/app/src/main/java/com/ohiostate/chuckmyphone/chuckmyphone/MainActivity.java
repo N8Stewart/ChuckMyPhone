@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private GPSHelper mGPSHelper;
 
+    // Views
     private DrawerLayout mDrawerLayout;
 
     private NavigationView mNavigationView;
@@ -166,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Class fragmentClass = null;
 
-
         if((int)NavigationHelper.getInstance().lastFragmentIDChoice()!=id) {
             //don't let pop ups from previous fragment appear in new fragment
             MiscHelperMethods.setUserNavigatedAway(true);
@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+        // method to deal with back button pressed
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -238,19 +239,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void markHamburgerMenu(){
+        // method to highlight the correct item in the hamburger menu
         unmarkAllItemsOnMenu();
         Object choice = NavigationHelper.getInstance().lastMenuChoice();
         if(choice!=null){
             int c = (Integer) choice;
             if(c < 2){
+                // to mark first part of menu
                 mNavigationView.getMenu().getItem(c).setChecked(true);
             } else if(c < 5) {
-                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(c%3).setChecked(true);
+                // to mark second part of menu (competitions)
+                mNavigationView.getMenu().getItem(2).getSubMenu().getItem(NavigationHelper.translateMenuIDToSubMenuID(c)).setChecked(true);
             }
         }
     }
 
     private void unmarkAllItemsOnMenu(){
+        // method to undo the highlighting of all items in the hamburger menu
         mNavigationView.getMenu().getItem(0).setChecked(false);
         mNavigationView.getMenu().getItem(1).setChecked(false);
         SubMenu subMenu = mNavigationView.getMenu().getItem(2).getSubMenu();
@@ -262,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Runnable updateGPSRequestRunnable = new Runnable() {
         @Override
         public void run() {
+            // runnable run to keep trying to request gps location until gps is enabled
             Looper.prepare();
             while (!CurrentUser.getInstance().isLocationUpdated()) {
                 Log.d("coords", "thread loop");
@@ -283,6 +289,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onLocationChanged(Location location) {
+        // method to listen to location changes found by gps
         mGPSHelper.setLocation(location);
         Log.d("coords", "changed");
         CurrentUser.getInstance().updateLocationUpdated(true);
@@ -293,6 +300,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onProviderEnabled(String provider) {
+        // method to listen to gps enablement
         Log.d("coords", provider + " enabled");
         CurrentUser.getInstance().updateGPSEnabled(true);
         mGPSHelper.setToLastLocation(this, provider);
@@ -300,6 +308,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onProviderDisabled(String provider) {
+        // method to listen to gps disablement
         Log.d("coords", provider + " disabled");
         CurrentUser.getInstance().updateGPSEnabled(false);
     }

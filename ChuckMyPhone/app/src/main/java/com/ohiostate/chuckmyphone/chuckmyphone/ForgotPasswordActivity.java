@@ -15,6 +15,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     private boolean actionPending;
 
+    // Views
     private Button cancelButton;
     private Button resetButton;
 

@@ -6,14 +6,21 @@ import android.content.SharedPreferences;
 
 /**
  * Created by Joao Pedro on 3/11/2016.
+ *
+ * This class is used to store data in the mobile phone.
+ * Data stored include username, password, email, last location, and settings variables
  */
 
 class SharedPreferencesHelper {
 
+    // file name
     private static final String PREFS_USER = "chuckmyphone.PREFS_USER";
+
+    // message to be received in case we try to get a string value from a key which doesn't exist
     private static final String MSG_KEY = "The user does not have this key";
 
     public static class Keys {
+        // set of strings used as keys to identify the values we want to store
         public static final String keyUsername = "username";
         public static final String keyPassword = "password";
         public static final String keyEmail = "email";
@@ -28,12 +35,14 @@ class SharedPreferencesHelper {
     public SharedPreferencesHelper(){}
 
     private static void setBooleanValue(Context context, String key, boolean value){
+        // base method to be called when wanting to store booleans values
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
         editor.putBoolean(key, value).commit();
     }
 
     private static void setStringValue(Context context, String key, String value){
+        // base method to be called when wanting to store string values
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
         editor.putString(key, value).commit();
@@ -76,11 +85,14 @@ class SharedPreferencesHelper {
     }
 
     private static boolean getBooleanValue(Context context, String key, boolean defValue){
+        // base method to be called when wanting to retrieve boolean values
+        // @defValue is the default variable returned in case the used key does not exist
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.getBoolean(key, defValue);
     }
 
     private static String getStringValue(Context context, String key){
+        // base method to be called when wanting to retrieve string values
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.getString(key, MSG_KEY);
     }
@@ -122,17 +134,20 @@ class SharedPreferencesHelper {
     }
 
     static boolean hasSharedData(Context context){
+        // method to check if there is user data stored in the mobile phone
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         return sharedData.contains(Keys.keyEmail);
     }
 
     static boolean clearSharedData(Context context){
+        // method to erase all user data this class stores
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
         return editor.clear().commit();
     }
 
     public static void createSharedPreferencesData(Context context, String email, String password, String username) {
+        // method to initialize and store all variables with starter values
         setEmail(context, email);
         setPassword(context, password);
         setUsername(context, username);
@@ -144,6 +159,7 @@ class SharedPreferencesHelper {
     }
 
     public static void setSharedPreferencesData(Context context, String email, String password, String username) {
+        // method to set some specific variables stored
         setEmail(context, email);
         setPassword(context, password);
         setUsername(context, username);

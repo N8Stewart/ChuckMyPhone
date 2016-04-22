@@ -23,7 +23,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     private OnFragmentInteractionListener mListener;
 
-    // views
+    // Views
     private Button confirmButton;
     private Button cancelButton;
 

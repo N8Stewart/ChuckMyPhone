@@ -45,6 +45,13 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     private long NUM_MILLISECONDS_FOR_ACTION = 5000;
     private long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
 
+    Runnable updateViewSubRunnableScore;
+    Runnable showTutorialToastRunnable;
+
+    Thread updateViewRunnableThread;
+
+
+    // Views
     private Animation progressBarAnimation;
 
     private ImageButton competeButton;
@@ -53,11 +60,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     TextView yourBestScoreTextView;
     TextView currentScoreTextView;
-
-    Runnable updateViewSubRunnableScore;
-    Runnable showTutorialToastRunnable;
-
-    Thread updateViewRunnableThread;
 
     public CompeteFragment() {}
 
@@ -112,10 +114,10 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     public void onResume() {
         super.onResume();
 
-        if (!CurrentUser.getInstance().isGPSEnabled() && CurrentUser.getInstance().playedOnceWithoutGps()){
+        if (!CurrentUser.getInstance().isGPSEnabled() && !CurrentUser.getInstance().playedOnceWithoutGps()){
             Toast.makeText(getActivity(), "Please, enable the GPS", Toast.LENGTH_SHORT).show();
             CurrentUser.getInstance().updatePlayedOnceWithoutGps();
-        } else if (CurrentUser.getInstance().needToUpdateLocation() && CurrentUser.getInstance().playedOnceWithGps()){
+        } else if (CurrentUser.getInstance().needToUpdateLocation() && !CurrentUser.getInstance().playedOnceWithGps()){
             Toast.makeText(getActivity(), "Please wait for the GPS update your location", Toast.LENGTH_LONG).show();
             CurrentUser.getInstance().updatePlayedOnceWithGps();
         }

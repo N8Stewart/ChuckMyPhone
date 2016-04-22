@@ -23,6 +23,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     private FirebaseHelper firebaseHelper;
 
+    // Views
     private Button cancelButton;
     private Button signUpButton;
 

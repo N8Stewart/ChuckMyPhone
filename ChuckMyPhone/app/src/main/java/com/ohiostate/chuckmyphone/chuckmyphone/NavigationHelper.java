@@ -8,6 +8,10 @@ import java.util.Map;
 
 /**
  * Created by Joao Pedro on 4/2/2016.
+ *
+ * This class is intended to keep track of fragments that were opened, using their tags
+ * These tags are used to set the title in the support bar
+ * There are also maps to help with other navigational issues
  */
 public class NavigationHelper {
 
@@ -15,8 +19,17 @@ public class NavigationHelper {
 
     public static NavigationHelper getInstance(){ return ourInstance;}
 
+    public static final int numberOfSubMenuItems = 3;
+
+    // variable to map fragment tags to integers:
+    // - used to highlight the menu option chosen
+    // - used to translate tags into fragments
     private Map<String, Integer> fragmentTagsToMenuID;
+
+    // variable to map fragment tags to ids used to prevent users from going to the same fragment they are in
     private Map<String, Integer> fragmentTagsToID;
+
+    // list holding fragment tags to keep the order of navigation
     private LinkedList<String> fragmentTags;
 
     private NavigationHelper(){
@@ -27,6 +40,7 @@ public class NavigationHelper {
     }
 
     private void fillMaps(){
+        // method to fill maps with values
         fragmentTagsToMenuID.put("'s Profile", 0);
         fragmentTagsToMenuID.put("Leaderboards", 1);
         fragmentTagsToMenuID.put("Chuck My Phone", 3);
@@ -45,7 +59,12 @@ public class NavigationHelper {
         fragmentTagsToID.put("Settings", R.id.menu_dot_item_settings);
     }
 
+    public static int translateMenuIDToSubMenuID(int id){
+        return id%numberOfSubMenuItems;
+    }
+
     public Fragment translateTagToFragment(String tag){
+        // method to return an instance of the fragment related to the given tag
         int id = fragmentTagsToMenuID.get(tag);
 
         Fragment resultantFragment = null;
@@ -82,6 +101,7 @@ public class NavigationHelper {
     }
 
     public String previousFragmentTag(){
+        // method to return the last but one tag in the list
         if(noFragmentsLeft()) return null;
         fragmentTags.removeLast();
         if(noFragmentsLeft()) return null;
@@ -93,17 +113,20 @@ public class NavigationHelper {
     }
 
     public String addNextFragmentTag (String nextFragmentTag){
+        // method to add a tag into the list
         if(fragmentTags.contains(nextFragmentTag)) fragmentTags.remove(nextFragmentTag);
         fragmentTags.addLast(nextFragmentTag);
         return fragmentTags.getLast();
     }
 
     public Object lastMenuChoice(){
+        // method to retrieve the menu id of the last fragment in the list
         if(noFragmentsLeft()) return null;
         return fragmentTagsToMenuID.get(fragmentTags.getLast());
     }
 
     public Object lastFragmentIDChoice(){
+        // method to retrieve the id of the last fragment in the list
         if(noFragmentsLeft()) return null;
         return fragmentTagsToID.get(fragmentTags.getLast());
     }

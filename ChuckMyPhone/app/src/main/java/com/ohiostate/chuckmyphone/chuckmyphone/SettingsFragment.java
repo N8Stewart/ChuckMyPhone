@@ -18,6 +18,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
+    // Views
     private Button saveButton;
 
     private CheckBox soundEnabledCheckbox;
@@ -99,6 +100,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void loadSettings(){
+        // method to load settings values into views
         soundEnabledCheckbox.setChecked(CurrentUser.getInstance().getSoundEnabled());
         tutorialMessagesEnabledCheckbox.setChecked(CurrentUser.getInstance().getTutorialMessagesEnabled());
         badgeNotificationsCheckbox.setChecked(CurrentUser.getInstance().getBadgeNotificationsEnabled());
@@ -106,6 +108,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void saveSettings(){
+        // method to save settings values in the user class and in the mobile phone
         CurrentUser.getInstance().updateSoundEnabled(soundEnabledCheckbox.isChecked());
         CurrentUser.getInstance().updateTutorialMessagesEnabled(tutorialMessagesEnabledCheckbox.isChecked());
         CurrentUser.getInstance().updateBadgeNotificationsEnabled(badgeNotificationsCheckbox.isChecked());

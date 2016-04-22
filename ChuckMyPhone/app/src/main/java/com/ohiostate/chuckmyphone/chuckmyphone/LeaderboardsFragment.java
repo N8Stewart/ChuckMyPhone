@@ -32,7 +32,7 @@ public class LeaderboardsFragment extends Fragment {
     private ArrayList<FirebaseHelper.CompeteRecord> spinRecords;
     private ArrayList<FirebaseHelper.CompeteRecord> dropRecords;
 
-    // views
+    // Views
     private Spinner distanceSpinner;
     private Spinner competitionSpinner;
 
