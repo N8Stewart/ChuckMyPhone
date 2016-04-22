@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,64 +9,54 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CompeteChuckFragment">
+    tools:context=".CompeteChuckFragment"
+    android:id="@+id/compete_linear_layout"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
+        android:id="@+id/compete_top_relative_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/compete_linear_layout">
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/compete_top_relative_layout">
-
-            <ProgressBar
-                android:id="@+id/compete_progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"
-                android:layout_centerHorizontal="true"
-                android:indeterminate="false"
-                android:max="@integer/progress_bar_max"
-                android:progress="@integer/progress_bar_default"
-                android:progressDrawable="@drawable/circular_progress_bar"
-                android:layout_marginBottom="25dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="0"
-                android:textSize="30dp"
-                android:id="@+id/compete_measure_textview"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/compete_button"
-            android:src="@drawable/compete_play"
-            android:layout_above="@+id/compete_best_score_textview"
+        <ProgressBar
+            android:id="@+id/compete_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
             android:layout_marginBottom="25dp"
-            android:background="@android:color/transparent"
-            android:layout_gravity="center"/>
+            android:indeterminate="false"
+            android:max="@integer/progress_bar_max"
+            android:progress="@integer/progress_bar_default"
+            android:progressDrawable="@drawable/circular_progress_bar" />
 
         <TextView
+            android:id="@+id/compete_measure_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Your Best: "
-            android:id="@+id/compete_best_score_textview"
-            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center"/>
+            android:layout_centerVertical="true"
+            android:text="0"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30dp" />
+    </RelativeLayout>
 
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/compete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/compete_play" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/compete_best_score_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Your Best: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</LinearLayout>

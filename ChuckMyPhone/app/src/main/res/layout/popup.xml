@@ -10,7 +10,6 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:textColor="@color/colorAccent"
         android:gravity="center"
         android:text="Badge Unlocked!"
@@ -40,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:drawablePadding="3sp"
-            android:layout_centerHorizontal="true"
             android:text="Dismiss"/>
     </LinearLayout>
 </LinearLayout>

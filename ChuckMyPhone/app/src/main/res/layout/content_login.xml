@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,83 +10,75 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ohiostate.chuckmyphone.chuckmyphone.LoginActivity"
-    tools:showIn="@layout/activity_login">
+    tools:showIn="@layout/activity_login"
+    android:id="@+id/login_linear_layout"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/login_app_icon_image_view"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher" />
+
+    <EditText
+        android:id="@+id/login_email_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoText="false"
+        android:editable="true"
+        android:enabled="true"
+        android:hint="@string/email" />
+
+    <EditText
+        android:id="@+id/login_password_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        android:password="true" />
+
+    <Button
+        android:id="@+id/login_login_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/login" />
+
+    <Button
+        android:id="@+id/login_new_user_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_user" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:text="New Text"
+        android:visibility="invisible" />
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/login_bottom_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
-        android:id="@+id/login_linear_layout">
-
-        <ImageView
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:id="@+id/login_app_icon_image_view"
-            android:src="@mipmap/ic_launcher"
-            android:layout_gravity="center"/>
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         <EditText
-            android:layout_width="match_parent"
+            android:id="@+id/editText4"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/login_email_edit_text"
-            android:autoText="false"
-            android:editable="true"
-            android:enabled="true"
-            android:hint="@string/email" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/login_password_edit_text"
-            android:hint="@string/password"
-            android:password="true" />
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/login"
-            android:id="@+id/login_login_button"
-            android:layout_marginTop="20dp"/>
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/new_user"
-            android:id="@+id/login_new_user_button" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:text="New Text"
-            android:id="@+id/textView4"
+            android:layout_weight="1.00"
             android:visibility="invisible" />
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:weightSum="1"
-            android:id="@+id/login_bottom_linear_layout">
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/editText4"
-                android:layout_weight="1.00"
-                android:visibility="invisible" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/login_forgot_password_textview"
-                android:text="@string/forgot_password"
-                android:singleLine="true"
-                android:linksClickable="true" />
-        </LinearLayout>
-
+        <TextView
+            android:id="@+id/login_forgot_password_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:linksClickable="true"
+            android:singleLine="true"
+            android:text="@string/forgot_password"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

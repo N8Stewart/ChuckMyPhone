@@ -182,7 +182,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
                 try {
                     Thread.sleep(SCORE_VIEW_UPDATE_FREQUENCY, 0);
                 } catch (Exception e) {
-
+                    e.printStackTrace();
                 }
 
                 //This code updates the UI, needs to be separate because on the original thread can touch the views

@@ -54,7 +54,7 @@
 
         <Spinner
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:id="@+id/leaderboards_competition_filter_dropdown"
             android:spinnerMode="dropdown"
             android:layout_weight="0.63" />
