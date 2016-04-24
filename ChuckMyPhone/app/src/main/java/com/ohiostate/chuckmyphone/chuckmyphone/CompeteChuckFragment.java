@@ -19,8 +19,6 @@ public class CompeteChuckFragment extends CompeteFragment {
     private MediaPlayer chuckSound;
     private Sensor linearAccelerometer;
 
-    public CompeteChuckFragment() {}
-
     public static CompeteFragment newInstance() {
         CompeteFragment fragment = new CompeteChuckFragment();
         return fragment;
@@ -116,7 +114,7 @@ public class CompeteChuckFragment extends CompeteFragment {
         }
     }
 
-    public void initializeViews(View view) {
+    void initializeViews(View view) {
         super.initializeViews(view);
 
         yourBestScoreTextView.setText(TUTORIAL_TEXT);

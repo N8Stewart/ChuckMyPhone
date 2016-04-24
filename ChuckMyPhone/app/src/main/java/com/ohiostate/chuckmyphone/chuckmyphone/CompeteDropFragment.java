@@ -27,8 +27,6 @@ public class CompeteDropFragment extends CompeteFragment {
 
     private MediaPlayer dropSound;
 
-    public CompeteDropFragment() {}
-
     public static CompeteDropFragment newInstance() {
         CompeteDropFragment fragment = new CompeteDropFragment();
         return fragment;
@@ -144,7 +142,7 @@ public class CompeteDropFragment extends CompeteFragment {
         }
     }
 
-    public void initializeViews(View view) {
+    void initializeViews(View view) {
         super.initializeViews(view);
 
         yourBestScoreTextView.setText(TUTORIAL_TEXT);

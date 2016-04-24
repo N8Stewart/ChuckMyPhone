@@ -5,15 +5,12 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Tim on 3/25/2016.
- */
 class Badge {
-    private String unlockDate;
-    private String name;
+    private final String unlockDate;
+    private final String name;
 
-    public static Map<String, String> badgeNameToDescriptionMap = new HashMap<>();
-    public static Map<String, Integer> badgeNameToDrawableMap = new HashMap<>();
+    public final static Map<String, String> badgeNameToDescriptionMap = new HashMap<>();
+    public final static Map<String, Integer> badgeNameToDrawableMap = new HashMap<>();
 
     public void initializeDescriptionMappings(Context c) {
         badgeNameToDescriptionMap.put(c.getString(R.string.badge_chuck_level_one), "Unlock this by doing your first chuck trial");

@@ -27,7 +27,7 @@ class GPSHelper {
     // minimum distance in meters to consider changes in location
     private final float MINIMUM_DISTANCE = 10;
 
-    private LocationManager locationManager;
+    private final LocationManager locationManager;
 
     public GPSHelper(Context context) {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);

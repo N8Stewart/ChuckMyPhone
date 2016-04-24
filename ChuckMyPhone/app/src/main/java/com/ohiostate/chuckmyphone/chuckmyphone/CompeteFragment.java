@@ -42,8 +42,8 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     // Control the progress of the progress bar
     private int progress;
 
-    private long NUM_MILLISECONDS_FOR_ACTION = 5000;
-    private long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
+    private final long NUM_MILLISECONDS_FOR_ACTION = 5000;
+    private final long SCORE_VIEW_UPDATE_FREQUENCY = 100; //higher number leads to lower refresh rate
 
     Runnable updateViewSubRunnableScore;
     Runnable showTutorialToastRunnable;
@@ -60,8 +60,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     TextView yourBestScoreTextView;
     TextView currentScoreTextView;
-
-    public CompeteFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +144,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         sensManager.unregisterListener(this);
     }
 
-    private View.OnClickListener buttonListener = new View.OnClickListener() {
+    private final View.OnClickListener buttonListener = new View.OnClickListener() {
         public void onClick(View v) {
             if (userHasSensor) {
                 isRecording = !isRecording;
@@ -168,7 +166,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     }
 
     //create a updateViewRunnable thread to run to listen for and update current rotationSpeed
-    Runnable updateViewRunnable = new Runnable() {
+    final Runnable updateViewRunnable = new Runnable() {
         public void run() {
 
             if (CurrentUser.getInstance().getTutorialMessagesEnabled() && isRecording) {
@@ -224,7 +222,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         }
     };
 
-    private Runnable updateViewSubRunnableImage = new Runnable() {
+    private final Runnable updateViewSubRunnableImage = new Runnable() {
         @Override
         public void run() {
             if (isRecording) {
@@ -235,7 +233,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         }
     };
 
-    private Runnable updateProgressBar = new Runnable() {
+    private final Runnable updateProgressBar = new Runnable() {
 
         @Override
         public void run() {

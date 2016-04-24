@@ -16,12 +16,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * Created by Tim on 3/11/2016.
- */
 public class FirebaseHelper {
 
-    private static FirebaseHelper ourInstance = new FirebaseHelper();
+    private final static FirebaseHelper ourInstance = new FirebaseHelper();
 
     public static FirebaseHelper getInstance() {
         return ourInstance;
@@ -30,7 +27,7 @@ public class FirebaseHelper {
     private FirebaseHelper() {}
 
     private DataSnapshot dataSnapshot;
-    boolean hasLoadedInitialSnapshot;
+    private boolean hasLoadedInitialSnapshot;
 
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
@@ -44,11 +41,11 @@ public class FirebaseHelper {
     }
 
     public class User {
-        public ArrayList<Badge> badgeList;
-        public CompeteRecord bestChuckRecord;
-        public CompeteRecord bestDropRecord;
-        public CompeteRecord bestSpinRecord;
-        public String username;
+        public final ArrayList<Badge> badgeList;
+        public final CompeteRecord bestChuckRecord;
+        public final CompeteRecord bestDropRecord;
+        public final CompeteRecord bestSpinRecord;
+        public final String username;
 
         //TODO get users location here
 
@@ -80,11 +77,11 @@ public class FirebaseHelper {
     }
 
     public class CompeteRecord {
-        public long score;
-        public double longitude;
-        public double latitude;
-        public competitionType competition;
-        public String username;
+        public final long score;
+        public final double longitude;
+        public final double latitude;
+        public final competitionType competition;
+        public final String username;
 
         public CompeteRecord(competitionType competition, String username) {
             this.score = 0;
@@ -169,7 +166,7 @@ public class FirebaseHelper {
         return firebaseWasLoaded;
     }
 
-    private Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
+    private final Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
         //Event driven: called when user creation succeeds
         @Override
         public void onSuccess(Map<String, Object> result) {
@@ -185,7 +182,7 @@ public class FirebaseHelper {
         }
     };
 
-   private Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
+   private final Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
        //Event driven: called when user login succeeds
        @Override
        public void onAuthenticated(AuthData authData) {
@@ -315,7 +312,7 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         String username = CurrentUser.getInstance().getUsername();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, CurrentUser.getInstance().getUsername()), score);
+        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, username), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
@@ -349,11 +346,10 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
             DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
-            ArrayList<Badge> badgeList = new ArrayList<>();
             for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
                 if (badgeSnapshot.child("name").getValue().toString().equals(badgeName)) {
                     String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
-                    if (unlockDate != "") {
+                    if (!unlockDate.equals("")) {
                         hasBadge = true;
                         break;
                     }
@@ -364,10 +360,6 @@ public class FirebaseHelper {
     }
 
     private void updateLeaderboard() {
-        ArrayList<CompeteRecord> chuckLeaderboardGlobal = new ArrayList<>();
-        ArrayList<CompeteRecord> spinLeaderboardGlobal = new ArrayList<>();
-        ArrayList<CompeteRecord> dropLeaderboardGlobal = new ArrayList<>();
-
         //may be possible to query up until the users entry, but that can wait until later
         //Query queryRef = myFirebaseRef.orderByPriority().endAt(??);
 
@@ -381,7 +373,7 @@ public class FirebaseHelper {
         top100Drop.addListenerForSingleValueEvent(dropLeaderboardValueEventListener);
     }
 
-    private ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
+    private final ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
             ArrayList<CompeteRecord> chuckRecords = new ArrayList<>();
@@ -401,7 +393,7 @@ public class FirebaseHelper {
         }
     };
 
-    private ValueEventListener spinLeaderboardValueEventListener = new ValueEventListener() {
+    private final ValueEventListener spinLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
             ArrayList<CompeteRecord> spinRecords = new ArrayList<>();
@@ -421,7 +413,7 @@ public class FirebaseHelper {
         }
     };
 
-    private ValueEventListener dropLeaderboardValueEventListener = new ValueEventListener() {
+    private final ValueEventListener dropLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
             ArrayList<CompeteRecord> dropRecords = new ArrayList<>();

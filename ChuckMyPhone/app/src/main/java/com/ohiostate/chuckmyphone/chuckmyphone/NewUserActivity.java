@@ -107,7 +107,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         String passwordVerification = passwordConfirmationEditText.getText().toString();
         String email = emailEditText.getText().toString();
 
-        Toast toast = null;
         boolean isReady = false;
 
         // Ensure username length is restricted
@@ -118,7 +117,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         } else if (password.isEmpty()) {
             Toast.makeText(this.getApplicationContext(), "Please enter a password.", Toast.LENGTH_SHORT).show();
         } else if (!password.equals(passwordVerification)) {
-            Toast.makeText(this.getApplicationContext(), String.format("Passwords do not match"), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getApplicationContext(), "Passwords do not match", Toast.LENGTH_SHORT).show();
         } else if (email.isEmpty()) {
             Toast.makeText(this.getApplicationContext(), "Enter a valid email to create an account.", Toast.LENGTH_SHORT).show();
         } else if (!termsOfServiceCheckBox.isChecked()) {
@@ -170,7 +169,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         actionPending = false;
     }
 
-    boolean isValidUsername(String username) {
+    private boolean isValidUsername(String username) {
         boolean isValidUsername = true;
         for (int i = 0; i < username.length(); i++) {
             char c = username.charAt(i);

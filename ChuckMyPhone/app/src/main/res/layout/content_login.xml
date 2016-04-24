@@ -26,8 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:autoText="false"
-        android:editable="true"
-        android:enabled="true"
         android:hint="@string/email" />
 
     <EditText
@@ -35,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/password"
-        android:password="true" />
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/login_login_button"

@@ -20,8 +20,6 @@ public class CompeteSpinFragment extends CompeteFragment {
     private final int SCORE_THRESHOLD_FOR_SOUND = 2500;
     private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
 
-    public CompeteSpinFragment() {}
-
     public static CompeteSpinFragment newInstance() {
         CompeteSpinFragment fragment = new CompeteSpinFragment();
         return fragment;
@@ -124,7 +122,7 @@ public class CompeteSpinFragment extends CompeteFragment {
         }
     }
 
-    public void initializeViews(View view) {
+    void initializeViews(View view) {
         super.initializeViews(view);
 
         yourBestScoreTextView.setText(TUTORIAL_TEXT);

@@ -15,22 +15,22 @@ import java.util.Map;
  */
 public class NavigationHelper {
 
-    private static NavigationHelper ourInstance = new NavigationHelper();
+    private final static NavigationHelper ourInstance = new NavigationHelper();
 
     public static NavigationHelper getInstance(){ return ourInstance;}
 
-    public static final int numberOfSubMenuItems = 3;
+    private static final int numberOfSubMenuItems = 3;
 
     // variable to map fragment tags to integers:
     // - used to highlight the menu option chosen
     // - used to translate tags into fragments
-    private Map<String, Integer> fragmentTagsToMenuID;
+    private final Map<String, Integer> fragmentTagsToMenuID;
 
     // variable to map fragment tags to ids used to prevent users from going to the same fragment they are in
-    private Map<String, Integer> fragmentTagsToID;
+    private final Map<String, Integer> fragmentTagsToID;
 
     // list holding fragment tags to keep the order of navigation
-    private LinkedList<String> fragmentTags;
+    private final LinkedList<String> fragmentTags;
 
     private NavigationHelper(){
         fragmentTags = new LinkedList<>();

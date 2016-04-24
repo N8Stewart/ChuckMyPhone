@@ -26,10 +26,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private CheckBox tutorialMessagesEnabledCheckbox;
     private CheckBox badgeNotificationsCheckbox;
 
-    public SettingsFragment() {}
-
     public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
         return new SettingsFragment();
     }
 

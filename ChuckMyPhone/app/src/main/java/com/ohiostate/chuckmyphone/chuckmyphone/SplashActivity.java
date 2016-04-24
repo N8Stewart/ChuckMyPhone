@@ -12,7 +12,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private static int SPLASH_TIME = 2000;
+    private final static int SPLASH_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

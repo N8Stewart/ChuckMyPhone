@@ -26,11 +26,8 @@ public class ProfileFragment extends Fragment {
     private TextView bestDropScoreTextView;
     private TextView bestSpinScoreTextView;
 
-    public ProfileFragment() {}
-
     public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override

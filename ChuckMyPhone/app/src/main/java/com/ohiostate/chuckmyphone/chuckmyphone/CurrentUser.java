@@ -9,7 +9,7 @@ import java.util.Collections;
  * getting high scores and setting high scores through firebase
  */
 public class CurrentUser {
-    private static CurrentUser ourInstance = new CurrentUser();
+    private final static CurrentUser ourInstance = new CurrentUser();
 
     public static CurrentUser getInstance() {
         return ourInstance;

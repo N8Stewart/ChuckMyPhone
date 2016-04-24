@@ -38,8 +38,6 @@ public class LeaderboardsFragment extends Fragment {
 
     private TableLayout leaderboardTable;
 
-    public LeaderboardsFragment() {}
-
     public static LeaderboardsFragment newInstance() {
         LeaderboardsFragment fragment = new LeaderboardsFragment();
         return fragment;
@@ -208,7 +206,7 @@ public class LeaderboardsFragment extends Fragment {
         }
     }
 
-    static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         double a =(Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(Math.toRadians(lat1))
@@ -220,8 +218,6 @@ public class LeaderboardsFragment extends Fragment {
     }
 
     private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
-        final float scale = this.getResources().getDisplayMetrics().density;
-
         TableLayout leaderboardUserRecordTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
 
         TableRow userRow = new TableRow(getActivity());
@@ -257,8 +253,6 @@ public class LeaderboardsFragment extends Fragment {
     }
 
     private void addEntryToLeaderboard(int rank, String name, long score, View view) {
-        final float scale = this.getResources().getDisplayMetrics().density;
-
         leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
 
         TableRow leaderboardRow = new TableRow(getActivity());

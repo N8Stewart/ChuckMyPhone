@@ -26,12 +26,9 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
     // Views
     private Button confirmButton;
     private Button cancelButton;
-
     private EditText oldPasswordEditText;
     private EditText newPasswordEditText;
     private EditText newPasswordConfirmationEditText;
-
-    public ChangePasswordFragment() {}
 
     public static ChangePasswordFragment newInstance() {
         ChangePasswordFragment fragment = new ChangePasswordFragment();

@@ -26,15 +26,11 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     // Views
     private Button creditsButton;
-
     private TextView termsOfService;
     private TextView randomizedTip;
 
-    public AboutFragment() {}
-
     public static AboutFragment newInstance() {
-        AboutFragment fragment = new AboutFragment();
-        return fragment;
+        return new AboutFragment();
     }
 
     @Override
@@ -104,7 +100,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     }
 
     private String getRandomTip() {
-        String tip = "";
         Resources res = getResources();
         String[] randomTips = res.getStringArray(R.array.about_random_tips);
 
@@ -112,7 +107,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         r.setSeed(System.currentTimeMillis());
         int val = r.nextInt(randomTips.length);
 
-        tip = randomTips[val];
+        String tip = randomTips[val];
 
         return tip;
     }

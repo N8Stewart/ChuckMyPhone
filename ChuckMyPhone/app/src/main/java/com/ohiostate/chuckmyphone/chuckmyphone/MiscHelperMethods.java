@@ -15,9 +15,6 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-/**
- * Created by Tim on 4/18/2016.
- */
 final class MiscHelperMethods {
     private MiscHelperMethods () { // private constructor
     }
@@ -68,7 +65,7 @@ final class MiscHelperMethods {
         }
     }
 
-    private static View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
+    private final static View.OnClickListener cancel_button_click_listener = new View.OnClickListener() {
         public void onClick(View v) {
             pw.dismiss();
             Log.d("", "Pop up window dismissed");

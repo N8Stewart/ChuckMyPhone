@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         subMenu.getItem(2).setChecked(false);
     }
 
-    private Runnable updateGPSRequestRunnable = new Runnable() {
+    private final Runnable updateGPSRequestRunnable = new Runnable() {
         @Override
         public void run() {
             // runnable run to keep trying to request gps location until gps is enabled
