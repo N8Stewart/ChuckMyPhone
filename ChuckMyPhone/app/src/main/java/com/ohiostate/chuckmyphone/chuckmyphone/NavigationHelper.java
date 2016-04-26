@@ -49,6 +49,7 @@ public class NavigationHelper {
         fragmentTagsToMenuID.put("Settings", 5);
         fragmentTagsToMenuID.put("About", 6);
         fragmentTagsToMenuID.put("Change Password", 7);
+        fragmentTagsToMenuID.put("Tips", 8);
         fragmentTagsToID.put("Chuck My Phone", R.id.menu_hamburger_item_chuck);
         fragmentTagsToID.put("Drop My Phone", R.id.menu_hamburger_item_drop);
         fragmentTagsToID.put("Spin My Phone", R.id.menu_hamburger_item_spin);
@@ -57,6 +58,7 @@ public class NavigationHelper {
         fragmentTagsToID.put("Change Password", R.id.menu_dot_item_change_password);
         fragmentTagsToID.put("About", R.id.menu_dot_item_about);
         fragmentTagsToID.put("Settings", R.id.menu_dot_item_settings);
+        fragmentTagsToID.put("Tips", R.id.menu_dot_item_tips);
     }
 
     public static int translateMenuIDToSubMenuID(int id){
@@ -93,6 +95,9 @@ public class NavigationHelper {
                 break;
             case 7:
                 resultantFragment = ChangePasswordFragment.newInstance();
+                break;
+            case 8:
+                resultantFragment = TipsFragment.newInstance();
                 break;
             default:
                 break;

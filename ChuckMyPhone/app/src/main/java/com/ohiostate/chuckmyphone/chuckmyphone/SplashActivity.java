@@ -24,8 +24,6 @@ public class SplashActivity extends AppCompatActivity {
         b.initializeDescriptionMappings(getApplicationContext());
         b.initializeDrawableMappings(getApplicationContext());
         MiscHelperMethods.initializeUserNavigationTracking();
-        LoginActivity.setLoginFromNewUserScreen(false);
-
 
         Log.d(TAG, "onCreate() called");
 

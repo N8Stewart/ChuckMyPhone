@@ -24,6 +24,8 @@ public class LeaderboardsFragment extends Fragment {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    private final int MAX_NUM_LEADERBOARD_ENTRIES_DISPLAYED = 100;
+
     private OnFragmentInteractionListener mListener;
 
     private static final int earthRadius = 6371;
@@ -121,7 +123,7 @@ public class LeaderboardsFragment extends Fragment {
                     if (distanceOption.equals("Global")) {
                         for (int i = 0; i < records.size(); i++) {
                             //don't have more than 100 entries
-                            if (i > 99) {
+                            if (i > MAX_NUM_LEADERBOARD_ENTRIES_DISPLAYED - 1) {
                                 break;
                             }
                             addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v);
@@ -153,7 +155,7 @@ public class LeaderboardsFragment extends Fragment {
                                 score = record.score;
                             }
                             //don't have more than 100 entries
-                            if (i > 99) {
+                            if (i > MAX_NUM_LEADERBOARD_ENTRIES_DISPLAYED - 1) {
                                 break;
                             }
                         }

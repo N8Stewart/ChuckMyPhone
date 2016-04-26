@@ -70,9 +70,9 @@ public class FirebaseHelper {
             badgeList.add(new Badge(c.getString(R.string.badge_one_percent)));
             badgeList.add(new Badge(c.getString(R.string.badge_hidden)));
 
-            bestChuckRecord = new CompeteRecord(competitionType.CHUCK, username);
-            bestSpinRecord = new CompeteRecord(competitionType.SPIN, username);
-            bestDropRecord = new CompeteRecord(competitionType.DROP, username);
+            bestChuckRecord = new CompeteRecord(username);
+            bestSpinRecord = new CompeteRecord(username);
+            bestDropRecord = new CompeteRecord(username);
         }
     }
 
@@ -80,22 +80,19 @@ public class FirebaseHelper {
         public final long score;
         public final double longitude;
         public final double latitude;
-        public final competitionType competition;
         public final String username;
 
-        public CompeteRecord(competitionType competition, String username) {
+        public CompeteRecord(String username) {
             this.score = 0;
             this.longitude = 0.0;
             this.latitude = 0.0;
-            this.competition = competition;
             this.username = username;
         }
 
-        public CompeteRecord(long score, double latitude, double longitude, competitionType competition, String username) {
+        public CompeteRecord(long score, double latitude, double longitude, String username) {
             this.score = score;
             this.longitude = longitude;
             this.latitude = latitude;
-            this.competition = competition;
             this.username = username;
         }
     }
@@ -302,7 +299,7 @@ public class FirebaseHelper {
                 int score = i;
                 int latitude = 0;
                 double longitude = 2;
-                myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, username), score);
+                myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
             }
         }
     }
@@ -312,21 +309,21 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         String username = CurrentUser.getInstance().getUsername();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK, username), score);
+        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addSpinScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.SPIN, CurrentUser.getInstance().getUsername()), score);
+        myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addDropScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, competitionType.DROP, CurrentUser.getInstance().getUsername()), score);
+        myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
     }
 
     void unlockBadge(String badgeName) {
@@ -382,7 +379,7 @@ public class FirebaseHelper {
                 String username = (String) subSnapshot.child("username").getValue();
                 double latitude = (double) subSnapshot.child("latitude").getValue();
                 double longitude = (double) subSnapshot.child("longitude").getValue();
-                chuckRecords.add(new CompeteRecord(score, latitude, longitude, competitionType.CHUCK,username));
+                chuckRecords.add(new CompeteRecord(score, latitude, longitude,username));
             }
 
             CurrentUser.getInstance().updateGlobalChuckLeaderboard(chuckRecords);
@@ -402,7 +399,7 @@ public class FirebaseHelper {
                 String username = (String) subSnapshot.child("username").getValue();
                 double latitude = (double) subSnapshot.child("latitude").getValue();
                 double longitude = (double) subSnapshot.child("longitude").getValue();
-                spinRecords.add(new CompeteRecord(score, latitude, longitude, competitionType.SPIN, username));
+                spinRecords.add(new CompeteRecord(score, latitude, longitude, username));
             }
 
             CurrentUser.getInstance().updateGlobalSpinLeaderboard(spinRecords);
@@ -422,7 +419,7 @@ public class FirebaseHelper {
                 String username = (String) subSnapshot.child("username").getValue();
                 double latitude = (double) subSnapshot.child("latitude").getValue();
                 double longitude = (double) subSnapshot.child("longitude").getValue();
-                dropRecords.add(new CompeteRecord(score, latitude, longitude, competitionType.DROP, username));
+                dropRecords.add(new CompeteRecord(score, latitude, longitude, username));
             }
 
             CurrentUser.getInstance().updateGlobalDropLeaderboard(dropRecords);

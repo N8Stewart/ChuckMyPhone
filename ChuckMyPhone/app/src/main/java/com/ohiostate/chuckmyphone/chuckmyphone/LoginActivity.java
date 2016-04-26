@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +16,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private static boolean loginFromNewUserScreen;
-
-    private boolean actionPending;
-
     // Views
     private Button newUserButton;
     private Button loginButton;
@@ -28,7 +25,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private TextView forgotPasswordTextView;
 
-    private Toast loggingInToast;
+    private ProgressDialog loggingInDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +33,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         Log.d(TAG, "onCreate() called");
-
-        actionPending = false;
-
-        loggingInToast = Toast.makeText(this.getApplicationContext(), "Logging in, please wait...", Toast.LENGTH_SHORT);
 
         if (SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
             attemptLogin(SharedPreferencesHelper.getEmail(getApplicationContext()),
@@ -89,24 +82,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         Intent intent;
+        switch (v.getId()) {
+            case R.id.login_login_button:
+                attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
+                break;
+            case R.id.login_forgot_password_textview:
+                intent = new Intent(getApplication(), ForgotPasswordActivity.class);
+                startActivity(intent);
 
-        if (!actionPending) {
-            switch (v.getId()) {
-                case R.id.login_login_button:
-                    attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
-                    break;
-                case R.id.login_forgot_password_textview:
-                    intent = new Intent(getApplication(), ForgotPasswordActivity.class);
-                    startActivity(intent);
-
-                    break;
-                default: //new user button case
-                    intent = new Intent(getApplication(), NewUserActivity.class);
-                    startActivity(intent);
-                    break;
-            }
-        } else {
-            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_SHORT).show();
+                break;
+            default: //new user button case
+                intent = new Intent(getApplication(), NewUserActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -115,13 +103,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (MiscHelperMethods.isNetworkAvailable(this)) {
             if (!email.equals("")) {
                 if (!password.equals("")) {
-                    actionPending = true;
-                    if (!loginFromNewUserScreen) {
-                        loggingInToast.show();
-                    }
+
+                    loggingInDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in, please wait...\nIf this takes a while, check your internet connection", true);
+
                     boolean firebaseWasLoaded = FirebaseHelper.getInstance().login(email, password, this);
                     if (!firebaseWasLoaded) {
-                        actionPending = false;
                         Toast.makeText(this.getApplicationContext(), "App is still loading, please try to login again in a second", Toast.LENGTH_SHORT).show();
                     }
                 } else {
@@ -138,7 +124,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     void onSuccessfulLogin(String email, String password, String userID) {
-        loggingInToast.cancel();
         if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
             CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
         }
@@ -160,7 +145,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         CurrentUser.getInstance().loadUserLocation(SharedPreferencesHelper.getLatitude(getApplicationContext()),
                 SharedPreferencesHelper.getLongitude(getApplicationContext()));
 
-        actionPending = false;
+        loggingInDialog.cancel();
 
         this.startActivity(new Intent(this.getApplication(), MainActivity.class));
         finish();
@@ -168,13 +153,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
     void onUnsuccessfulLogin(String error) {
-        loggingInToast.cancel();
+        loggingInDialog.cancel();
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
-        actionPending = false;
-    }
-
-    public static void setLoginFromNewUserScreen(boolean value) {
-        loginFromNewUserScreen = value;
     }
 }

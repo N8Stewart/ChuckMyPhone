@@ -25,9 +25,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     // Views
-    private Button creditsButton;
     private TextView termsOfService;
-    private TextView randomizedTip;
+    private Button creditsButton;
 
     public static AboutFragment newInstance() {
         return new AboutFragment();
@@ -56,8 +55,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         creditsButton = (Button) view.findViewById(R.id.about_credits_button);
         creditsButton.setOnClickListener(this);
 
-        randomizedTip = (TextView) view.findViewById(R.id.about_random_tip_textview);
-        randomizedTip.setText(getRandomTip());
     }
 
     @Override
@@ -97,19 +94,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
                 break;
         }
-    }
-
-    private String getRandomTip() {
-        Resources res = getResources();
-        String[] randomTips = res.getStringArray(R.array.about_random_tips);
-
-        Random r = new Random();
-        r.setSeed(System.currentTimeMillis());
-        int val = r.nextInt(randomTips.length);
-
-        String tip = randomTips[val];
-
-        return tip;
     }
 
     @Override

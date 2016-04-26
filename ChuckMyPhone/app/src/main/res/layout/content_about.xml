@@ -20,52 +20,44 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-        android:text="Tips:"
+        android:text="About This App\n"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="For better chuck scores, try throwing your phone into a pillow as hard as you can" />
+        android:text="Feel free to check out the code behind the project at\nhttp://github.com/timtaylorosu16/ChuckMyPhone\n\n" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:visibility="invisible" />
+        android:text="This app was made to be free for you, but this app does cost money to maintain. Please consider supporting it.\n" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="For better spin scores, try to flip your phone across all axis of orientation" />
+        android:text="If you donate, you receive in-app benefits:\n" />
+
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:visibility="invisible" />
+        android:text="$0.01 Donation - Bronze star by name on leaderboard" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="For better drop scores, make sure you drop from as high as possible, and allow the phone to come to a complete stop before picking it up" />
+        android:text="$1.00 Donation - Silver star by name on leaderboard" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
-        android:visibility="invisible" />
+        android:text="$5.00 Donation - Gold star by name on leaderboard" />
 
     <TextView
-        android:id="@+id/about_random_tip_textview"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Random tip" />
-
-    <TextView
-        android:layout_width="43dp"
-        android:layout_height="0dp"
-        android:layout_weight="0.48" />
+        android:text="$10.00 Donation - Rainbow shooting star by name" />
 
     <Button
         android:id="@+id/about_credits_button"

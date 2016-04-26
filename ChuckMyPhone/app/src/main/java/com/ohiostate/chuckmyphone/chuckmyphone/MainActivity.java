@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ProfileFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
-        ChangePasswordFragment.OnFragmentInteractionListener {
+        ChangePasswordFragment.OnFragmentInteractionListener,
+        TipsFragment.OnFragmentInteractionListener {
 
     private static final long GPS_THREAD_SLEEP_TIME = 4000;
 
@@ -114,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Class fragmentClass = null;
 
+        //null object ref on int?
         if((int)NavigationHelper.getInstance().lastFragmentIDChoice() != id) {
             switch (id) {
                 case R.id.menu_dot_item_about:
@@ -123,6 +125,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case R.id.menu_dot_item_change_password:
                     fragmentClass = ChangePasswordFragment.class;
                     nextFragmentTag = "Change Password";
+                    break;
+                case R.id.menu_dot_item_tips:
+                    fragmentClass = TipsFragment.class;
+                    nextFragmentTag = "Tips";
                     break;
                 case R.id.menu_dot_item_settings:
                     fragmentClass = SettingsFragment.class;

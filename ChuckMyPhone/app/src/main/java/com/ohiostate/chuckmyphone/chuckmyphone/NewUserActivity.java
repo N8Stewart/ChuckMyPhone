@@ -1,5 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,8 +20,6 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     private final String TAG = this.getClass().getSimpleName();
 
-    private boolean actionPending;
-
     private FirebaseHelper firebaseHelper;
 
     // Views
@@ -34,16 +33,12 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private EditText passwordConfirmationEditText;
     private EditText emailEditText;
 
-    private Toast creatingAccountToast;
+    ProgressDialog creatingAccountLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_user);
-
-        actionPending = false;
-
-        creatingAccountToast = Toast.makeText(this.getApplicationContext(), "Creating Account...", Toast.LENGTH_SHORT);
 
         firebaseHelper = FirebaseHelper.getInstance();
         Log.d(TAG, "onCreate() called");
@@ -73,29 +68,25 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (!actionPending) {
-            switch (v.getId()) {
-                case R.id.new_user_sign_up_button:
-                    if (isReadyToCreateAccount()) {
-                        //Account creation works asynchronously
-                        //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
-                        actionPending = true;
-                        createUserData();
-                    }
-                    break;
-                case R.id.new_user_cancel_button:
-                    startActivity(new Intent(getApplication(), LoginActivity.class));
-                    finish();
-                    break;
-                case R.id.new_user_terms_of_service_text :
-                    Uri uri = Uri.parse(this.getApplicationContext().getString(R.string.terms_of_service));
-                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                    startActivity(intent);
-                default:
-                    break;
-            }
-        } else {
-            Toast.makeText(this.getApplicationContext(), "Loading your previous request, please wait", Toast.LENGTH_SHORT).show();
+
+        switch (v.getId()) {
+            case R.id.new_user_sign_up_button:
+                if (isReadyToCreateAccount()) {
+                    //Account creation works asynchronously
+                    //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
+                    createUserData();
+                }
+                break;
+            case R.id.new_user_cancel_button:
+                startActivity(new Intent(getApplication(), LoginActivity.class));
+                finish();
+                break;
+            case R.id.new_user_terms_of_service_text :
+                Uri uri = Uri.parse(this.getApplicationContext().getString(R.string.terms_of_service));
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            default:
+                break;
         }
     }
 
@@ -140,7 +131,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         String password = passwordEditText.getText().toString();
         String email = emailEditText.getText().toString();
 
-        creatingAccountToast.show();
+        //creatingAccountToast.show();
+        creatingAccountLoadingDialog = ProgressDialog.show(NewUserActivity.this, "", "Loading, please wait...", true);
 
         //Deal with Firebase user creation
         firebaseHelper.createUser(email, password, username, this);
@@ -148,25 +140,20 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
     //called by Firebase helper when an account is successfully created. Don't call from anywhere else
     void accountWasCreated() {
-        creatingAccountToast.cancel();
-
         //update shared preferences
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
         SharedPreferencesHelper.createSharedPreferencesData(this, emailEditText.getText().toString(), passwordConfirmationEditText.getText().toString(), usernameEditText.getText().toString());
-        actionPending = false;
-        LoginActivity.setLoginFromNewUserScreen(true);
 
         //account was created successfully, navigate back to login page
-        Toast.makeText(this.getApplicationContext(), "Account was successfully created, logging in now!", Toast.LENGTH_SHORT).show();
+        creatingAccountLoadingDialog.cancel();
         this.startActivity(new Intent(this.getApplication(), LoginActivity.class));
     }
 
     //called by Firebase helper when an account is not successfully created. Don't call from anywhere else
     void accountWasNotCreated(String error) {
-        creatingAccountToast.cancel();
+        creatingAccountLoadingDialog.cancel();
 
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
-        actionPending = false;
     }
 
     private boolean isValidUsername(String username) {
