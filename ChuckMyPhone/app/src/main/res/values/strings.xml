@@ -47,7 +47,6 @@
     <string name="action_logout">Logout</string>
     <string name="title_menu_competitions">Competitions</string>
     <string name="action_drop">Drop my phone</string>
-    <string name="action_tips">Tips</string>
     <string name="action_spin">Spin my phone</string>
     <string name="action_chuck">Chuck my phone</string>
     <string name="action_leaderboards">Leaderboards</string>
