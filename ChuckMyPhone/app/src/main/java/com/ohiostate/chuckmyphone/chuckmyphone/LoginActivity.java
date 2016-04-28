@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (MiscHelperMethods.isNetworkAvailable(this)) {
             if (!email.equals("")) {
                 if (!password.equals("")) {
-
                     loggingInDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in, please wait...\nIf this takes a while, check your internet connection", true);
 
                     boolean firebaseWasLoaded = FirebaseHelper.getInstance().login(email, password, this);

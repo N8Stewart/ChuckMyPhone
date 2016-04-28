@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -19,8 +20,17 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class LeaderboardsFragment extends Fragment {
+
+    public enum Star_icon_names {
+        none,
+        bronze,
+        silver,
+        gold,
+        shooting
+    };
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -91,7 +101,7 @@ public class LeaderboardsFragment extends Fragment {
         //needs a final declaration to be used in listener
         final View v = view;
 
-        AdapterView.OnItemSelectedListener filterResults = new AdapterView.OnItemSelectedListener() {
+        final AdapterView.OnItemSelectedListener filterResults = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 //clear leaderboard entries to make room for new entries
@@ -126,7 +136,10 @@ public class LeaderboardsFragment extends Fragment {
                             if (i > MAX_NUM_LEADERBOARD_ENTRIES_DISPLAYED - 1) {
                                 break;
                             }
-                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v);
+
+                            Star_icon_names starName = FirebaseHelper.getInstance().getStarStatusOfUser(records.get(i).username);
+
+                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v,starName);
                             if (CurrentUser.getInstance().getUsername().equals(records.get(i).username)) {
                                 rank = i + 1;
                                 score = records.get(i).score;
@@ -148,7 +161,7 @@ public class LeaderboardsFragment extends Fragment {
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;
-                                addEntryToLeaderboard(i, record.username, record.score, v);
+                                addEntryToLeaderboard(i, record.username, record.score, v, FirebaseHelper.getInstance().getStarStatusOfUser(record.username));
                             }
                             if (CurrentUser.getInstance().getUsername().equals(record.username)) {
                                 rank = i;
@@ -162,9 +175,9 @@ public class LeaderboardsFragment extends Fragment {
 
                     }
                     if (rank == -1) {
-                        addUserStaticRankToLeaderboard("N/A", CurrentUser.getInstance().getUsername(), 0 + "", v);
+                        addUserStaticRankToLeaderboard("N/A", CurrentUser.getInstance().getUsername(), 0 + "", v, FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername()));
                     } else {
-                        addUserStaticRankToLeaderboard(rank + "", CurrentUser.getInstance().getUsername(), score + "", v);
+                        addUserStaticRankToLeaderboard(rank + "", CurrentUser.getInstance().getUsername(), score + "", v, FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername()));
                     }
 
                     checkToUnlockOnePercentBadge(rank);
@@ -219,7 +232,7 @@ public class LeaderboardsFragment extends Fragment {
         return d * conversion;
     }
 
-    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view) {
+    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view, Star_icon_names star_names) {
         TableLayout leaderboardUserRecordTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
 
         TableRow userRow = new TableRow(getActivity());
@@ -249,12 +262,30 @@ public class LeaderboardsFragment extends Fragment {
 
         userRow.addView(leaderboardRank);
         userRow.addView(leaderboardName);
+
+        if (star_names != Star_icon_names.none) {
+            int iconID;
+            if (star_names == Star_icon_names.bronze) {
+                iconID = R.drawable.bronze_star_icon;
+            } else if (star_names == Star_icon_names.silver) {
+                iconID = R.drawable.silver_star_icon;
+            } else if (star_names == Star_icon_names.gold) {
+                iconID = R.drawable.gold_star_icon;
+            } else { //shooting star
+                iconID = R.drawable.shooting_star_icon;
+            }
+            ImageView starImageView = new ImageView(getActivity());
+            starImageView.setImageResource(iconID);
+
+            userRow.addView(starImageView);
+        }
+
         userRow.addView(leaderboardScore);
 
         leaderboardUserRecordTable.addView(userRow);
     }
 
-    private void addEntryToLeaderboard(int rank, String name, long score, View view) {
+    private void addEntryToLeaderboard(int rank, String name, long score, View view, Star_icon_names star_names) {
         leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
 
         TableRow leaderboardRow = new TableRow(getActivity());
@@ -284,6 +315,24 @@ public class LeaderboardsFragment extends Fragment {
 
         leaderboardRow.addView(leaderboardRank);
         leaderboardRow.addView(leaderboardName);
+
+        if (star_names != Star_icon_names.none) {
+            int iconID;
+            if (star_names == Star_icon_names.bronze) {
+                iconID = R.drawable.bronze_star_icon;
+            } else if (star_names == Star_icon_names.silver) {
+                iconID = R.drawable.silver_star_icon;
+            } else if (star_names == Star_icon_names.gold) {
+                iconID = R.drawable.gold_star_icon;
+            } else { //shooting star
+                iconID = R.drawable.shooting_star_icon;
+            }
+            ImageView starImageView = new ImageView(getActivity());
+            starImageView.setImageResource(iconID);
+
+            leaderboardRow.addView(starImageView);
+        }
+
         leaderboardRow.addView(leaderboardScore);
 
         View dividerView = new View(getActivity());

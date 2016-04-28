@@ -46,6 +46,7 @@ public class FirebaseHelper {
         public final CompeteRecord bestDropRecord;
         public final CompeteRecord bestSpinRecord;
         public final String username;
+        public final LeaderboardsFragment.Star_icon_names starIconName;
 
         //TODO get users location here
 
@@ -73,6 +74,8 @@ public class FirebaseHelper {
             bestChuckRecord = new CompeteRecord(username);
             bestSpinRecord = new CompeteRecord(username);
             bestDropRecord = new CompeteRecord(username);
+
+            starIconName = LeaderboardsFragment.Star_icon_names.none;
         }
     }
 
@@ -354,6 +357,24 @@ public class FirebaseHelper {
             }
         }
         return hasBadge;
+    }
+
+    public LeaderboardsFragment.Star_icon_names getStarStatusOfUser(String username) {
+        LeaderboardsFragment.Star_icon_names iconName = LeaderboardsFragment.Star_icon_names.none;
+        for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
+            if (userSnapshot.child("username").getValue().equals(username)) {
+                iconName = LeaderboardsFragment.Star_icon_names.valueOf(userSnapshot.child("starIconName").getValue().toString());
+                break;
+            }
+        }
+        return iconName;
+    }
+
+    public void updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names starIconName) {
+        LeaderboardsFragment.Star_icon_names iconName = LeaderboardsFragment.Star_icon_names.none;
+        String userID = CurrentUser.getInstance().getUserId();
+
+        myFirebaseRef.child("users/"+userID + "/starIconName").setValue(starIconName.toString());
     }
 
     private void updateLeaderboard() {

@@ -92,6 +92,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
                 //FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard();
 
+                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.gold);
+
                 break;
         }
     }
