@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ohiostate.chuckmyphone.chuckmyphone.util.IabHelper;
+import com.ohiostate.chuckmyphone.chuckmyphone.util.IabResult;
+
 import java.util.Random;
 
 public class AboutFragment extends Fragment implements View.OnClickListener {
@@ -24,9 +27,18 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
+    private boolean inAppBillingReady;
+
     // Views
     private TextView termsOfService;
     private Button creditsButton;
+    private Button donateTier1Button;
+    private Button donateTier2Button;
+    private Button donateTier3Button;
+    private Button donateTier4Button;
+
+
+    IabHelper mHelper;
 
     public static AboutFragment newInstance() {
         return new AboutFragment();
@@ -36,6 +48,28 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
+
+        initializeInAppBilling();
+    }
+
+    //prepare for any possible user instigated purchases made
+    public void initializeInAppBilling() {
+        inAppBillingReady = false;
+
+        //TODO for the love of god obfuscate this before publishing or pushing on github
+        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA03QJhg9aRQQn9rzygBAiCqSGgRVe6PFG0XjxAcEik0EsbJkNANgAQwczEwdBkjOUXQMDvyHc0gZxPLRyIbXmFqMdrNhSQDWUighgWDbLAwK0h62hm0IDmZNBWM2XuSg5vutfeXzlIi7f+nhTWxUMtk4U881ThDSdZ7/q8YPmEjQF/hQZEoXq1qbod2V5tF1nXth1p4qQvew2bHUmyjvHFoMatk/N2tMZzuHqVJ8EoKqR+ip8vCdUnQqwyHw3kJq+V/37v2lvXnvIC5u5N/1QT+2IoKsQOAhhUCdxO10Ng6M/Rw/7DFYwB7URqHdnspJHGoywVZpQAS+y5oN8/sdoAQIDAQAB";
+        // compute your public key and store it in base64EncodedPublicKey
+        mHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
+        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+            public void onIabSetupFinished(IabResult result) {
+                if (!result.isSuccess()) {
+                    // Oh no, there was a problem.
+                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                }
+                // IAB is fully set up!
+                inAppBillingReady = true;
+            }
+        });
     }
 
     @Override
@@ -55,6 +89,15 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         creditsButton = (Button) view.findViewById(R.id.about_credits_button);
         creditsButton.setOnClickListener(this);
 
+        donateTier1Button = (Button) view.findViewById(R.id.about_donate_tier_1);
+        donateTier2Button = (Button) view.findViewById(R.id.about_donate_tier_2);
+        donateTier3Button = (Button) view.findViewById(R.id.about_donate_tier_3);
+        donateTier4Button = (Button) view.findViewById(R.id.about_donate_tier_4);
+
+        donateTier1Button.setOnClickListener(this);
+        donateTier2Button.setOnClickListener(this);
+        donateTier3Button.setOnClickListener(this);
+        donateTier4Button.setOnClickListener(this);
     }
 
     @Override
@@ -82,6 +125,34 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 Uri uri = Uri.parse(getContext().getString(R.string.terms_of_service));
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
+                break;
+            case R.id.about_donate_tier_1:
+                if (inAppBillingReady) {
+
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.about_donate_tier_2:
+                if (inAppBillingReady) {
+
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.about_donate_tier_3:
+                if (inAppBillingReady) {
+
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
+                }
+                break;
+            case R.id.about_donate_tier_4:
+                if (inAppBillingReady) {
+
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
                 Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
@@ -117,5 +188,18 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mHelper != null) {
+            try {
+                mHelper.dispose();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        mHelper = null;
     }
 }
