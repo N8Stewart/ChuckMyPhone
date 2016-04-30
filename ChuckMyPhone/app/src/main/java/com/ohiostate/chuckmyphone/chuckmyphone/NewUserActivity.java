@@ -15,8 +15,8 @@ import android.widget.Toast;
 
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private final int USERNAME_LENGTH_MIN = 3;
-    private final int USERNAME_LENGTH_MAX = 13;
+    public static final int USERNAME_LENGTH_MIN = 3;
+    public static int USERNAME_LENGTH_MAX = 13;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -156,7 +156,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
     }
 
-    private boolean isValidUsername(String username) {
+    public static boolean isValidUsername(String username) {
         boolean isValidUsername = true;
         for (int i = 0; i < username.length(); i++) {
             char c = username.charAt(i);

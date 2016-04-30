@@ -53,4 +53,34 @@
         android:text="@string/save"
         android:textColor="@color/colorWhite" />
 
+    <TextView
+        android:layout_width="47dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:singleLine="true"
+        android:layout_weight="0.35" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/settings_change_username_edit_text"
+        android:hint="New Username" />
+
+
+    <TextView
+        android:layout_width="47dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:singleLine="true"
+        android:layout_weight="0.10" />
+
+    <Button
+        android:layout_width="159dp"
+        android:layout_height="wrap_content"
+        android:text="@string/settings_change_username_button_locked"
+        android:id="@+id/settings_change_username_button"
+        android:textColor="@color/colorWhite"
+        android:background="@color/colorAccent"
+        android:layout_gravity="center" />
+
 </LinearLayout>

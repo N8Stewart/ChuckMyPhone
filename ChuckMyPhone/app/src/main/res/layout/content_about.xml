@@ -23,6 +23,15 @@
         android:text="About This App\n"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <Button
+        android:id="@+id/about_credits_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Credits"
+        android:layout_marginBottom="20dp"
+        />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,29 +51,22 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$0.01 Donation - Bronze star by name on leaderboard" />
+        android:text="$0.01 - Bronze star by name on leaderboard" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$1.00 Donation - Silver star by name on leaderboard" />
+        android:text="$1.00 - Silver star by name on leaderboard" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$5.00 Donation - Gold star by name on leaderboard" />
+        android:text="$5.00 - Gold star by name, change password freely" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="$10.00 Donation - Rainbow shooting star by name" />
-
-    <Button
-        android:id="@+id/about_credits_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Credits" />
+        android:text="$10.00 - Rainbow shooting star by name, change password freely, can use special characters in username" />
 
     <TextView
         android:id="@+id/about_terms_of_service_textview"

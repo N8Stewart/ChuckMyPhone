@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
@@ -18,8 +19,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
+    private boolean hasUnlockedUsernameChange;
+
     // Views
     private Button saveButton;
+    private Button changeUsernameButton;
+
+    private EditText changeUsernameEditText;
 
     private CheckBox soundEnabledCheckbox;
     private CheckBox goofySoundEnabledCheckbox;
@@ -34,6 +40,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
+        hasUnlockedUsernameChange = FirebaseHelper.getInstance().hasUnlockedChangingUsername();
     }
 
     @Override
@@ -60,6 +67,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         saveButton = (Button) view.findViewById(R.id.settings_save_button);
         saveButton.setOnClickListener(this);
+
+        changeUsernameEditText = (EditText) view.findViewById(R.id.settings_change_username_edit_text);
+
+        changeUsernameButton = (Button) view.findViewById(R.id.settings_change_username_button);
+        changeUsernameButton.setOnClickListener(this);
+
+        if (hasUnlockedUsernameChange) {
+            changeUsernameButton.setText(getString(R.string.settings_change_username_button_unlocked));
+        }
 
         if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_hidden))) {
             goofySoundEnabledCheckbox.setVisibility(View.INVISIBLE);
@@ -91,6 +107,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 saveSettings();
                 Toast.makeText(getActivity().getApplicationContext(), "Saved successfully!", Toast.LENGTH_LONG).show();
                 getActivity().onBackPressed();
+                break;
+            case R.id.settings_change_username_button:
+                String proposedUsername = changeUsernameEditText.getText().toString();
+                if (attemptToChangePassword(proposedUsername)) {
+                    getActivity().onBackPressed();
+                }
             default:
                 break;
         }
@@ -117,6 +139,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         SharedPreferencesHelper.setGoofySoundEnabled(getActivity().getApplicationContext(), goofySoundEnabledCheckbox.isChecked());
     }
 
+    private void changeUsername(String username) {
+        CurrentUser.getInstance().assignUsername(username);
+        FirebaseHelper.getInstance().changeUsername(username);
+        Toast.makeText(getActivity().getApplicationContext(), "Username changed!", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -136,5 +164,40 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     public interface OnFragmentInteractionListener {
         void onFragmentInteraction(Uri uri);
+    }
+
+    //return true if password was changed
+    public boolean attemptToChangePassword(String proposedUsername) {
+        if (hasUnlockedUsernameChange) {
+            if (!proposedUsername.equals("")) {
+                if (!proposedUsername.equals(CurrentUser.getInstance().getUsername())) {
+                    if (FirebaseHelper.getInstance().hasUnlockedSpecialCharactersInUsername() || NewUserActivity.isValidUsername(proposedUsername)) {
+                        if (proposedUsername.length() >= NewUserActivity.USERNAME_LENGTH_MIN && proposedUsername.length() <= NewUserActivity.USERNAME_LENGTH_MAX) {
+                            if (MiscHelperMethods.isNetworkAvailable(getActivity())) {
+                                if (FirebaseHelper.getInstance().isUsernameAvailable(proposedUsername)) {
+                                    changeUsername(proposedUsername);
+                                    return true;
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), "Username is taken, please try another", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getActivity().getApplicationContext(), "No internet available, check your internet connection and try again", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity().getApplicationContext(), "Username must be between " + NewUserActivity.USERNAME_LENGTH_MIN + " and " + NewUserActivity.USERNAME_LENGTH_MAX + " characters long", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "Only letters and numbers are allowed in a username", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "That's already your username, you goofball", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Please enter a new username", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "You have not unlocked this feature, see the about page for details on how", Toast.LENGTH_LONG).show();
+        }
+        return false;
     }
 }

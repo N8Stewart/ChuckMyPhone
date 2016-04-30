@@ -154,6 +154,21 @@ public class FirebaseHelper {
         return usernameIsAvailable;
     }
 
+    public void changeUsername(String newUsername) {
+        String userID = CurrentUser.getInstance().getUserId();
+
+        //change username in the chuck, spin and drop records
+        String[] competeRecordStrings = {"ChuckScores/", "SpinScores/", "DropScores/"};
+        for (String competeRecordString : competeRecordStrings) {
+            if (dataSnapshot.hasChild(competeRecordString + userID)) {
+                myFirebaseRef.child(competeRecordString + userID + "/username").setValue(newUsername);
+            }
+        }
+
+        //change username in the users records
+        myFirebaseRef.child("users/" + userID + "/username").setValue(newUsername);
+    }
+
     public boolean login(String email, String password, LoginActivity activity) {
         loginActivity = activity;
         loginEmail = email;
@@ -368,6 +383,16 @@ public class FirebaseHelper {
             }
         }
         return iconName;
+    }
+
+    public boolean hasUnlockedChangingUsername() {
+        LeaderboardsFragment.Star_icon_names starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        return (starStatus == LeaderboardsFragment.Star_icon_names.gold || starStatus == LeaderboardsFragment.Star_icon_names.shooting);
+    }
+
+    public boolean hasUnlockedSpecialCharactersInUsername() {
+        LeaderboardsFragment.Star_icon_names starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        return (starStatus == LeaderboardsFragment.Star_icon_names.shooting);
     }
 
     public void updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names starIconName) {
