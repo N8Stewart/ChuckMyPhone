@@ -18,7 +18,7 @@ public class CompeteSpinFragment extends CompeteFragment {
     private MediaPlayer spinSound;
 
     private final int SCORE_THRESHOLD_FOR_SOUND = 2500;
-    private final String TUTORIAL_TEXT = "Click the arrow to begin, then spin your phone!";
+    private final String TUTORIAL_TEXT = "Click the arrow, then spin your phone!";
 
     public static CompeteSpinFragment newInstance() {
         CompeteSpinFragment fragment = new CompeteSpinFragment();

@@ -1,6 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import com.firebase.client.AuthData;
@@ -376,10 +377,12 @@ public class FirebaseHelper {
 
     public LeaderboardsFragment.Star_icon_names getStarStatusOfUser(String username) {
         LeaderboardsFragment.Star_icon_names iconName = LeaderboardsFragment.Star_icon_names.none;
-        for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
-            if (userSnapshot.child("username").getValue().equals(username)) {
-                iconName = LeaderboardsFragment.Star_icon_names.valueOf(userSnapshot.child("starIconName").getValue().toString());
-                break;
+        if (dataSnapshot != null) {
+            for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
+                if (userSnapshot.child("username").getValue().equals(username)) {
+                    iconName = LeaderboardsFragment.Star_icon_names.valueOf(userSnapshot.child("starIconName").getValue().toString());
+                    break;
+                }
             }
         }
         return iconName;

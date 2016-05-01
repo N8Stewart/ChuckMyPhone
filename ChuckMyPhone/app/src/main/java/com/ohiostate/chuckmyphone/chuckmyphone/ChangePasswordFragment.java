@@ -88,28 +88,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         if (!actionPending) {
             switch (v.getId()) {
                 case R.id.change_password_confirm_button:
-                    if (MiscHelperMethods.isNetworkAvailable(getActivity())) {
-                        if (newPasswordEditText.getText().toString().equals(newPasswordConfirmationEditText.getText().toString())) {
-                            //TODO
-                            //is it bad to use the shared preferences as the check here for the password?
-                            if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).
-                                    equals(oldPasswordEditText.getText().toString())) {
-                                Toast.makeText(getActivity().getApplicationContext(), "Sending email, please wait", Toast.LENGTH_SHORT).show();
-                                actionPending = true;
-
-                                SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(),
-                                        newPasswordConfirmationEditText.getText().toString());
-                                FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
-                                        oldPasswordEditText.getText().toString(), newPasswordConfirmationEditText.getText().toString(), this);
-                            } else {
-                                Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getActivity().getApplicationContext(), "Your new password entries don't match, please re-type them", Toast.LENGTH_LONG).show();
-                        }
-                    } else {
-                        Toast.makeText(getActivity().getApplicationContext(), "Cannot change password when you have no internet", Toast.LENGTH_LONG).show();
-                    }
+                    attemptChangePassword();
                     break;
                 default:
                     getActivity().onBackPressed();
@@ -120,14 +99,45 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
         }
     }
 
+    private boolean attemptChangePassword() {
+        String oldPassword = oldPasswordEditText.getText().toString();
+        String newPassword = newPasswordEditText.getText().toString();
+        String newPasswordConfirmation = newPasswordConfirmationEditText.getText().toString();
+        if (MiscHelperMethods.isNetworkAvailable(getActivity())) {
+            if (!newPasswordConfirmation.equals("") && !newPassword.equals("")) {
+                if (newPassword.equals(newPasswordConfirmation)) {
+                    if (SharedPreferencesHelper.getPassword(getActivity().getApplicationContext()).equals(oldPassword)) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Changing password, please wait", Toast.LENGTH_SHORT).show();
+                        actionPending = true;
+
+                        SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(), newPasswordConfirmation);
+                        FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
+                                oldPassword, newPasswordConfirmation, this);
+                        return true;
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Your new password entries don't match, please re-type them", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Please enter your new password", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "Cannot change password when you have no internet", Toast.LENGTH_LONG).show();
+        }
+        return false;
+    }
+
     public void onSuccessfulPasswordChange() {
         Toast.makeText(getActivity().getApplicationContext(), "Password was changed!", Toast.LENGTH_LONG).show();
         SharedPreferencesHelper.clearSharedData(getActivity().getApplicationContext());
 
         actionPending = false;
 
-        //jump to chuck compete fragment, might be a better way to do this
-        startActivity(new Intent(getActivity().getApplication(), MainActivity.class));
+        //startActivity(new Intent(getActivity().getApplication(), MainActivity.class));
+        getActivity().onBackPressed();
+
     }
 
     public void onUnsuccessfulPasswordChange(FirebaseError firebaseError) {

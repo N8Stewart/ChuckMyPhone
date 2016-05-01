@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class CompeteDropFragment extends CompeteFragment {
     private final float FALLING_MAX_ACCELERATION = 4.0f;
 
-    private final String TUTORIAL_TEXT = "Click the arrow to begin, then drop your phone!";
+    private final String TUTORIAL_TEXT = "Click the arrow, then drop your phone!";
 
     private double acceleration;
     private boolean isFalling;

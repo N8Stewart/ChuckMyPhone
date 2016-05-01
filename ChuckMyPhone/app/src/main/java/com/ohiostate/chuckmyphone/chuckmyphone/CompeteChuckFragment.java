@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 public class CompeteChuckFragment extends CompeteFragment {
-    private final String TUTORIAL_TEXT = "Click the arrow to begin, then chuck your phone!";
+    private final String TUTORIAL_TEXT = "Click the arrow, then chuck your phone!";
     private final int SCORE_THRESHOLD_FOR_SOUND = 1500;
 
     private MediaPlayer chuckSound;
