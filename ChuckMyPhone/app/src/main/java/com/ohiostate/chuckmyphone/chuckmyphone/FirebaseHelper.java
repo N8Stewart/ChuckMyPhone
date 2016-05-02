@@ -310,17 +310,14 @@ public class FirebaseHelper {
         addDropScoreToLeaderboard(score, latitude, longitude);
     }
 
-    protected void addFakeChuckScoresToLeaderboard() {
-        for (int j = 0; j < 1; j++) {
-            for (int i = 0; i < 100; i++) {
-                String userID = "userGlob"+j+"_"+ i;
-                String username = "usernameGlob"+j+"_"+ i;
-                int score = i;
-                int latitude = 0;
-                double longitude = 2;
-                myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
-            }
-        }
+    protected void addFakeChuckScoresToLeaderboard(String userID, String username, int score) {
+        //String userID = "1";
+        //String username = "bob";
+        //int score = 600;
+
+        int latitude = 0;
+        double longitude = 0;
+        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier

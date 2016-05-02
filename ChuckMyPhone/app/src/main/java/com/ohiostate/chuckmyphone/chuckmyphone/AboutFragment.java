@@ -53,7 +53,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         Log.d(TAG, "onCreate() called");
 
         //TODO remove this later
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("1", "Bob", 600);
+        /*FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("1", "Bob", 600);
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("2", "Jill", 700);
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("3", "King", 770);
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("4", "DudeMan", 800);
@@ -64,7 +64,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("9", "SoccerMom", 920);
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("10", "CrimsonShin", 1000);
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("11", "WithFries", 650);
-
+        */
+        
         initializeInAppBilling();
     }
 
