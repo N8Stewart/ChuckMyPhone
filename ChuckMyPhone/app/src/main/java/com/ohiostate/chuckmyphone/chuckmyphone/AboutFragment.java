@@ -16,7 +16,10 @@ import android.widget.Toast;
 
 import com.ohiostate.chuckmyphone.chuckmyphone.util.IabHelper;
 import com.ohiostate.chuckmyphone.chuckmyphone.util.IabResult;
+import com.ohiostate.chuckmyphone.chuckmyphone.util.Inventory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class AboutFragment extends Fragment implements View.OnClickListener {
@@ -49,6 +52,19 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
 
+        //TODO remove this later
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("1", "Bob", 600);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("2", "Jill", 700);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("3", "King", 770);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("4", "DudeMan", 800);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("5", "BadMan88", 850);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("6", "WhoDey", 870);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("7", "CheeseFace", 890);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("8", "Number1Dad", 910);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("9", "SoccerMom", 920);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("10", "CrimsonShin", 1000);
+        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("11", "WithFries", 650);
+
         initializeInAppBilling();
     }
 
@@ -68,6 +84,19 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 }
                 // IAB is fully set up!
                 inAppBillingReady = true;
+
+                List additionalSkuList = new ArrayList();
+                additionalSkuList.add("tier_one_donation");
+                additionalSkuList.add("tier_two_donation");
+                additionalSkuList.add("tier_three_donation");
+                additionalSkuList.add("tier_four_donation");
+
+                //get prices asynchonously
+                try {
+                    mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryFinishedListener);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -135,7 +164,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.about_donate_tier_2:
                 if (inAppBillingReady) {
-
+                    //check if user already purchased this item
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
                 }
@@ -160,8 +189,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                     FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
                     MiscHelperMethods.initiatePopupWindow(getString(R.string.badge_hidden), this);
                 }
-
-                //FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard();
 
                 FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.gold);
 
@@ -202,4 +229,22 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         }
         mHelper = null;
     }
+
+    IabHelper.QueryInventoryFinishedListener mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
+        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
+        {
+            if (result.isFailure()) {
+                // handle error
+                return;
+            }
+
+            //String tierOnePrice = inventory.getSkuDetails("tier_one_donation").getPrice();
+            //String tierTwoPrice = inventory.getSkuDetails("tier_two_donation").getPrice();
+            //String tierThreePrice = inventory.getSkuDetails("tier_three_donation").getPrice();
+            //String tierFourPrice = inventory.getSkuDetails("tier_four_donation").getPrice();
+
+            // update the UI
+            String bob = "5";
+        }
+    };
 }
