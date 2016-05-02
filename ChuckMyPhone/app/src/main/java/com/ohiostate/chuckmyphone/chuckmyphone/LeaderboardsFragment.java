@@ -150,8 +150,11 @@ public class LeaderboardsFragment extends Fragment {
                         double targetDistance;
                         if (distanceOption.equals("Within 10 miles"))
                             targetDistance = 10.0;
-                        else
+                        else if (distanceOption.equals("Within 100 miles")) {
                             targetDistance = 100.0;
+                        } else {
+                            targetDistance = 1000.0;
+                        }
 
                         CurrentUser user = CurrentUser.getInstance();
                         int i = 0;

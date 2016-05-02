@@ -7,8 +7,9 @@
     <string name="action_settings">Settings</string>
     <string-array name="Radius_spinner_labels">
         <item>Global</item>
-        <item>Within 10 miles</item>
+        <item>Within 1000 miles</item>
         <item>Within 100 miles</item>
+        <item>Within 10 miles</item>
     </string-array>
     <string-array name="Competition_spinner_labels">
         <item>Chuck</item>
@@ -18,7 +19,6 @@
     <string-array name="about_random_tips">
         <item>"Make sure you tell your phone you love it before you ruthlessly throw it"</item>
         <item>"You might forget it after playing this for a while, but phones are used to call people too. Don't forget to call home every once and a while"</item>
-        <item>"Don't try to drop your phone on the moon. This app was designed for Earth use only"</item>
         <item>"This app is rated 'R' for radical, user discretion is advised"</item>
         <item>"While it may yield a very high score, don't use a blender to spin your phone"</item>
         <item>"If phones weren't meant to be chucked, they wouldn't fit so nicely in our hands"</item>
@@ -31,7 +31,7 @@
         <item>"If you have any problems with this app, please drop your phone anywhere outside and we will return it to you at our earliest convenience"</item>
         <item>"Try to chuck your phone into a soft surface like a pillow, your bed, or soft serve ice cream"</item>
         <item>"Don't worry about breaking your phone. Phones may be expensive, but entertainment is priceless"</item>
-        <item>"Don't tell your parents about this app. We only want cool kids playing it and grown ups are poopyheads"</item>
+        <item>"Don't tell your parents about this app. We only want cool kids playing it and grown ups are boogerfaces"</item>
         <item>"This app has a built in dating functionality. To use it, just throw your phone at someone you think is cute"</item>
         <item>"Please use this app irresponsibly"</item>
         <item>"Try to drop your phone onto a soft surface like a pile of clothes, a piece of rubber, or on your pet's tummy"</item>
