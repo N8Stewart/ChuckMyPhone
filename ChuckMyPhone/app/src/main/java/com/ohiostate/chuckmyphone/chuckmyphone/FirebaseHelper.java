@@ -420,7 +420,7 @@ public class FirebaseHelper {
         top100Drop.addListenerForSingleValueEvent(dropLeaderboardValueEventListener);
     }
 
-    double getPercentOfUsersEarnedBadge(String badgeName) {
+    int getPercentOfUsersEarnedBadge(String badgeName) {
         double numberUsersEarned = 0;
         int numberUsers = 0;
 
@@ -439,10 +439,10 @@ public class FirebaseHelper {
         }
 
         if (numberUsers == 0) {
-            return 0.0;
+            return 0;
         }
 
-        return 100.0*numberUsersEarned / numberUsers;
+        return (int) (100.0*numberUsersEarned / numberUsers);
     }
 
     private final ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
