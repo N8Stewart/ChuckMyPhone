@@ -67,12 +67,11 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
                 if (!result.isSuccess()) {
-                    // Oh no, there was a problem.
                     Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                } else {
+                    // IAB is fully set up!
+                    inAppBillingReady = true;
                 }
-                // IAB is fully set up!
-                inAppBillingReady = true;
-
                 List additionalSkuList = new ArrayList();
                 additionalSkuList.add("tier_one_donation");
                 additionalSkuList.add("tier_two_donation");
@@ -162,17 +161,15 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                     MiscHelperMethods.initiatePopupWindow(getString(R.string.badge_hidden), this);
                 }
 
-                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.gold);
-
                 break;
         }
     }
 
-    public void attemptToPlaceOrder(String orderTier) {
+    public void attemptToPlaceOrder(String orderSku) {
         if (inAppBillingReady) {
             if (inventoryLoaded) {
-                if (!userInventory.hasPurchase(orderTier)) {
-                    placeOrder(orderTier);
+                if (!userInventory.hasPurchase(orderSku)) {
+                    placeOrder(orderSku);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "You already bought this tier", Toast.LENGTH_LONG).show();
                 }
@@ -184,11 +181,11 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void placeOrder(String orderTier) {
+    private void placeOrder(String orderSku) {
         try {
             //need a string to uniquely identify who made order and what order was for record keeping
-            String uniqueIdentifier = CurrentUser.getInstance().getUserId() + "_tier_one_donation";
-            mHelper.launchPurchaseFlow(getActivity(), "tier_one_donation", 1, mPurchaseFinishedListener, uniqueIdentifier);
+            String uniqueIdentifier = CurrentUser.getInstance().getUserId() + "_" + orderSku;
+            mHelper.launchPurchaseFlow(getActivity(), orderSku, 1, mPurchaseFinishedListener, uniqueIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
