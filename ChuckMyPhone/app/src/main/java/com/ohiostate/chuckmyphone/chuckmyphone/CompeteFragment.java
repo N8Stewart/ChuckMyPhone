@@ -199,7 +199,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
             isRecording = false;
 
             //if a badge was unlocked during the run
-            if (badgeUnlockNames.size() != 0) {
+            if (badgeUnlockNames.size() != 0 && !MiscHelperMethods.userNavigatedAway) {
                 //to avoid concurrency issues, clone the list of badges to unlock
                 ArrayList<String> tempBadges = (ArrayList<String>) badgeUnlockNames.clone();
                 for (String badgeName : tempBadges) {
@@ -237,10 +237,12 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
         @Override
         public void run() {
-            if (isRecording) {
-                progressBar.setProgress(progress);
-            } else {
-                progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
+            if (!MiscHelperMethods.userNavigatedAway) {
+                if (isRecording) {
+                    progressBar.setProgress(progress);
+                } else {
+                    progressBar.setProgress(getContext().getResources().getInteger(R.integer.progress_bar_default));
+                }
             }
         }
     };

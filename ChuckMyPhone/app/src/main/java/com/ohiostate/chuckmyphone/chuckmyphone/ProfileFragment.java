@@ -85,7 +85,7 @@ public class ProfileFragment extends Fragment {
         badgeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String unlockPercentString = "\n\n"+FirebaseHelper.getInstance().getPercentOfUsersEarnedBadge(badge.getName())+ "% of users unlocked this badge";
+                String unlockPercentString = "\n\n"+FirebaseHelper.getInstance().getPercentOfUsersEarnedBadge(badge.getName())+ "% of users have unlocked this badge";
                 if (badge.unlocked()) {
                     Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription() + "\n\n" +"Date Earned: " + badge.getUnlockDate() + unlockPercentString, Toast.LENGTH_LONG).show();
                 } else {
