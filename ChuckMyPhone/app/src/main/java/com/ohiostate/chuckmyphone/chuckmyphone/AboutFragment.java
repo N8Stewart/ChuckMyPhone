@@ -53,20 +53,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
 
-        //TODO remove this later
-        /*FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("1", "Bob", 600);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("2", "Jill", 700);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("3", "King", 770);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("4", "DudeMan", 800);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("5", "BadMan88", 850);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("6", "WhoDey", 870);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("7", "CheeseFace", 890);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("8", "Number1Dad", 910);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("9", "SoccerMom", 920);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("10", "CrimsonShin", 1000);
-        FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("11", "WithFries", 650);
-        */
-
         initializeInAppBilling();
     }
 
@@ -205,6 +191,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             mHelper.launchPurchaseFlow(getActivity(), "tier_one_donation", 1, mPurchaseFinishedListener, uniqueIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
         }
     }
 
