@@ -38,8 +38,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_profile, container, false);
 
         ArrayList<Badge> badgeList = CurrentUser.getInstance().getBadgeList();
@@ -86,10 +85,11 @@ public class ProfileFragment extends Fragment {
         badgeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String unlockPercentString = "\n\n"+FirebaseHelper.getInstance().getPercentOfUsersEarnedBadge(badge.getName())+ "% of users unlocked this badge";
                 if (badge.unlocked()) {
-                    Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription() + "\n\n" +"Date Earned: " + badge.getUnlockDate(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), badge.UnlockedDescription() + "\n\n" +"Date Earned: " + badge.getUnlockDate() + unlockPercentString, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), badge.LockedDescription(getContext()), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), badge.LockedDescription(getContext()) + unlockPercentString, Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -420,6 +420,31 @@ public class FirebaseHelper {
         top100Drop.addListenerForSingleValueEvent(dropLeaderboardValueEventListener);
     }
 
+    double getPercentOfUsersEarnedBadge(String badgeName) {
+        double numberUsersEarned = 0;
+        int numberUsers = 0;
+
+        for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
+            numberUsers++;
+            for (DataSnapshot badgeSnapshot: userSnapshot.child("badgeList").getChildren()) {
+                //check if user has unlocked this badge
+                if (badgeSnapshot.child("name").getValue().toString().equals(badgeName)) {
+                    String unlockDate = badgeSnapshot.child("unlockDate").getValue().toString();
+                    if (!unlockDate.equals("")) {
+                        numberUsersEarned++;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (numberUsers == 0) {
+            return 0.0;
+        }
+
+        return 100.0*numberUsersEarned / numberUsers;
+    }
+
     private final ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot querySnapshot) {
