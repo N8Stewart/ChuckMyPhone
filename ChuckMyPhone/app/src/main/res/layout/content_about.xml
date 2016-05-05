@@ -30,71 +30,99 @@
         android:layout_height="wrap_content"
         android:text="If you donate, you receive in-app benefits:\n" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 1 - "
-                android:id="@+id/textView" />
-
+                android:text="Tier 1 - "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 2 - "
-                android:id="@+id/textView2" />
-
+                android:text=""
+                android:id="@+id/about_tier_1_price_text_view" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 3 - "
-                android:id="@+id/textView3" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tier 4 - "
-                android:id="@+id/textView6" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
+                android:text=" - " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Bronze star by name on leaderboard"
-                android:id="@+id/textView7" />
-
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tier 2 - "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/about_tier_2_price_text_view" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" - " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Silver star by name on leaderboard"
-                android:id="@+id/textView9" />
-
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tier 3 - "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/about_tier_3_price_text_view" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" - " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gold star by name, change username freely"
-                android:id="@+id/textView11" />
-
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tier 4 - "/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:id="@+id/about_tier_4_price_text_view" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" - " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rainbow shooting star by name, change username freely, can use special characters in username"
-                android:id="@+id/textView13" />
-        </LinearLayout>
-    </LinearLayout>
+                android:layout_weight="1"/>
+        </TableRow>
+
+    </TableLayout>
 
     <LinearLayout
         android:orientation="horizontal"
