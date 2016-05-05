@@ -402,6 +402,10 @@ public class FirebaseHelper {
         myFirebaseRef.child("users/"+userID + "/starIconName").setValue(starIconName.toString());
     }
 
+    String getPublicKey() {
+        return dataSnapshot.child("PublicKey").getValue().toString();
+    }
+
     private void updateLeaderboard() {
         //may be possible to query up until the users entry, but that can wait until later
         //Query queryRef = myFirebaseRef.orderByPriority().endAt(??);

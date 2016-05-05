@@ -219,8 +219,6 @@ public class LeaderboardsFragment extends Fragment {
         int numRecords = leaderboardTable.getChildCount() / 2;
         if (numRecords > 99 && rank < 11 && rank > 0 && !FirebaseHelper.getInstance().hasBadge(getActivity().getString(R.string.badge_one_percent))) {
             FirebaseHelper.getInstance().unlockBadge(getActivity().getString(R.string.badge_one_percent));
-            //initiatePopupWindow(getActivity().getString(R.string.badge_one_percent));
-            Log.d(TAG, "UNLOCKING BADGE");
         }
     }
 

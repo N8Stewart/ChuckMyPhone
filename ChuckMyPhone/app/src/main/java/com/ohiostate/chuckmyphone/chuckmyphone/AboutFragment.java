@@ -1,7 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,10 +16,10 @@ import android.widget.Toast;
 import com.ohiostate.chuckmyphone.chuckmyphone.util.IabHelper;
 import com.ohiostate.chuckmyphone.chuckmyphone.util.IabResult;
 import com.ohiostate.chuckmyphone.chuckmyphone.util.Inventory;
+import com.ohiostate.chuckmyphone.chuckmyphone.util.Purchase;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
@@ -31,6 +30,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     private boolean inAppBillingReady;
+    private boolean inventoryLoaded;
+    private Inventory userInventory;
 
     // Views
     private TextView termsOfService;
@@ -65,17 +66,17 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("10", "CrimsonShin", 1000);
         FirebaseHelper.getInstance().addFakeChuckScoresToLeaderboard("11", "WithFries", 650);
         */
-        
+
         initializeInAppBilling();
     }
 
     //prepare for any possible user instigated purchases made
     public void initializeInAppBilling() {
         inAppBillingReady = false;
+        inventoryLoaded = false;
 
-        //TODO for the love of god obfuscate this before publishing or pushing on github
-        String base64EncodedPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA03QJhg9aRQQn9rzygBAiCqSGgRVe6PFG0XjxAcEik0EsbJkNANgAQwczEwdBkjOUXQMDvyHc0gZxPLRyIbXmFqMdrNhSQDWUighgWDbLAwK0h62hm0IDmZNBWM2XuSg5vutfeXzlIi7f+nhTWxUMtk4U881ThDSdZ7/q8YPmEjQF/hQZEoXq1qbod2V5tF1nXth1p4qQvew2bHUmyjvHFoMatk/N2tMZzuHqVJ8EoKqR+ip8vCdUnQqwyHw3kJq+V/37v2lvXnvIC5u5N/1QT+2IoKsQOAhhUCdxO10Ng6M/Rw/7DFYwB7URqHdnspJHGoywVZpQAS+y5oN8/sdoAQIDAQAB";
-        // compute your public key and store it in base64EncodedPublicKey
+        //store public key elsewhere so it may be gotten at runtime only. Don't want it in source code for security reasons
+        String base64EncodedPublicKey = FirebaseHelper.getInstance().getPublicKey();
         mHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
@@ -94,7 +95,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
                 //get prices asynchonously
                 try {
-                    mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryFinishedListener);
+                    mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryGetInventoryListener);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -157,32 +158,16 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.about_donate_tier_1:
-                if (inAppBillingReady) {
-
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
-                }
+                attemptToPlaceOrder("tier_one_donation");
                 break;
             case R.id.about_donate_tier_2:
-                if (inAppBillingReady) {
-                    //check if user already purchased this item
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
-                }
+                attemptToPlaceOrder("tier_two_donation");
                 break;
             case R.id.about_donate_tier_3:
-                if (inAppBillingReady) {
-
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
-                }
+                attemptToPlaceOrder("tier_three_donation");
                 break;
             case R.id.about_donate_tier_4:
-                if (inAppBillingReady) {
-
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
-                }
+                attemptToPlaceOrder("tier_four_donation");
                 break;
             default:
                 Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
@@ -194,6 +179,32 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.gold);
 
                 break;
+        }
+    }
+
+    public void attemptToPlaceOrder(String orderTier) {
+        if (inAppBillingReady) {
+            if (inventoryLoaded) {
+                if (!userInventory.hasPurchase(orderTier)) {
+                    placeOrder(orderTier);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "You already bought this tier", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Fetching your current inventory of purchases, please wait", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void placeOrder(String orderTier) {
+        try {
+            //need a string to uniquely identify who made order and what order was for record keeping
+            String uniqueIdentifier = CurrentUser.getInstance().getUserId() + "_tier_one_donation";
+            mHelper.launchPurchaseFlow(getActivity(), "tier_one_donation", 1, mPurchaseFinishedListener, uniqueIdentifier);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -231,21 +242,57 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         mHelper = null;
     }
 
-    IabHelper.QueryInventoryFinishedListener mQueryFinishedListener = new IabHelper.QueryInventoryFinishedListener() {
+    IabHelper.QueryInventoryFinishedListener mQueryGetInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
         public void onQueryInventoryFinished(IabResult result, Inventory inventory)
         {
             if (result.isFailure()) {
-                // handle error
+                Toast.makeText(getActivity().getApplicationContext(), "Error fetching info from Google Play Store, please try again later", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            //String tierOnePrice = inventory.getSkuDetails("tier_one_donation").getPrice();
-            //String tierTwoPrice = inventory.getSkuDetails("tier_two_donation").getPrice();
-            //String tierThreePrice = inventory.getSkuDetails("tier_three_donation").getPrice();
-            //String tierFourPrice = inventory.getSkuDetails("tier_four_donation").getPrice();
+            String tierOnePrice = inventory.getSkuDetails("tier_one_donation").getPrice();
+            String tierTwoPrice = inventory.getSkuDetails("tier_two_donation").getPrice();
+            String tierThreePrice = inventory.getSkuDetails("tier_three_donation").getPrice();
+            String tierFourPrice = inventory.getSkuDetails("tier_four_donation").getPrice();
 
             // update the UI
-            String bob = "5";
+            TextView priceView = (TextView) getView().findViewById(R.id.about_tier_1_price_text_view);
+            priceView.setText(tierOnePrice);
+
+            priceView = (TextView) getView().findViewById(R.id.about_tier_2_price_text_view);
+            priceView.setText(tierTwoPrice);
+
+            priceView = (TextView) getView().findViewById(R.id.about_tier_3_price_text_view);
+            priceView.setText(tierThreePrice);
+
+            priceView = (TextView) getView().findViewById(R.id.about_tier_4_price_text_view);
+            priceView.setText(tierFourPrice);
+
+            userInventory = inventory;
+            inventoryLoaded = true;
+        }
+    };
+
+    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
+            = new IabHelper.OnIabPurchaseFinishedListener() {
+        public void onIabPurchaseFinished(IabResult result, Purchase purchase)
+        {
+            if (result.isFailure()) {
+                Log.d(TAG, "Error purchasing: " + result);
+                Toast.makeText(getActivity().getApplicationContext(), "Error occurred during the purchase, you will not be charged", Toast.LENGTH_LONG).show();
+                return;
+            } else if (purchase.getSku().equals("tier_one_donation")) {
+                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.bronze);
+            } else if (purchase.getSku().equals("tier_two_donation")) {
+                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.silver);
+            } else if (purchase.getSku().equals("tier_three_donation")) {
+                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.gold);
+            } else if (purchase.getSku().equals("tier_four_donation")) {
+                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.shooting);
+            } else {
+                //this should not occur ever
+                Toast.makeText(getActivity().getApplicationContext(), "You should not see this message. Congrats since you did", Toast.LENGTH_LONG).show();
+            }
         }
     };
 }
