@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         initializeViews();
+        MiscHelperMethods.setupUI(findViewById(android.R.id.content), this);
     }
 
     //connect all views to view instances

@@ -44,6 +44,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
         Log.d(TAG, "onCreate() called");
 
         initializeViews();
+        MiscHelperMethods.setupUI(findViewById(android.R.id.content), this);
     }
 
     //connect all views to view instances

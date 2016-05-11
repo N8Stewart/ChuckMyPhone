@@ -49,6 +49,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.content_settings, container, false);
         initializeViews(view);
         loadSettings();
+        MiscHelperMethods.setupUI(view, getActivity());
         return view;
     }
 
