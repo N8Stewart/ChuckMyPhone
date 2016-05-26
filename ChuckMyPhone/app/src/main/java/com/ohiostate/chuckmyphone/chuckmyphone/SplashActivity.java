@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.firebase.client.Firebase;
-
 public class SplashActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -27,7 +25,6 @@ public class SplashActivity extends AppCompatActivity {
 
         Log.d(TAG, "onCreate() called");
 
-        Firebase.setAndroidContext(this);
         FirebaseHelper.getInstance().create();
 
         new Handler().postDelayed(new Runnable() {

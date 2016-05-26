@@ -20,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
@@ -137,6 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 default: // logout button
                     //wipe shared preferences so it doesn't auto login on this account anymore
                     SharedPreferencesHelper.clearSharedData(getApplicationContext());
+                    FirebaseHelper.getInstance().logout();
 
                     //go back to login screen
                     Intent intent = new Intent(this, LoginActivity.class);

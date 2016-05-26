@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Toast.makeText(this.getApplicationContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this.getApplicationContext(), "Please enter your username", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this.getApplicationContext(), "Please enter your email", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this.getApplicationContext(), "You have no internet, please try again when you get internet", Toast.LENGTH_LONG).show();
@@ -152,9 +152,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
-    void onUnsuccessfulLogin(String error) {
+    void onUnsuccessfulLogin(Exception e) {
         loggingInDialog.cancel();
         SharedPreferencesHelper.clearSharedData(getApplicationContext());
-        Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + error, Toast.LENGTH_LONG).show();
+
+        String messageToUser = e.getMessage();
+
+        if (e.getMessage().contains("the password is invalid")) {
+            messageToUser = "Incorrect password, please try a different one";
+        } else if (e.getMessage().contains("There is no user record corresponding to this identifier")) {
+            messageToUser = "Incorrect email, please try a different one";
+        }
+
+        Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

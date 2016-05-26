@@ -68,21 +68,24 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             public void onIabSetupFinished(IabResult result) {
                 if (!result.isSuccess()) {
                     Log.d(TAG, "Problem setting up In-app Billing: " + result);
+                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing:\n"+result.getMessage(), Toast.LENGTH_LONG).show();
                 } else {
                     // IAB is fully set up!
                     inAppBillingReady = true;
-                }
-                List additionalSkuList = new ArrayList();
-                additionalSkuList.add("tier_one_donation");
-                additionalSkuList.add("tier_two_donation");
-                additionalSkuList.add("tier_three_donation");
-                additionalSkuList.add("tier_four_donation");
 
-                //get prices asynchonously
-                try {
-                    mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryGetInventoryListener);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    List additionalSkuList = new ArrayList();
+                    additionalSkuList.add("tier_one_donation");
+                    additionalSkuList.add("tier_two_donation");
+                    additionalSkuList.add("tier_three_donation");
+                    additionalSkuList.add("tier_four_donation");
+
+                    //get prices asynchonously
+                    try {
+                        if (mHelper != null) mHelper.flagEndAsync();
+                        mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryGetInventoryListener);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
@@ -172,6 +175,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                     placeOrder(orderSku);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "You already bought this tier", Toast.LENGTH_LONG).show();
+                    checkIfUnconsumedProducts();
                 }
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "Fetching your current inventory of purchases, please wait", Toast.LENGTH_LONG).show();
@@ -185,10 +189,13 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         try {
             //need a string to uniquely identify who made order and what order was for record keeping
             String uniqueIdentifier = CurrentUser.getInstance().getUserId() + "_" + orderSku;
+
+            //makes sure that the async call actually ends before firing it off
+            if (mHelper != null) mHelper.flagEndAsync();
             mHelper.launchPurchaseFlow(getActivity(), orderSku, 1, mPurchaseFinishedListener, uniqueIdentifier);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "There was a problem placing order with Google Play Billing, you were not billed, please try again later:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -257,26 +264,60 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         }
     };
 
+    public void checkIfUnconsumedProducts() {
+        String[] tiersArrayStrings = new String[] {"tier_one_donation", "tier_two_donation", "tier_three_donation", "tier_four_donation"};
+        for (String tierString : tiersArrayStrings) {
+            if (userInventory.hasPurchase(tierString)) {
+                try {
+                    if (mHelper != null) mHelper.flagEndAsync();
+                    mHelper.consumeAsync(userInventory.getPurchase(tierString), mConsumeFinishedListener);
+                } catch (Exception e) {
+                    //TODO remove this toast
+                    Toast.makeText(getActivity().getApplicationContext(), "Failed to consume:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
             = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase)
         {
             if (result.isFailure()) {
-                Log.d(TAG, "Error purchasing: " + result);
-                Toast.makeText(getActivity().getApplicationContext(), "Error occurred during the purchase, you will not be charged", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Error occurred during the purchase, you will not be charged\n"+result.getMessage(), Toast.LENGTH_LONG).show();
                 return;
             } else if (purchase.getSku().equals("tier_one_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.bronze);
+                FirebaseHelper.getInstance().updateStarStatusOfUser("bronze");
             } else if (purchase.getSku().equals("tier_two_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.silver);
+                FirebaseHelper.getInstance().updateStarStatusOfUser("silver");
             } else if (purchase.getSku().equals("tier_three_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.gold);
+                FirebaseHelper.getInstance().updateStarStatusOfUser("gold");
             } else if (purchase.getSku().equals("tier_four_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names.shooting);
-            } else {
-                //this should not occur ever
-                Toast.makeText(getActivity().getApplicationContext(), "You should not see this message. Congrats since you did", Toast.LENGTH_LONG).show();
+                FirebaseHelper.getInstance().updateStarStatusOfUser("shooting");
             }
+
+            //consume the purchase so that the user may purchase it again later if they want
+            try {
+                if (mHelper != null) mHelper.flagEndAsync();
+                mHelper.consumeAsync(userInventory.getPurchase(purchase.getSku()), mConsumeFinishedListener);
+            } catch (Exception e) {
+                //TODO remove this toast
+                Toast.makeText(getActivity().getApplicationContext(), "An error occured:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            Toast.makeText(getActivity().getApplicationContext(), "Purchase finished for:\n"+purchase.getSku() + "\n" + result.getMessage(), Toast.LENGTH_LONG).show();
         }
     };
+
+    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener =
+            new IabHelper.OnConsumeFinishedListener() {
+                public void onConsumeFinished(Purchase purchase, IabResult result) {
+                    if (result.isSuccess()) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Purchase was consumed!\n"+purchase.getSku(), Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        Toast.makeText(getActivity().getApplicationContext(), "purhcase failed to be consumed :(\n"+purchase.getSku()+"\n"+result.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
 }

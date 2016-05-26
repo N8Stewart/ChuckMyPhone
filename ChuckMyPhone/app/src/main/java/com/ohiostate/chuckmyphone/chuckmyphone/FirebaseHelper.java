@@ -1,21 +1,22 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
-import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.firebase.client.AuthData;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.*;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 public class FirebaseHelper {
 
@@ -28,6 +29,9 @@ public class FirebaseHelper {
     private FirebaseHelper() {}
 
     private DataSnapshot dataSnapshot;
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference firebaseDatabaseRef;
+
     private boolean hasLoadedInitialSnapshot;
 
     //needed to work asynchonously with new user and login activities
@@ -37,17 +41,13 @@ public class FirebaseHelper {
     private ChangePasswordFragment changePasswordFragment;
     private String loginEmail, loginPassword;
 
-    public enum competitionType {
-        CHUCK, DROP, SPIN
-    }
-
     public class User {
         public final ArrayList<Badge> badgeList;
         public final CompeteRecord bestChuckRecord;
         public final CompeteRecord bestDropRecord;
         public final CompeteRecord bestSpinRecord;
         public final String username;
-        public final LeaderboardsFragment.Star_icon_names starIconName;
+        public final String starIconName;
 
         //TODO get users location here
 
@@ -76,7 +76,7 @@ public class FirebaseHelper {
             bestSpinRecord = new CompeteRecord(username);
             bestDropRecord = new CompeteRecord(username);
 
-            starIconName = LeaderboardsFragment.Star_icon_names.none;
+            starIconName = "none";
         }
     }
 
@@ -101,18 +101,16 @@ public class FirebaseHelper {
         }
     }
 
-    private Firebase myFirebaseRef;
-
     //firebase initializer, must be called before any other firebase logic is
     public void create() {
-        myFirebaseRef = new Firebase("https://amber-inferno-6835.firebaseio.com/");
+        firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference();
         hasLoadedInitialSnapshot = false;
-        myFirebaseRef.addValueEventListener(new ValueEventListener() {
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        firebaseDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                System.out.println("@@@@@@ DATA CHANGE @@@@@@" + snapshot.getValue());
                 dataSnapshot = snapshot;
-
                 hasLoadedInitialSnapshot = true;
 
                 //if users data has appeared then get their score from it
@@ -128,7 +126,8 @@ public class FirebaseHelper {
             }
 
             @Override
-            public void onCancelled(FirebaseError error) {
+            public void onCancelled(DatabaseError error) {
+
             }
         });
     }
@@ -136,7 +135,22 @@ public class FirebaseHelper {
     public void createUser(String email, String password, String username, NewUserActivity activity) {
         newUserActivity = activity;
         CurrentUser.getInstance().assignUsername(username);
-        myFirebaseRef.createUser(email, password, userCreationHandler);
+        Task<AuthResult> userCreationTask = firebaseAuth.createUserWithEmailAndPassword(email, password);
+        userCreationTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                System.out.println("Created user account in firebase");
+                newUserActivity.accountWasCreated();
+            }
+        });
+
+        userCreationTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Failed to create user account in firebase");
+                newUserActivity.accountWasNotCreated(e.getMessage());
+            }
+        });
     }
 
     public boolean isUsernameAvailable(String username) {
@@ -162,12 +176,12 @@ public class FirebaseHelper {
         String[] competeRecordStrings = {"ChuckScores/", "SpinScores/", "DropScores/"};
         for (String competeRecordString : competeRecordStrings) {
             if (dataSnapshot.hasChild(competeRecordString + userID)) {
-                myFirebaseRef.child(competeRecordString + userID + "/username").setValue(newUsername);
+                firebaseDatabaseRef.child(competeRecordString + userID + "/username").setValue(newUsername);
             }
         }
 
         //change username in the users records
-        myFirebaseRef.child("users/" + userID + "/username").setValue(newUsername);
+        firebaseDatabaseRef.child("users/" + userID + "/username").setValue(newUsername);
     }
 
     public boolean login(String email, String password, LoginActivity activity) {
@@ -175,58 +189,58 @@ public class FirebaseHelper {
         loginEmail = email;
         loginPassword = password;
         boolean firebaseWasLoaded = false;
-        if (myFirebaseRef != null) {
+        if (firebaseAuth != null) {
             firebaseWasLoaded = true;
-            myFirebaseRef.authWithPassword(email, password, loginHandler);
+            Task<AuthResult> loginResult = firebaseAuth.signInWithEmailAndPassword(email, password);
+
+            loginResult.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    String uid = firebaseAuth.getCurrentUser().getUid();
+                    if (dataSnapshot != null) {
+                        if (!dataSnapshot.hasChild("users/" + uid)) {
+                            //create the record and insert it into Firebase
+                            System.out.println("Created user account in firebase");
+
+                            Task<Void> changeAcceptedTask = firebaseDatabaseRef.child("users/" + uid).setValue(new User(CurrentUser.getInstance().getUsername(), loginActivity.getApplicationContext()));
+                            changeAcceptedTask.addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    System.out.println("change success");
+                                }
+                            });
+                            changeAcceptedTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    System.out.println("change failure??1?1//1/1/??");
+                                }
+                            });
+                        } else {
+                            System.out.println("User logged into existing account, no data was changed");
+                        }
+                        System.out.println("Login handled: User ID: " + uid);
+                        CurrentUser.getInstance().loadUserMetaData(uid);
+                        loginActivity.onSuccessfulLogin(loginEmail, loginPassword, firebaseAuth.getCurrentUser().getUid());
+                    } else {
+                        //TODO
+                        //need to do something here? maybe try to re-authenticate user?
+                    }
+                }
+            });
+
+            loginResult.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    loginActivity.onUnsuccessfulLogin(e);
+                }
+            });
         }
         return firebaseWasLoaded;
     }
 
-    private final Firebase.ValueResultHandler<Map<String, Object>> userCreationHandler = new Firebase.ValueResultHandler<Map<String, Object>>() {
-        //Event driven: called when user creation succeeds
-        @Override
-        public void onSuccess(Map<String, Object> result) {
-            System.out.println("Successfully created user account with uid: " + result.get("uid"));
-            newUserActivity.accountWasCreated();
-        }
-
-        //Event driven: called when user creation fails
-        @Override
-        public void onError(FirebaseError firebaseError) {
-            System.out.println("Error on user creation: " + firebaseError.toString());
-            newUserActivity.accountWasNotCreated(firebaseError.getMessage());
-        }
-    };
-
-   private final Firebase.AuthResultHandler loginHandler = new Firebase.AuthResultHandler() {
-       //Event driven: called when user login succeeds
-       @Override
-       public void onAuthenticated(AuthData authData) {
-           if (dataSnapshot != null) {
-                if (!dataSnapshot.hasChild("users/" + authData.getUid())) {
-                    //create the record and insert it into Firebase
-                    Firebase newUserRef = myFirebaseRef.child("users/" + authData.getUid());
-                    newUserRef.setValue(new User(CurrentUser.getInstance().getUsername(), newUserActivity.getApplicationContext()));
-                } else {
-                    System.out.println("User logged into existing account, no data was changed");
-                }
-                System.out.println("Login handled: User ID: " + authData.getUid() + ", Provider: " + authData.getProvider());
-                CurrentUser.getInstance().loadUserMetaData(authData.getUid());
-                loginActivity.onSuccessfulLogin(loginEmail, loginPassword, authData.getUid());
-            } else {
-                //TODO
-                //need to do something here? maybe try to re-authenticate user?
-            }
-        }
-
-       //Event driven: called when user login fails
-       @Override
-        public void onAuthenticationError(FirebaseError firebaseError) {
-            // there was an error
-            System.out.println("Error logging into Firebase: "+ firebaseError.toString());
-            loginActivity.onUnsuccessfulLogin(firebaseError.getMessage());
-        }
-    };
+    public void logout() {
+        FirebaseAuth.getInstance().signOut();
+    }
 
     //ACCESSOR METHODS FOR GETTING DATA
 
@@ -291,21 +305,21 @@ public class FirebaseHelper {
     //SETTING METHODS FOR SAVING SCORES
     void updateBestChuckScore(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
-        myFirebaseRef.child("users/" + userID + "/bestChuckRecord/score").setValue(score);
+        firebaseDatabaseRef.child("users/" + userID + "/bestChuckRecord/score").setValue(score);
 
         addChuckScoreToLeaderboard(score, latitude, longitude);
     }
 
     void updateBestSpinScore(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
-        myFirebaseRef.child("users/" + userID + "/bestSpinRecord/score").setValue(score);
+        firebaseDatabaseRef.child("users/" + userID + "/bestSpinRecord/score").setValue(score);
 
         addSpinScoreToLeaderboard(score, latitude, longitude);
     }
 
     void updateBestDropScore(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
-        myFirebaseRef.child("users/" + userID + "/bestDropRecord/score").setValue(score);
+        firebaseDatabaseRef.child("users/" + userID + "/bestDropRecord/score").setValue(score);
 
         addDropScoreToLeaderboard(score, latitude, longitude);
     }
@@ -317,7 +331,7 @@ public class FirebaseHelper {
 
         int latitude = 0;
         double longitude = 0;
-        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
+        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
@@ -325,21 +339,21 @@ public class FirebaseHelper {
         String userID = CurrentUser.getInstance().getUserId();
         String username = CurrentUser.getInstance().getUsername();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
+        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addSpinScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
+        firebaseDatabaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addDropScoreToLeaderboard(long score, double latitude, double longitude) {
         String userID = CurrentUser.getInstance().getUserId();
         //priority set as inverse of the score, should order entries automatically
-        myFirebaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
+        firebaseDatabaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
     }
 
     void unlockBadge(String badgeName) {
@@ -348,7 +362,7 @@ public class FirebaseHelper {
             if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
                 DateFormat df = new SimpleDateFormat("MM/dd/yy");
                 Date dateobj = new Date();
-                myFirebaseRef.child("users/" + userID + "/badgeList/"+i+"/unlockDate").setValue(df.format(dateobj));
+                firebaseDatabaseRef.child("users/" + userID + "/badgeList/" + i + "/unlockDate").setValue(df.format(dateobj));
                 i = 20; //end this loop
             }
         }
@@ -372,12 +386,12 @@ public class FirebaseHelper {
         return hasBadge;
     }
 
-    public LeaderboardsFragment.Star_icon_names getStarStatusOfUser(String username) {
-        LeaderboardsFragment.Star_icon_names iconName = LeaderboardsFragment.Star_icon_names.none;
+    public String getStarStatusOfUser(String username) {
+        String iconName = "none";
         if (dataSnapshot != null) {
             for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
                 if (userSnapshot.child("username").getValue().equals(username)) {
-                    iconName = LeaderboardsFragment.Star_icon_names.valueOf(userSnapshot.child("starIconName").getValue().toString());
+                    iconName = userSnapshot.child("starIconName").getValue().toString();
                     break;
                 }
             }
@@ -386,20 +400,20 @@ public class FirebaseHelper {
     }
 
     public boolean hasUnlockedChangingUsername() {
-        LeaderboardsFragment.Star_icon_names starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
-        return (starStatus == LeaderboardsFragment.Star_icon_names.gold || starStatus == LeaderboardsFragment.Star_icon_names.shooting);
+        String starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        return (starStatus.equals("gold") || starStatus.equals("shooting"));
     }
 
     public boolean hasUnlockedSpecialCharactersInUsername() {
-        LeaderboardsFragment.Star_icon_names starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
-        return (starStatus == LeaderboardsFragment.Star_icon_names.shooting);
+        String starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        return (starStatus.equals("shooting"));
     }
 
-    public void updateStarStatusOfUser(LeaderboardsFragment.Star_icon_names starIconName) {
-        LeaderboardsFragment.Star_icon_names iconName = LeaderboardsFragment.Star_icon_names.none;
+    public void updateStarStatusOfUser(String starIconName) {
+        String iconName = "none";
         String userID = CurrentUser.getInstance().getUserId();
 
-        myFirebaseRef.child("users/"+userID + "/starIconName").setValue(starIconName.toString());
+        firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue(starIconName);
     }
 
     String getPublicKey() {
@@ -407,12 +421,9 @@ public class FirebaseHelper {
     }
 
     private void updateLeaderboard() {
-        //may be possible to query up until the users entry, but that can wait until later
-        //Query queryRef = myFirebaseRef.orderByPriority().endAt(??);
-
-        Query top100Chuck = myFirebaseRef.child("ChuckScores").orderByPriority();//.limitToLast(100);
-        Query top100Spin = myFirebaseRef.child("SpinScores").orderByPriority();//.limitToLast(100);
-        Query top100Drop = myFirebaseRef.child("DropScores").orderByPriority();//.limitToLast(100);
+        Query top100Chuck = firebaseDatabaseRef.child("ChuckScores").orderByPriority();//.limitToLast(100);
+        Query top100Spin = firebaseDatabaseRef.child("SpinScores").orderByPriority();//.limitToLast(100);
+        Query top100Drop = firebaseDatabaseRef.child("DropScores").orderByPriority();//.limitToLast(100);
 
         //take one look at the data, pass it to the current user, and then throw it away
         top100Chuck.addListenerForSingleValueEvent(chuckLeaderboardValueEventListener);
@@ -461,7 +472,7 @@ public class FirebaseHelper {
         }
 
         @Override
-        public void onCancelled(FirebaseError error) {
+        public void onCancelled(DatabaseError error) {
         }
     };
 
@@ -481,7 +492,7 @@ public class FirebaseHelper {
         }
 
         @Override
-        public void onCancelled(FirebaseError error) {
+        public void onCancelled(DatabaseError error) {
         }
     };
 
@@ -501,37 +512,41 @@ public class FirebaseHelper {
         }
 
         @Override
-        public void onCancelled(FirebaseError error) {
+        public void onCancelled(DatabaseError error) {
         }
     };
 
     public void changePassword(String loginEmail, String oldPassword, String newPassword, final ChangePasswordFragment changePasswordFragment) {
         this.changePasswordFragment = changePasswordFragment;
-        myFirebaseRef.changePassword(loginEmail, oldPassword, newPassword, new Firebase.ResultHandler() {
-            @Override
-            public void onSuccess() {
-                changePasswordFragment.onSuccessfulPasswordChange();
-            }
-            @Override
-            public void onError(FirebaseError firebaseError) {
-                changePasswordFragment.onUnsuccessfulPasswordChange(firebaseError);
-            }
-        });
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user.updatePassword(newPassword)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            changePasswordFragment.onSuccessfulPasswordChange();
+                        } else {
+                            changePasswordFragment.onUnsuccessfulPasswordChange(task.getException());
+                        }
+                    }
+                });
     }
 
     public void resetPassword(String loginEmail, final ForgotPasswordActivity forgotPasswordActivity) {
         this.forgotPasswordActivity = forgotPasswordActivity;
-        myFirebaseRef.resetPassword(loginEmail, new Firebase.ResultHandler() {
-            @Override
-            public void onSuccess() {
-                forgotPasswordActivity.onPasswordSuccessfullyReset();
-            }
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
-            @Override
-            public void onError(FirebaseError firebaseError) {
-                forgotPasswordActivity.onPasswordUnsuccessfullyReset(firebaseError);
-            }
-        });
+        auth.sendPasswordResetEmail(loginEmail)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            forgotPasswordActivity.onPasswordSuccessfullyReset();
+                        } else {
+                            forgotPasswordActivity.onPasswordUnsuccessfullyReset(task.getException());
+                        }
+                    }
+                });
     }
 
 }

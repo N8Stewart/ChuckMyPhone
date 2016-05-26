@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "673215054811",
+    "firebase_url": "https://amber-inferno-6835.firebaseio.com",
+    "project_id": "amber-inferno-6835",
+    "storage_bucket": "amber-inferno-6835.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673215054811:android:4e7796c58738a3cb",
+        "android_client_info": {
+          "package_name": "com.ohiostate.chuckmyphone.chuckmyphone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673215054811-1alnj3248iapnpkpfvhobpjr3s840rdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASpH9sAlEjTiQHrguKEdx6UMXnVEG4bUU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

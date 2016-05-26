@@ -13,8 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.firebase.client.FirebaseError;
+import com.google.firebase.FirebaseException;
 
 public class ChangePasswordFragment extends Fragment implements View.OnClickListener {
 
@@ -140,9 +139,9 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
 
     }
 
-    public void onUnsuccessfulPasswordChange(FirebaseError firebaseError) {
+    public void onUnsuccessfulPasswordChange(Exception e) {
         actionPending = false;
-        Toast.makeText(getActivity().getApplicationContext(), "Password was not changed: " + firebaseError.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity().getApplicationContext(), "Password was not changed: " + e.getMessage(), Toast.LENGTH_LONG).show();
     }
 
     @Override

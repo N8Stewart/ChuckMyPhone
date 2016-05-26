@@ -72,6 +72,11 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
         switch (v.getId()) {
             case R.id.new_user_sign_up_button:
+                //remove spaces from end (autocomplete tends to add them annoyingly)
+                passwordEditText.setText(passwordEditText.getText().toString().replace(" ", ""));
+                passwordConfirmationEditText.setText(passwordConfirmationEditText.getText().toString().replace(" ", ""));
+                emailEditText.setText(emailEditText.getText().toString().replace(" ", ""));
+
                 if (isReadyToCreateAccount()) {
                     //Account creation works asynchronously
                     //accountWasCreated() or accountWasNotCreated() will be called when the account is done being created
@@ -151,10 +156,16 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     //called by Firebase helper when an account is not successfully created. Don't call from anywhere else
-    void accountWasNotCreated(String error) {
+    void accountWasNotCreated(String errorMessage) {
         creatingAccountLoadingDialog.cancel();
 
-        Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + error, Toast.LENGTH_LONG).show();
+        if (errorMessage.contains("email address is badly")) {
+            errorMessage = "Invalid email provided";
+        } else if (errorMessage.contains("should be at least 6 characters")) {
+            errorMessage = "Password must contain at least 6 characters";
+        }
+
+        Toast.makeText(this.getApplicationContext(), "Account was not successfully created: " + errorMessage, Toast.LENGTH_LONG).show();
     }
 
     public static boolean isValidUsername(String username) {

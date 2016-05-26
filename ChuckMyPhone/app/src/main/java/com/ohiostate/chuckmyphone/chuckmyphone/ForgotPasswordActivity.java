@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.firebase.client.FirebaseError;
+import com.google.firebase.FirebaseException;
 
 public class ForgotPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -95,8 +95,8 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         finish();
     }
 
-    public void onPasswordUnsuccessfullyReset(FirebaseError error) {
+    public void onPasswordUnsuccessfullyReset(Exception e) {
         actionPending = false;
-        Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ error.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ e.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

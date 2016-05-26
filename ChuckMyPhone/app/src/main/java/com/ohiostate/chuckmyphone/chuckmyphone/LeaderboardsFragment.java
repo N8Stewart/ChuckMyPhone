@@ -24,14 +24,6 @@ import java.util.Random;
 
 public class LeaderboardsFragment extends Fragment {
 
-    public enum Star_icon_names {
-        none,
-        bronze,
-        silver,
-        gold,
-        shooting
-    };
-
     private final String TAG = this.getClass().getSimpleName();
 
     private final int MAX_NUM_LEADERBOARD_ENTRIES_DISPLAYED = 100;
@@ -137,7 +129,7 @@ public class LeaderboardsFragment extends Fragment {
                                 break;
                             }
 
-                            Star_icon_names starName = FirebaseHelper.getInstance().getStarStatusOfUser(records.get(i).username);
+                            String starName = FirebaseHelper.getInstance().getStarStatusOfUser(records.get(i).username);
 
                             addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v,starName);
                             if (CurrentUser.getInstance().getUsername().equals(records.get(i).username)) {
@@ -233,7 +225,7 @@ public class LeaderboardsFragment extends Fragment {
         return d * conversion;
     }
 
-    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view, Star_icon_names star_names) {
+    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view, String star_name) {
         TableLayout leaderboardUserRecordTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
 
         TableRow userRow = new TableRow(getActivity());
@@ -264,13 +256,13 @@ public class LeaderboardsFragment extends Fragment {
         userRow.addView(leaderboardRank);
         userRow.addView(leaderboardName);
 
-        if (star_names != Star_icon_names.none) {
+        if (!star_name.equals("none")) {
             int iconID;
-            if (star_names == Star_icon_names.bronze) {
+            if (star_name.equals("bronze")) {
                 iconID = R.drawable.bronze_star_icon;
-            } else if (star_names == Star_icon_names.silver) {
+            } else if (star_name.equals("silver")) {
                 iconID = R.drawable.silver_star_icon;
-            } else if (star_names == Star_icon_names.gold) {
+            } else if (star_name.equals("gold")) {
                 iconID = R.drawable.gold_star_icon;
             } else { //shooting star
                 iconID = R.drawable.shooting_star_icon;
@@ -286,7 +278,9 @@ public class LeaderboardsFragment extends Fragment {
         leaderboardUserRecordTable.addView(userRow);
     }
 
-    private void addEntryToLeaderboard(int rank, String name, long score, View view, Star_icon_names star_names) {
+    //TODO factor out repeated code from above and below
+
+    private void addEntryToLeaderboard(int rank, String name, long score, View view, String star_name) {
         leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
 
         TableRow leaderboardRow = new TableRow(getActivity());
@@ -317,13 +311,13 @@ public class LeaderboardsFragment extends Fragment {
         leaderboardRow.addView(leaderboardRank);
         leaderboardRow.addView(leaderboardName);
 
-        if (star_names != Star_icon_names.none) {
+        if (!star_name.equals("none")) {
             int iconID;
-            if (star_names == Star_icon_names.bronze) {
+            if (star_name.equals("bronze")) {
                 iconID = R.drawable.bronze_star_icon;
-            } else if (star_names == Star_icon_names.silver) {
+            } else if (star_name.equals("silver")) {
                 iconID = R.drawable.silver_star_icon;
-            } else if (star_names == Star_icon_names.gold) {
+            } else if (star_name.equals("gold")) {
                 iconID = R.drawable.gold_star_icon;
             } else { //shooting star
                 iconID = R.drawable.shooting_star_icon;
@@ -333,7 +327,6 @@ public class LeaderboardsFragment extends Fragment {
 
             leaderboardRow.addView(starImageView);
         }
-
         leaderboardRow.addView(leaderboardScore);
 
         View dividerView = new View(getActivity());
