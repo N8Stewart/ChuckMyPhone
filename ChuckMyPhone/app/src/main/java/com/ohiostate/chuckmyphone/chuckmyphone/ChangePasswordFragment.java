@@ -112,8 +112,7 @@ public class ChangePasswordFragment extends Fragment implements View.OnClickList
                         actionPending = true;
 
                         SharedPreferencesHelper.setPassword(getActivity().getApplicationContext(), newPasswordConfirmation);
-                        FirebaseHelper.getInstance().changePassword(SharedPreferencesHelper.getEmail(getActivity().getApplicationContext()),
-                                oldPassword, newPasswordConfirmation, this);
+                        FirebaseHelper.getInstance().changePassword(newPasswordConfirmation, this);
                         return true;
                     } else {
                         Toast.makeText(getActivity().getApplicationContext(), "Your old password is incorrect, please re-type it", Toast.LENGTH_LONG).show();

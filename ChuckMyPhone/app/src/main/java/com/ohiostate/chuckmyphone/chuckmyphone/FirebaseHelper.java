@@ -28,6 +28,8 @@ public class FirebaseHelper {
 
     private FirebaseHelper() {}
 
+    private CurrentUser currentUser;
+
     private DataSnapshot dataSnapshot;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference firebaseDatabaseRef;
@@ -43,9 +45,6 @@ public class FirebaseHelper {
 
     public class User {
         public final ArrayList<Badge> badgeList;
-        public final CompeteRecord bestChuckRecord;
-        public final CompeteRecord bestDropRecord;
-        public final CompeteRecord bestSpinRecord;
         public final String username;
         public final String starIconName;
 
@@ -72,37 +71,35 @@ public class FirebaseHelper {
             badgeList.add(new Badge(c.getString(R.string.badge_one_percent)));
             badgeList.add(new Badge(c.getString(R.string.badge_hidden)));
 
-            bestChuckRecord = new CompeteRecord(username);
-            bestSpinRecord = new CompeteRecord(username);
-            bestDropRecord = new CompeteRecord(username);
-
             starIconName = "none";
         }
     }
 
     public class CompeteRecord {
+        public final String username;
         public final long score;
         public final double longitude;
         public final double latitude;
-        public final String username;
 
         public CompeteRecord(String username) {
+            this.username = username;
             this.score = 0;
             this.longitude = 0.0;
             this.latitude = 0.0;
-            this.username = username;
         }
 
-        public CompeteRecord(long score, double latitude, double longitude, String username) {
+        public CompeteRecord(String username, long score, double latitude, double longitude) {
+            this.username = username;
             this.score = score;
             this.longitude = longitude;
             this.latitude = latitude;
-            this.username = username;
         }
     }
 
     //firebase initializer, must be called before any other firebase logic is
     public void create() {
+        currentUser = CurrentUser.getInstance();
+
         firebaseDatabaseRef = FirebaseDatabase.getInstance().getReference();
         hasLoadedInitialSnapshot = false;
         firebaseAuth = FirebaseAuth.getInstance();
@@ -114,11 +111,11 @@ public class FirebaseHelper {
                 hasLoadedInitialSnapshot = true;
 
                 //if users data has appeared then get their score from it
-                String userID = CurrentUser.getInstance().getUserId();
+                String userID = currentUser.getUserId();
                 if (userID != null) {
                     if (dataSnapshot.child("users").hasChild(userID)) {
-                        CurrentUser.getInstance().loadUserScoreData();
-                        CurrentUser.getInstance().loadUserBadgeData();
+                        currentUser.loadUserScoreData();
+                        currentUser.loadUserBadgeData();
                     }
                 }
 
@@ -134,7 +131,7 @@ public class FirebaseHelper {
 
     public void createUser(String email, String password, String username, NewUserActivity activity) {
         newUserActivity = activity;
-        CurrentUser.getInstance().assignUsername(username);
+        currentUser.assignUsername(username);
         Task<AuthResult> userCreationTask = firebaseAuth.createUserWithEmailAndPassword(email, password);
         userCreationTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
@@ -170,7 +167,7 @@ public class FirebaseHelper {
     }
 
     public void changeUsername(String newUsername) {
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
 
         //change username in the chuck, spin and drop records
         String[] competeRecordStrings = {"ChuckScores/", "SpinScores/", "DropScores/"};
@@ -202,7 +199,7 @@ public class FirebaseHelper {
                             //create the record and insert it into Firebase
                             System.out.println("Created user account in firebase");
 
-                            Task<Void> changeAcceptedTask = firebaseDatabaseRef.child("users/" + uid).setValue(new User(CurrentUser.getInstance().getUsername(), loginActivity.getApplicationContext()));
+                            Task<Void> changeAcceptedTask = firebaseDatabaseRef.child("users/" + uid).setValue(new User(currentUser.getUsername(), loginActivity.getApplicationContext()));
                             changeAcceptedTask.addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -219,7 +216,7 @@ public class FirebaseHelper {
                             System.out.println("User logged into existing account, no data was changed");
                         }
                         System.out.println("Login handled: User ID: " + uid);
-                        CurrentUser.getInstance().loadUserMetaData(uid);
+                        currentUser.loadUserMetaData(uid);
                         loginActivity.onSuccessfulLogin(loginEmail, loginPassword, firebaseAuth.getCurrentUser().getUid());
                     } else {
                         //TODO
@@ -259,27 +256,27 @@ public class FirebaseHelper {
 
     //Need user to be logged in before this may be called
     long getBestSpinScore() {
-        String userID = CurrentUser.getInstance().getUserId();
-        if (dataSnapshot.hasChild("users/" + userID + "/bestSpinRecord/score")) {
-            DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestSpinRecord/score");
+        String userID = currentUser.getUserId();
+        if (dataSnapshot.hasChild("SpinScores/" + userID + "/score")) {
+            DataSnapshot yourScoreSnapshot = dataSnapshot.child("SpinScores/" + userID + "/score");
             return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
         return 0;
     }
 
     long getBestChuckScore() {
-        String userID = CurrentUser.getInstance().getUserId();
-        if (dataSnapshot.hasChild("users/" + userID + "/bestChuckRecord/score")) {
-            DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestChuckRecord/score");
+        String userID = currentUser.getUserId();
+        if (dataSnapshot.hasChild("ChuckScores/" + userID + "/score")) {
+            DataSnapshot yourScoreSnapshot = dataSnapshot.child("ChuckScores/" + userID + "/score");
             return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
         return 0;
     }
 
     long getBestDropScore() {
-        String userID = CurrentUser.getInstance().getUserId();
-        if (dataSnapshot.hasChild("users/" + userID + "/bestDropRecord/score")) {
-            DataSnapshot yourScoreSnapshot = dataSnapshot.child("users/" + userID + "/bestDropRecord/score");
+        String userID = currentUser.getUserId();
+        if (dataSnapshot.hasChild("DropScores/" + userID + "/score")) {
+            DataSnapshot yourScoreSnapshot = dataSnapshot.child("DropScores/" + userID + "/score");
             return Long.parseLong(yourScoreSnapshot.getValue().toString());
         }
         return 0;
@@ -287,7 +284,7 @@ public class FirebaseHelper {
 
     ArrayList<Badge> getBadges() {
         Log.d("tag", "GETTING USERS BADGES##################");
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
             DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
             ArrayList<Badge> badgeList = new ArrayList<>();
@@ -304,60 +301,53 @@ public class FirebaseHelper {
 
     //SETTING METHODS FOR SAVING SCORES
     void updateBestChuckScore(long score, double latitude, double longitude) {
-        String userID = CurrentUser.getInstance().getUserId();
-        firebaseDatabaseRef.child("users/" + userID + "/bestChuckRecord/score").setValue(score);
-
+        String userID = currentUser.getUserId();
         addChuckScoreToLeaderboard(score, latitude, longitude);
     }
 
     void updateBestSpinScore(long score, double latitude, double longitude) {
-        String userID = CurrentUser.getInstance().getUserId();
-        firebaseDatabaseRef.child("users/" + userID + "/bestSpinRecord/score").setValue(score);
-
+        String userID = currentUser.getUserId();
         addSpinScoreToLeaderboard(score, latitude, longitude);
     }
 
     void updateBestDropScore(long score, double latitude, double longitude) {
-        String userID = CurrentUser.getInstance().getUserId();
-        firebaseDatabaseRef.child("users/" + userID + "/bestDropRecord/score").setValue(score);
-
+        String userID = currentUser.getUserId();
         addDropScoreToLeaderboard(score, latitude, longitude);
     }
 
-    protected void addFakeChuckScoresToLeaderboard(String userID, String username, int score) {
+    protected void addFakeChuckScoresToLeaderboard(String userID, int score) {
         //String userID = "1";
         //String username = "bob";
         //int score = 600;
 
         int latitude = 0;
         double longitude = 0;
-        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
+        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addChuckScoreToLeaderboard(long score, double latitude, double longitude) {
-        String userID = CurrentUser.getInstance().getUserId();
-        String username = CurrentUser.getInstance().getUsername();
+        String userID = currentUser.getUserId();
         //priority set as inverse of the score, should order entries automatically
-        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, username), score);
+        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addSpinScoreToLeaderboard(long score, double latitude, double longitude) {
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
         //priority set as inverse of the score, should order entries automatically
-        firebaseDatabaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
+        firebaseDatabaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addDropScoreToLeaderboard(long score, double latitude, double longitude) {
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
         //priority set as inverse of the score, should order entries automatically
-        firebaseDatabaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(score, latitude, longitude, CurrentUser.getInstance().getUsername()), score);
+        firebaseDatabaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
     }
 
     void unlockBadge(String badgeName) {
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
         for (int i = 0; i < 11; i++) {
             if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
                 DateFormat df = new SimpleDateFormat("MM/dd/yy");
@@ -370,7 +360,7 @@ public class FirebaseHelper {
 
     boolean hasBadge(String badgeName) {
         boolean hasBadge = false;
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
             DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
             for (DataSnapshot badgeSnapshot: usersSnapshot.getChildren()) {
@@ -400,18 +390,18 @@ public class FirebaseHelper {
     }
 
     public boolean hasUnlockedChangingUsername() {
-        String starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        String starStatus = getStarStatusOfUser(currentUser.getUsername());
         return (starStatus.equals("gold") || starStatus.equals("shooting"));
     }
 
     public boolean hasUnlockedSpecialCharactersInUsername() {
-        String starStatus = getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        String starStatus = getStarStatusOfUser(currentUser.getUsername());
         return (starStatus.equals("shooting"));
     }
 
     public void updateStarStatusOfUser(String starIconName) {
         String iconName = "none";
-        String userID = CurrentUser.getInstance().getUserId();
+        String userID = currentUser.getUserId();
 
         firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue(starIconName);
     }
@@ -462,13 +452,13 @@ public class FirebaseHelper {
             ArrayList<CompeteRecord> chuckRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
-                String username = (String) subSnapshot.child("username").getValue();
                 double latitude = (double) subSnapshot.child("latitude").getValue();
                 double longitude = (double) subSnapshot.child("longitude").getValue();
-                chuckRecords.add(new CompeteRecord(score, latitude, longitude,username));
+                String username = subSnapshot.child("username").getValue().toString();
+                chuckRecords.add(new CompeteRecord(username, score, latitude, longitude));
             }
 
-            CurrentUser.getInstance().updateGlobalChuckLeaderboard(chuckRecords);
+            currentUser.updateGlobalChuckLeaderboard(chuckRecords);
         }
 
         @Override
@@ -482,13 +472,13 @@ public class FirebaseHelper {
             ArrayList<CompeteRecord> spinRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
-                String username = (String) subSnapshot.child("username").getValue();
                 double latitude = (double) subSnapshot.child("latitude").getValue();
                 double longitude = (double) subSnapshot.child("longitude").getValue();
-                spinRecords.add(new CompeteRecord(score, latitude, longitude, username));
+                String username = subSnapshot.child("username").getValue().toString();
+                spinRecords.add(new CompeteRecord(username, score, latitude, longitude));
             }
 
-            CurrentUser.getInstance().updateGlobalSpinLeaderboard(spinRecords);
+            currentUser.updateGlobalSpinLeaderboard(spinRecords);
         }
 
         @Override
@@ -502,13 +492,13 @@ public class FirebaseHelper {
             ArrayList<CompeteRecord> dropRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
-                String username = (String) subSnapshot.child("username").getValue();
                 double latitude = (double) subSnapshot.child("latitude").getValue();
                 double longitude = (double) subSnapshot.child("longitude").getValue();
-                dropRecords.add(new CompeteRecord(score, latitude, longitude, username));
+                String username = subSnapshot.child("username").getValue().toString();
+                dropRecords.add(new CompeteRecord(username, score, latitude, longitude));
             }
 
-            CurrentUser.getInstance().updateGlobalDropLeaderboard(dropRecords);
+            currentUser.updateGlobalDropLeaderboard(dropRecords);
         }
 
         @Override
@@ -516,7 +506,7 @@ public class FirebaseHelper {
         }
     };
 
-    public void changePassword(String loginEmail, String oldPassword, String newPassword, final ChangePasswordFragment changePasswordFragment) {
+    public void changePassword(String newPassword, final ChangePasswordFragment changePasswordFragment) {
         this.changePasswordFragment = changePasswordFragment;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.updatePassword(newPassword)
@@ -548,5 +538,4 @@ public class FirebaseHelper {
                     }
                 });
     }
-
 }

@@ -275,6 +275,7 @@ public class LeaderboardsFragment extends Fragment {
 
         userRow.addView(leaderboardScore);
 
+        leaderboardUserRecordTable.removeAllViews();
         leaderboardUserRecordTable.addView(userRow);
     }
 

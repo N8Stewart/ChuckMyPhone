@@ -85,6 +85,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent;
         switch (v.getId()) {
             case R.id.login_login_button:
+                //remove spaces from email
+                emailEditText.setText(emailEditText.getText().toString().replace(" ", ""));
                 attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case R.id.login_forgot_password_textview:
