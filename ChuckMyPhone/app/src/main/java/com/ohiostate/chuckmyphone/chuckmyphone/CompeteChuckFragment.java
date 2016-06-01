@@ -74,7 +74,9 @@ public class CompeteChuckFragment extends CompeteFragment {
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
                 if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
-                    chuckSound.start();
+                    if (chuckSound != null) {
+                        chuckSound.start();
+                    }
                 }
 
                 if (score > runHighScore)

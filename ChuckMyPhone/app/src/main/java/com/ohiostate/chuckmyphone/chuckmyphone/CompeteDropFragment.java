@@ -99,12 +99,15 @@ public class CompeteDropFragment extends CompeteFragment {
                     score = (fallingEndTime-fallingStartTime);
                     isFalling = false;
                     if (CurrentUser.getInstance().getSoundEnabled()) {
-                        dropSound.start();
+                        if (dropSound != null) {
+                            dropSound.start();
+                        }
                     }
                 }
 
-                if (score > runHighScore)
+                if (score > runHighScore) {
                     runHighScore = score;
+                }
 
                 //if new high score
                 if (score > currentUser.getDropScore()) {

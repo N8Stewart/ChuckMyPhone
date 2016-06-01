@@ -73,7 +73,9 @@ public class CompeteSpinFragment extends CompeteFragment {
             long currTime = System.currentTimeMillis();
 
             if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
-                spinSound.start();
+                if (spinSound != null) {
+                    spinSound.start();
+                }
             }
 
             if ((currTime - lastUpdate) > 10) {
