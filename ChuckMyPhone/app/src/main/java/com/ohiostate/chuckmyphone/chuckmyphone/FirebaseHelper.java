@@ -300,19 +300,14 @@ public class FirebaseHelper {
     }
 
     //SETTING METHODS FOR SAVING SCORES
-    void updateBestChuckScore(long score, double latitude, double longitude) {
+    void updateBestScore(long score, double latitude, double longitude, String competeLabelString) {
         String userID = currentUser.getUserId();
-        addChuckScoreToLeaderboard(score, latitude, longitude);
-    }
+        DatabaseReference ref = firebaseDatabaseRef.child(competeLabelString + "/" + userID );
 
-    void updateBestSpinScore(long score, double latitude, double longitude) {
-        String userID = currentUser.getUserId();
-        addSpinScoreToLeaderboard(score, latitude, longitude);
-    }
+        //priority set as inverse of the score, should order entries automatically
+        ref.setPriority(score);
 
-    void updateBestDropScore(long score, double latitude, double longitude) {
-        String userID = currentUser.getUserId();
-        addDropScoreToLeaderboard(score, latitude, longitude);
+        addScoreToLeaderboard(score, latitude, longitude, ref);
     }
 
     protected void addFakeChuckScoresToLeaderboard(String userID, int score) {
@@ -326,24 +321,12 @@ public class FirebaseHelper {
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
-    private void addChuckScoreToLeaderboard(long score, double latitude, double longitude) {
+    private void addScoreToLeaderboard(long score, double latitude, double longitude, DatabaseReference firebaseDatabaseReferenceSpot) {
         String userID = currentUser.getUserId();
-        //priority set as inverse of the score, should order entries automatically
-        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
-    }
-
-    //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
-    private void addSpinScoreToLeaderboard(long score, double latitude, double longitude) {
-        String userID = currentUser.getUserId();
-        //priority set as inverse of the score, should order entries automatically
-        firebaseDatabaseRef.child("SpinScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
-    }
-
-    //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
-    private void addDropScoreToLeaderboard(long score, double latitude, double longitude) {
-        String userID = currentUser.getUserId();
-        //priority set as inverse of the score, should order entries automatically
-        firebaseDatabaseRef.child("DropScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
+        firebaseDatabaseReferenceSpot.child("username").setValue(currentUser.getUsername());
+        firebaseDatabaseReferenceSpot.child("score").setValue(score);
+        firebaseDatabaseReferenceSpot.child("latitude").setValue(latitude);
+        firebaseDatabaseReferenceSpot.child("longitude").setValue(longitude);
     }
 
     void unlockBadge(String badgeName) {

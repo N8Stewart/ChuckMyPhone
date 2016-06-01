@@ -32,6 +32,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     private boolean inAppBillingReady;
     private boolean inventoryLoaded;
     private Inventory userInventory;
+    private List additionalSkuList;
 
     // Views
     private TextView termsOfService;
@@ -73,19 +74,14 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                     // IAB is fully set up!
                     inAppBillingReady = true;
 
-                    List additionalSkuList = new ArrayList();
+                    additionalSkuList = new ArrayList();
                     additionalSkuList.add("tier_one_donation");
                     additionalSkuList.add("tier_two_donation");
                     additionalSkuList.add("tier_three_donation");
                     additionalSkuList.add("tier_four_donation");
 
                     //get prices asynchonously
-                    try {
-                        if (mHelper != null) mHelper.flagEndAsync();
-                        mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryGetInventoryListener);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    refreshInventory();
                 }
             }
         });
@@ -169,6 +165,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     }
 
     public void attemptToPlaceOrder(String orderSku) {
+        refreshInventory();
+
         if (inAppBillingReady) {
             if (inventoryLoaded) {
                 if (!userInventory.hasPurchase(orderSku)) {
@@ -279,6 +277,15 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void refreshInventory() {
+        try {
+            if (mHelper != null) mHelper.flagEndAsync();
+            mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryGetInventoryListener);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
             = new IabHelper.OnIabPurchaseFinishedListener() {
         public void onIabPurchaseFinished(IabResult result, Purchase purchase)
@@ -294,7 +301,11 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 FirebaseHelper.getInstance().updateStarStatusOfUser("gold");
             } else if (purchase.getSku().equals("tier_four_donation")) {
                 FirebaseHelper.getInstance().updateStarStatusOfUser("shooting");
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "No error occurred during purchase, but unknown SKU was provided:" + purchase.getSku(), Toast.LENGTH_LONG).show();
             }
+
+            refreshInventory();
 
             //consume the purchase so that the user may purchase it again later if they want
             try {
