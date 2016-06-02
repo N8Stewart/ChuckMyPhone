@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -324,4 +325,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onFragmentInteraction(Uri uri) {}
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+
+        Toast.makeText(getApplicationContext(), "OnActivityResultCalled", Toast.LENGTH_LONG).show();
+
+        // Pass on the activity result to the helper for handling
+        if (!AboutFragment.handleOnActivityResult(requestCode, resultCode, data)) {
+            Toast.makeText(getApplicationContext(), "OnActivityResultCalled, did not get handled by IAB", Toast.LENGTH_LONG).show();
+
+            // put logic for handling non-inAppBilling logic here. The call above will handle all in app billing requests
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+        else {
+            Log.d(TAG, "onActivityResult handled by IABUtil.");
+        }
+    }
 }
