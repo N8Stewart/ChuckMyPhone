@@ -330,12 +330,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
 
-        Toast.makeText(getApplicationContext(), "OnActivityResultCalled", Toast.LENGTH_LONG).show();
-
         // Pass on the activity result to the helper for handling
         if (!AboutFragment.handleOnActivityResult(requestCode, resultCode, data)) {
-            Toast.makeText(getApplicationContext(), "OnActivityResultCalled, did not get handled by IAB", Toast.LENGTH_LONG).show();
-
             // put logic for handling non-inAppBilling logic here. The call above will handle all in app billing requests
             super.onActivityResult(requestCode, resultCode, data);
         }
