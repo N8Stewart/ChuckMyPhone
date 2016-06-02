@@ -180,9 +180,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        
+
         loggingInWasCancelled = true;
-        Log.d("onUserLeaveHint","login was cancelled!!!!!!!!!");
+        Log.d("onUserLeaveHint","login was cancelled");
 
         //if user presses home button during logging in, it should try to cancel logging in process
         if (loggingInDialog != null && loggingInDialog.isShowing()) {
