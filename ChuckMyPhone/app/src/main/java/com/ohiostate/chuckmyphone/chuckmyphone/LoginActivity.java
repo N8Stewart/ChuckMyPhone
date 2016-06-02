@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,6 +17,8 @@ import android.widget.Toast;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
+
+    private boolean loggingInWasCancelled;
 
     // Views
     private Button newUserButton;
@@ -65,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onResume() {
         super.onResume();
+        loggingInWasCancelled = false;
         Log.d(TAG, "onResume() called");
     }
 
@@ -127,10 +132,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     //called by firebase when login is successfully performed. Don't call from anywhere else
     void onSuccessfulLogin(String email, String password, String userID) {
         CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
-
         CurrentUser.getInstance().loadUserBadgeData();
 
-        if(!SharedPreferencesHelper.hasSharedData(getApplicationContext())){
+        if (!SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
             SharedPreferencesHelper.createSharedPreferencesData(getApplicationContext(),
                     email, password, CurrentUser.getInstance().getUsername());
         } else {
@@ -145,10 +149,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         CurrentUser.getInstance().loadUserLocation(SharedPreferencesHelper.getLatitude(getApplicationContext()),
                 SharedPreferencesHelper.getLongitude(getApplicationContext()));
 
-        loggingInDialog.cancel();
+        if (loggingInDialog != null && loggingInDialog.isShowing()) {
+            loggingInDialog.cancel();
+        }
 
-        this.startActivity(new Intent(this.getApplication(), MainActivity.class));
-        finish();
+        if (!loggingInWasCancelled) {
+            Log.d("onUserLeaveHint","user finished logging in!!!!!!!!!!!!!");
+            this.startActivity(new Intent(this.getApplication(), MainActivity.class));
+            finish();
+        }
     }
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
@@ -165,5 +174,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + e.getMessage(), Toast.LENGTH_LONG).show();
+    }
+
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        
+        loggingInWasCancelled = true;
+        Log.d("onUserLeaveHint","login was cancelled!!!!!!!!!");
+
+        //if user presses home button during logging in, it should try to cancel logging in process
+        if (loggingInDialog != null && loggingInDialog.isShowing()) {
+            loggingInDialog.cancel();
+            Toast.makeText(this.getApplicationContext(), "Logging in canceled", Toast.LENGTH_LONG).show();
+        }
     }
 }
