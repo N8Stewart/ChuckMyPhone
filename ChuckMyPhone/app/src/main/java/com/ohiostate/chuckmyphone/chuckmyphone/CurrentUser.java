@@ -89,19 +89,19 @@ public class CurrentUser {
     }
 
     //updates high score in firebase
-    public void updateChuckScore(long score, double latitude, double longitude) {
+    public void updateChuckScore(long score) {
         FirebaseHelper.getInstance().updateBestScore(score, latitude, longitude, "ChuckScores");
         chuckScore = score;
     }
 
     //updates high score in firebase
-    public void updateDropScore(long score, double latitude, double longitude) {
+    public void updateDropScore(long score) {
         FirebaseHelper.getInstance().updateBestScore(score, latitude, longitude, "DropScores");
         dropScore = score;
     }
 
     //updates high score in firebase
-    public void updateSpinScore(long score, double latitude, double longitude) {
+    public void updateSpinScore(long score) {
         FirebaseHelper.getInstance().updateBestScore(score, latitude, longitude, "SpinScores");
         spinScore = score;
     }

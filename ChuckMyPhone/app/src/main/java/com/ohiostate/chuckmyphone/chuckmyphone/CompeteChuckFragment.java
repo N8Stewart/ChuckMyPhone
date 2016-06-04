@@ -87,7 +87,7 @@ public class CompeteChuckFragment extends CompeteFragment {
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getChuckScore()) {
-                        currentUser.updateChuckScore(runHighScore, CurrentUser.getInstance().getLatitude(), CurrentUser.getInstance().getLongitude());
+                        currentUser.updateChuckScore(runHighScore);
                         score = runHighScore;
                     }
 

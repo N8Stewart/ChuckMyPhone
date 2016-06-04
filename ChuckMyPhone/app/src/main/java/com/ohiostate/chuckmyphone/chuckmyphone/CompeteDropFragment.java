@@ -114,7 +114,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
                     //a weird bug sometimes has the run score being higher than the score saved in current user, this removes that possibility
                     if (runHighScore > currentUser.getDropScore()) {
-                        currentUser.updateDropScore(runHighScore, CurrentUser.getInstance().getLatitude(), CurrentUser.getInstance().getLongitude());
+                        currentUser.updateDropScore(runHighScore);
                         score = runHighScore;
                     }
 
