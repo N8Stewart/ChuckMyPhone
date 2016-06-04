@@ -76,4 +76,16 @@ final class MiscHelperMethods {
             }
         }
     }
+
+    static double getDoubleValue(Object value){
+        double doubleValue = -1; // whatever to state invalid!
+
+        if(value instanceof Long) {
+            doubleValue = ((Long) value).doubleValue();
+        } else if (value instanceof Double) {
+            doubleValue = (double) value;
+        }
+
+        return doubleValue;
+    }
 }

@@ -34,7 +34,7 @@ public class FirebaseHelper {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference firebaseDatabaseRef;
 
-    private boolean hasLoadedInitialSnapshot;
+    boolean hasLoadedInitialSnapshot;
 
     //needed to work asynchonously with new user and login activities
     private NewUserActivity newUserActivity;
@@ -455,8 +455,9 @@ public class FirebaseHelper {
             ArrayList<CompeteRecord> spinRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
-                double latitude = (double) subSnapshot.child("latitude").getValue();
-                double longitude = (double) subSnapshot.child("longitude").getValue();
+                //firebase saves 0's as longs, so you have to check if it is a long and convert it to a double if appropriate
+                double latitude = MiscHelperMethods.getDoubleValue(subSnapshot.child("latitude").getValue());
+                double longitude = MiscHelperMethods.getDoubleValue(subSnapshot.child("longitude").getValue());
                 String username = subSnapshot.child("username").getValue().toString();
                 spinRecords.add(new CompeteRecord(username, score, latitude, longitude));
             }
