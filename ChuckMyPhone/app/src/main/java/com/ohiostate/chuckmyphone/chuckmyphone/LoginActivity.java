@@ -38,12 +38,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Log.d(TAG, "onCreate() called");
 
+        initializeViews();
+
         if (SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
+            emailEditText.setText(SharedPreferencesHelper.getEmail(getApplicationContext()));
+            passwordEditText.setText(SharedPreferencesHelper.getPassword(getApplicationContext()));
             attemptLogin(SharedPreferencesHelper.getEmail(getApplicationContext()),
                     SharedPreferencesHelper.getPassword(getApplicationContext()));
         }
 
-        initializeViews();
         MiscHelperMethods.setupUI(findViewById(android.R.id.content), this);
     }
 
@@ -92,6 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.login_login_button:
                 //remove spaces from email
                 emailEditText.setText(emailEditText.getText().toString().replace(" ", ""));
+                emailEditText.setText(emailEditText.getText().toString().replace("\n", ""));
                 attemptLogin(emailEditText.getText().toString(), passwordEditText.getText().toString());
                 break;
             case R.id.login_forgot_password_textview:
@@ -131,7 +135,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     void onSuccessfulLogin(String email, String password, String userID) {
-        CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
+        CurrentUser.getInstance().assignUsername(SharedPreferencesHelper.getUsername(getApplicationContext()));
         CurrentUser.getInstance().loadUserBadgeData();
 
         if (!SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
@@ -187,7 +191,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //if user presses home button during logging in, it should try to cancel logging in process
         if (loggingInDialog != null && loggingInDialog.isShowing()) {
             loggingInDialog.cancel();
-            Toast.makeText(this.getApplicationContext(), "Logging in canceled", Toast.LENGTH_LONG).show();
+            Toast.makeText(this.getApplicationContext(), "Login cancelled", Toast.LENGTH_LONG).show();
         }
     }
 }

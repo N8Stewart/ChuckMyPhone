@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener,
         CompeteFragment.OnFragmentInteractionListener,
         LeaderboardsFragment.OnFragmentInteractionListener,
@@ -328,15 +331,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG, "onActivityResult(" + requestCode + "," + resultCode + "," + data);
+        if (requestCode == 1001) {
+            int responseCode = data.getIntExtra("RESPONSE_CODE", 0);
+            String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
+            String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
 
-        // Pass on the activity result to the helper for handling
-        if (!AboutFragment.handleOnActivityResult(requestCode, resultCode, data)) {
-            // put logic for handling non-inAppBilling logic here. The call above will handle all in app billing requests
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-        else {
-            Log.d(TAG, "onActivityResult handled by IABUtil.");
+            if (IABHelper.base64EncodedPublicKey.equals(dataSignature)) {
+                Toast.makeText(getApplicationContext(), "Signatures did match, valid response received from google play", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Signatures did not match, possible spoof response", Toast.LENGTH_LONG).show();
+            }
+
+            if (resultCode == RESULT_OK) {
+                try {
+                    JSONObject jo = new JSONObject(purchaseData);
+                    String sku = jo.getString("productId");
+                    String token = jo.getString("purchaseToken");
+                    AboutFragment.handlePurchaseFinished(sku, token);
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

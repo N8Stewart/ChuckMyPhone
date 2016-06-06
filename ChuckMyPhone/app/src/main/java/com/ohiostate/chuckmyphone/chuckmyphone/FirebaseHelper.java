@@ -16,6 +16,7 @@ import com.google.firebase.database.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 
 public class FirebaseHelper {
@@ -36,19 +37,22 @@ public class FirebaseHelper {
 
     boolean hasLoadedInitialSnapshot;
 
-    //needed to work asynchonously with new user and login activities
-    private NewUserActivity newUserActivity;
-    private LoginActivity loginActivity;
-    private ForgotPasswordActivity forgotPasswordActivity;
-    private ChangePasswordFragment changePasswordFragment;
     private String loginEmail, loginPassword;
 
     public class User {
         public final ArrayList<Badge> badgeList;
         public final String username;
-        public final String starIconName;
+        public final String starIconName; // tells what the current displaying icon is
+        public final String highestStarIconEarned; // tells what the highest level icon they may display is
 
         //TODO get users location here
+
+        public User() {
+            badgeList = null;
+            username = "";
+            starIconName = "none";
+            highestStarIconEarned = "none";
+        }
 
         public User(String username, Context c) {
             this.username = username;
@@ -72,6 +76,7 @@ public class FirebaseHelper {
             badgeList.add(new Badge(c.getString(R.string.badge_hidden)));
 
             starIconName = "none";
+            highestStarIconEarned = "none";
         }
     }
 
@@ -80,13 +85,6 @@ public class FirebaseHelper {
         public final long score;
         public final double longitude;
         public final double latitude;
-
-        public CompeteRecord(String username) {
-            this.username = username;
-            this.score = 0;
-            this.longitude = 0.0;
-            this.latitude = 0.0;
-        }
 
         public CompeteRecord(String username, long score, double latitude, double longitude) {
             this.username = username;
@@ -129,15 +127,14 @@ public class FirebaseHelper {
         });
     }
 
-    public void createUser(String email, String password, String username, NewUserActivity activity) {
-        newUserActivity = activity;
+    public void createUser(String email, String password, String username, final NewUserActivity activity) {
         currentUser.assignUsername(username);
         Task<AuthResult> userCreationTask = firebaseAuth.createUserWithEmailAndPassword(email, password);
         userCreationTask.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 System.out.println("Created user account in firebase");
-                newUserActivity.accountWasCreated();
+                activity.accountWasCreated();
             }
         });
 
@@ -145,7 +142,7 @@ public class FirebaseHelper {
             @Override
             public void onFailure(@NonNull Exception e) {
                 System.out.println("Failed to create user account in firebase");
-                newUserActivity.accountWasNotCreated(e.getMessage());
+                activity.accountWasNotCreated(e.getMessage());
             }
         });
     }
@@ -181,8 +178,7 @@ public class FirebaseHelper {
         firebaseDatabaseRef.child("users/" + userID + "/username").setValue(newUsername);
     }
 
-    public boolean login(String email, String password, LoginActivity activity) {
-        loginActivity = activity;
+    public boolean login(String email, String password, final LoginActivity activity) {
         loginEmail = email;
         loginPassword = password;
         boolean firebaseWasLoaded = false;
@@ -198,29 +194,21 @@ public class FirebaseHelper {
                         if (!dataSnapshot.hasChild("users/" + uid)) {
                             //create the record and insert it into Firebase
                             System.out.println("Created user account in firebase");
+                            User newUser = new User(currentUser.getUsername(), activity.getApplicationContext());
+                            firebaseDatabaseRef.child("users/" + uid + "/username").setValue(newUser.username);
+                            firebaseDatabaseRef.child("users/" + uid + "/highestStarIconEarned").setValue(newUser.highestStarIconEarned);
+                            firebaseDatabaseRef.child("users/" + uid + "/starIconName").setValue(newUser.starIconName);
+                            firebaseDatabaseRef.child("users/" + uid + "/badgeList").setValue(newUser.badgeList);
 
-                            Task<Void> changeAcceptedTask = firebaseDatabaseRef.child("users/" + uid).setValue(new User(currentUser.getUsername(), loginActivity.getApplicationContext()));
-                            changeAcceptedTask.addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    System.out.println("change success");
-                                }
-                            });
-                            changeAcceptedTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    System.out.println("change failure??1?1//1/1/??");
-                                }
-                            });
+                            //firebaseDatabaseRef.child("users/" + uid).setValue(new User(currentUser.getUsername(), activity.getApplicationContext()));
                         } else {
                             System.out.println("User logged into existing account, no data was changed");
                         }
                         System.out.println("Login handled: User ID: " + uid);
                         currentUser.loadUserMetaData(uid);
-                        loginActivity.onSuccessfulLogin(loginEmail, loginPassword, firebaseAuth.getCurrentUser().getUid());
+                        activity.onSuccessfulLogin(loginEmail, loginPassword, firebaseAuth.getCurrentUser().getUid());
                     } else {
-                        //TODO
-                        //need to do something here? maybe try to re-authenticate user?
+                        //do nothing, need user to try again
                     }
                 }
             });
@@ -228,7 +216,7 @@ public class FirebaseHelper {
             loginResult.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
-                    loginActivity.onUnsuccessfulLogin(e);
+                    activity.onUnsuccessfulLogin(e);
                 }
             });
         }
@@ -372,13 +360,26 @@ public class FirebaseHelper {
         return iconName;
     }
 
+    public String getHighestStarStatusOfUser(String username) {
+        String iconName = "none";
+        if (dataSnapshot != null) {
+            for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
+                if (userSnapshot.child("username").getValue().equals(username)) {
+                    iconName = userSnapshot.child("highestStarIconEarned").getValue().toString();
+                    break;
+                }
+            }
+        }
+        return iconName;
+    }
+
     public boolean hasUnlockedChangingUsername() {
-        String starStatus = getStarStatusOfUser(currentUser.getUsername());
+        String starStatus = getHighestStarStatusOfUser(currentUser.getUsername());
         return (starStatus.equals("gold") || starStatus.equals("shooting"));
     }
 
     public boolean hasUnlockedSpecialCharactersInUsername() {
-        String starStatus = getStarStatusOfUser(currentUser.getUsername());
+        String starStatus = getHighestStarStatusOfUser(currentUser.getUsername());
         return (starStatus.equals("shooting"));
     }
 
@@ -387,6 +388,13 @@ public class FirebaseHelper {
         String userID = currentUser.getUserId();
 
         firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue(starIconName);
+    }
+
+    public void updateHighestStarEarnedOfUser(String starIconName) {
+        String iconName = "none";
+        String userID = currentUser.getUserId();
+
+        firebaseDatabaseRef.child("users/" + userID + "/highestStarIconEarned").setValue(starIconName);
     }
 
     String getPublicKey() {
@@ -491,7 +499,6 @@ public class FirebaseHelper {
     };
 
     public void changePassword(String newPassword, final ChangePasswordFragment changePasswordFragment) {
-        this.changePasswordFragment = changePasswordFragment;
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         user.updatePassword(newPassword)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -507,7 +514,6 @@ public class FirebaseHelper {
     }
 
     public void resetPassword(String loginEmail, final ForgotPasswordActivity forgotPasswordActivity) {
-        this.forgotPasswordActivity = forgotPasswordActivity;
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         auth.sendPasswordResetEmail(loginEmail)

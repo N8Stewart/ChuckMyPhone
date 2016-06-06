@@ -159,6 +159,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     void accountWasNotCreated(String errorMessage) {
         creatingAccountLoadingDialog.cancel();
 
+        //reformat the error messages to be more user friendly
         if (errorMessage.contains("email address is badly")) {
             errorMessage = "Invalid email provided";
         } else if (errorMessage.contains("should be at least 6 characters")) {

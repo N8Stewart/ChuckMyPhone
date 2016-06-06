@@ -1,6 +1,8 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +13,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
@@ -23,7 +29,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     // Views
     private Button saveButton;
-    private Button changeUsernameButton;
+    private Button cancelButton;
 
     private EditText changeUsernameEditText;
 
@@ -31,6 +37,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private CheckBox goofySoundEnabledCheckbox;
     private CheckBox tutorialMessagesEnabledCheckbox;
     private CheckBox badgeNotificationsCheckbox;
+
+    private Button noStarIconButton;
+    private ImageButton bronzeStarIconButton;
+    private ImageButton silverStarIconButton;
+    private ImageButton goldStarIconButton;
+    private ImageButton shootingStarIconButton;
+
+    private String userStarStatus;
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -40,7 +54,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
-        hasUnlockedUsernameChange = FirebaseHelper.getInstance().hasUnlockedChangingUsername();
     }
 
     @Override
@@ -50,6 +63,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         initializeViews(view);
         loadSettings();
         MiscHelperMethods.setupUI(view, getActivity());
+
         return view;
     }
 
@@ -69,17 +83,79 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         saveButton = (Button) view.findViewById(R.id.settings_save_button);
         saveButton.setOnClickListener(this);
 
+        cancelButton = (Button) view.findViewById(R.id.settings_cancel_button);
+        cancelButton.setOnClickListener(this);
+
         changeUsernameEditText = (EditText) view.findViewById(R.id.settings_change_username_edit_text);
 
-        changeUsernameButton = (Button) view.findViewById(R.id.settings_change_username_button);
-        changeUsernameButton.setOnClickListener(this);
-
+        hasUnlockedUsernameChange = FirebaseHelper.getInstance().hasUnlockedChangingUsername();
         if (hasUnlockedUsernameChange) {
-            changeUsernameButton.setText(getString(R.string.settings_change_username_button_unlocked));
+            changeUsernameEditText.setHint(getString(R.string.settings_change_username_button_unlocked));
+            changeUsernameEditText.setEnabled(true);
+        } else {
+            changeUsernameEditText.setEnabled(false);
         }
 
         if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_hidden))) {
             goofySoundEnabledCheckbox.setVisibility(View.INVISIBLE);
+        }
+
+        noStarIconButton = (Button) view.findViewById(R.id.settings_no_star_image_button);
+        noStarIconButton.setOnClickListener(this);
+
+        bronzeStarIconButton = (ImageButton) view.findViewById(R.id.settings_bronze_star_image_button);
+        bronzeStarIconButton.setOnClickListener(this);
+
+        silverStarIconButton = (ImageButton) view.findViewById(R.id.settings_silver_star_image_button);
+        silverStarIconButton.setOnClickListener(this);
+
+        goldStarIconButton = (ImageButton) view.findViewById(R.id.settings_gold_star_image_button);
+        goldStarIconButton.setOnClickListener(this);
+
+        shootingStarIconButton = (ImageButton) view.findViewById(R.id.settings_shooting_star_image_button);
+        shootingStarIconButton.setOnClickListener(this);
+
+        highlightCurrentStarStatusIcon();
+        highlightLockedIcons();
+    }
+
+    public void highlightCurrentStarStatusIcon() {
+        //set up screen such that their current star status has its button highlighted
+        userStarStatus = FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+
+        if (userStarStatus.equals("none")) {
+            clearAllFiltersOnButtons();
+            noStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+        } else if (userStarStatus.equals("bronze")) {
+            clearAllFiltersOnButtons();
+            bronzeStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+        } else if (userStarStatus.equals("silver")) {
+            clearAllFiltersOnButtons();
+            silverStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+        } else if (userStarStatus.equals("gold")) {
+            clearAllFiltersOnButtons();
+            goldStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+        } else if (userStarStatus.equals("shooting")) {
+            clearAllFiltersOnButtons();
+            shootingStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+        }
+    }
+
+    public void highlightLockedIcons() {
+        //set up screen such that all options that user hasn't unlocked are shaded red to indicate that
+        String highestStarStatusLevel = FirebaseHelper.getInstance().getHighestStarStatusOfUser(CurrentUser.getInstance().getUsername());
+        switch(highestStarStatusLevel) {
+            //no breaks on purpose, utilizing fall through of switch case
+            case "none":
+                bronzeStarIconButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            case "bronze":
+                silverStarIconButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            case "silver":
+                goldStarIconButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            case "gold":
+                shootingStarIconButton.getBackground().setColorFilter(Color.RED, PorterDuff.Mode.MULTIPLY);
+            case "shooting":
+                //do nothing, they have unlocked all, so don't lock any
         }
     }
 
@@ -103,20 +179,92 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        String highestStarStatusLevel = FirebaseHelper.getInstance().getHighestStarStatusOfUser(CurrentUser.getInstance().getUsername());
         switch(v.getId()){
             case R.id.settings_save_button:
-                saveSettings();
-                Toast.makeText(getActivity().getApplicationContext(), "Saved successfully!", Toast.LENGTH_LONG).show();
-                getActivity().onBackPressed();
-                break;
-            case R.id.settings_change_username_button:
-                String proposedUsername = changeUsernameEditText.getText().toString();
-                if (attemptToChangePassword(proposedUsername)) {
+                if (!changeUsernameEditText.getText().toString().equals("")) {
+                    String proposedUsername = changeUsernameEditText.getText().toString();
+                    if (attemptToChangeUsername(proposedUsername)) {
+                        saveSettings();
+                        getActivity().onBackPressed();
+                    }
+                } else {
+                    saveSettings();
                     getActivity().onBackPressed();
                 }
+                break;
+
+            case R.id.settings_no_star_image_button:
+                //highlight only the no star button
+                clearAllFiltersOnButtons();
+                highlightLockedIcons();
+                noStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+                userStarStatus = "none";
+                break;
+
+            case R.id.settings_bronze_star_image_button:
+                if (!highestStarStatusLevel.equals("none")) {
+                    //highlight only the bronze star button
+                    clearAllFiltersOnButtons();
+                    highlightLockedIcons();
+                    bronzeStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+                    userStarStatus = "bronze";
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "You have not unlocked that icon. Please donate on the about page to unlock it", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.settings_silver_star_image_button:
+                if (!highestStarStatusLevel.equals("none") && !highestStarStatusLevel.equals("bronze")) {
+                    //highlight only the silver star button
+                    clearAllFiltersOnButtons();
+                    highlightLockedIcons();
+                    silverStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+                    userStarStatus = "silver";
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "You have not unlocked that icon. Please donate on the about page to unlock it", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.settings_gold_star_image_button:
+                if (highestStarStatusLevel.equals("gold") || highestStarStatusLevel.equals("shooting")) {
+                    //highlight only the gold star button
+                    clearAllFiltersOnButtons();
+                    highlightLockedIcons();
+                    goldStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+                    userStarStatus = "gold";
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "You have not unlocked that icon. Please donate on the about page to unlock it", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.settings_shooting_star_image_button:
+                if (highestStarStatusLevel.equals("shooting")) {
+                    //highlight only the shooting star button
+                    clearAllFiltersOnButtons();
+                    highlightLockedIcons();
+                    shootingStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
+                    userStarStatus = "shooting";
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "You have not unlocked that icon. Please donate on the about page to unlock it", Toast.LENGTH_LONG).show();
+                }
+                break;
+
+            case R.id.settings_cancel_button:
+                Toast.makeText(getActivity().getApplicationContext(), "Settings not saved", Toast.LENGTH_LONG).show();
+                getActivity().onBackPressed();
+
             default:
                 break;
         }
+    }
+
+    private void clearAllFiltersOnButtons() {
+        noStarIconButton.getBackground().clearColorFilter();
+        bronzeStarIconButton.getBackground().clearColorFilter();
+        silverStarIconButton.getBackground().clearColorFilter();
+        goldStarIconButton.getBackground().clearColorFilter();
+        shootingStarIconButton.getBackground().clearColorFilter();
     }
 
     private void loadSettings(){
@@ -138,6 +286,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         SharedPreferencesHelper.setTutorialMessages(getActivity().getApplicationContext(), tutorialMessagesEnabledCheckbox.isChecked());
         SharedPreferencesHelper.setBadgeNotificationsEnabled(getActivity().getApplicationContext(), badgeNotificationsCheckbox.isChecked());
         SharedPreferencesHelper.setGoofySoundEnabled(getActivity().getApplicationContext(), goofySoundEnabledCheckbox.isChecked());
+
+        FirebaseHelper.getInstance().updateStarStatusOfUser(userStarStatus);
+
+        Toast.makeText(getActivity().getApplicationContext(), "Saved successfully!", Toast.LENGTH_LONG).show();
     }
 
     private void changeUsername(String username) {
@@ -167,8 +319,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         void onFragmentInteraction(Uri uri);
     }
 
-    //return true if password was changed
-    public boolean attemptToChangePassword(String proposedUsername) {
+    //return true if username was changed
+    public boolean attemptToChangeUsername(String proposedUsername) {
         if (hasUnlockedUsernameChange) {
             if (!proposedUsername.equals("")) {
                 if (!proposedUsername.equals(CurrentUser.getInstance().getUsername())) {

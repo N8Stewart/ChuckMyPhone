@@ -2,7 +2,6 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,16 +13,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.vending.billing.IInAppBillingService;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.IabHelper;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.IabResult;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.Inventory;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.Purchase;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -32,21 +21,16 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private OnFragmentInteractionListener mListener;
 
-    private boolean inAppBillingReady;
-    private boolean inventoryLoaded;
-    private Inventory userInventory;
-    private List additionalSkuList;
+    private IABHelper iabHelper;
 
     // Views
+    private View view;
     private TextView termsOfService;
     private Button creditsButton;
     private Button donateTier1Button;
     private Button donateTier2Button;
     private Button donateTier3Button;
     private Button donateTier4Button;
-
-
-    static IabHelper mHelper;
 
     public static AboutFragment newInstance() {
         return new AboutFragment();
@@ -56,46 +40,16 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate() called");
-
-        initializeInAppBilling();
-    }
-
-    //prepare for any possible user instigated purchases made
-    public void initializeInAppBilling() {
-        inAppBillingReady = false;
-        inventoryLoaded = false;
-
-        //store public key elsewhere so it may be gotten at runtime only. Don't want it in source code for security reasons
-        String base64EncodedPublicKey = FirebaseHelper.getInstance().getPublicKey();
-        mHelper = new IabHelper(getActivity(), base64EncodedPublicKey);
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    Log.d(TAG, "Problem setting up In-app Billing: " + result);
-                    Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing:\n"+result.getMessage(), Toast.LENGTH_LONG).show();
-                } else {
-                    // IAB is fully set up!
-                    inAppBillingReady = true;
-
-                    additionalSkuList = new ArrayList();
-                    additionalSkuList.add("tier_one_donation");
-                    additionalSkuList.add("tier_two_donation");
-                    additionalSkuList.add("tier_three_donation");
-                    additionalSkuList.add("tier_four_donation");
-
-                    //get prices asynchonously
-                    refreshInventory();
-                }
-            }
-        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_about, container, false);
+        view = inflater.inflate(R.layout.content_about, container, false);
 
         initializeViews(view);
+
+        iabHelper = new IABHelper(view);
 
         return view;
     }
@@ -121,6 +75,9 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
+        if (iabHelper.isLoaded()) {
+            iabHelper.consumeAllKnownPurchases();
+        }
         Log.d(TAG, "onResume() called");
     }
 
@@ -145,61 +102,44 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.about_donate_tier_1:
-                attemptToPlaceOrder("tier_one_donation");
+                if (iabHelper.isLoaded()) {
+                    iabHelper.makePurchase("tier_one_donation", getActivity());
+                } else {
+                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.about_donate_tier_2:
-                attemptToPlaceOrder("tier_two_donation");
+                if (iabHelper.isLoaded()) {
+                    iabHelper.makePurchase("tier_two_donation", getActivity());
+                } else {
+                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.about_donate_tier_3:
-                attemptToPlaceOrder("tier_three_donation");
+                if (iabHelper.isLoaded()) {
+                    iabHelper.makePurchase("tier_three_donation", getActivity());
+                } else {
+                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.about_donate_tier_4:
-                attemptToPlaceOrder("tier_four_donation");
+                if (iabHelper.isLoaded()) {
+                    iabHelper.makePurchase("tier_four_donation", getActivity());
+                } else {
+                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                }
                 break;
             default:
-                Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
                 if (!FirebaseHelper.getInstance().hasBadge(getContext().getString(R.string.badge_hidden))) {
                     FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
                     MiscHelperMethods.initiatePopupWindow(getString(R.string.badge_hidden), this);
-                }
-
-                break;
-        }
-    }
-
-    public void attemptToPlaceOrder(String orderSku) {
-        refreshInventory();
-        checkIfUnconsumedProducts();
-        refreshInventory();
-
-        if (inAppBillingReady) {
-            if (inventoryLoaded) {
-                if (!userInventory.hasPurchase(orderSku)) {
-                    placeOrder(orderSku);
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "You already bought this tier", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "Fetching your current inventory of purchases, please wait", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), "There was a problem establishing connection with Google Play Billing, please try again later", Toast.LENGTH_LONG).show();
-        }
-    }
 
-    private void placeOrder(String orderSku) {
-        try {
-            //need a string to uniquely identify who made order and what order was for record keeping
-            java.util.Date date= new java.util.Date();
-            Timestamp time = new Timestamp(date.getTime());
-            String uniqueIdentifier = CurrentUser.getInstance().getUserId() + "_" + orderSku + "_"+time.toString();
-
-            //makes sure that the async call actually ends before firing it off
-            if (mHelper != null) mHelper.flagEndAsync();
-            mHelper.launchPurchaseFlow(getActivity(), orderSku, 1, mPurchaseFinishedListener, uniqueIdentifier);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity().getApplicationContext(), "There was a problem placing order with Google Play Billing, you were not charged, please try again later:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+                //TODO remove this later
+                //iabHelper.consumeAllPurchasesAdmin();
+                break;
         }
     }
 
@@ -227,114 +167,27 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mHelper != null) {
-            try {
-                mHelper.dispose();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        mHelper = null;
+        iabHelper.onDestroy();
     }
 
-    IabHelper.QueryInventoryFinishedListener mQueryGetInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
-        public void onQueryInventoryFinished(IabResult result, Inventory inventory)
-        {
-            if (result.isFailure()) {
-                Toast.makeText(getActivity().getApplicationContext(), "Error fetching info from Google Play Store, please try again later", Toast.LENGTH_LONG).show();
-                return;
-            }
+    //set asynchronously by IABHelper when it is ready with the prices
+    public void setPricesTexts(View view, String tierOnePrice, String tierTwoPrice, String tierThreePrice, String tierFourPrice) {
+        // update the UI
+        TextView priceView = (TextView) view.findViewById(R.id.about_tier_1_price_text_view);
+        priceView.setText(tierOnePrice);
 
-            String tierOnePrice = inventory.getSkuDetails("tier_one_donation").getPrice();
-            String tierTwoPrice = inventory.getSkuDetails("tier_two_donation").getPrice();
-            String tierThreePrice = inventory.getSkuDetails("tier_three_donation").getPrice();
-            String tierFourPrice = inventory.getSkuDetails("tier_four_donation").getPrice();
+        priceView = (TextView) view.findViewById(R.id.about_tier_2_price_text_view);
+        priceView.setText(tierTwoPrice);
 
-            // update the UI
-            TextView priceView = (TextView) getView().findViewById(R.id.about_tier_1_price_text_view);
-            priceView.setText(tierOnePrice);
+        priceView = (TextView) view.findViewById(R.id.about_tier_3_price_text_view);
+        priceView.setText(tierThreePrice);
 
-            priceView = (TextView) getView().findViewById(R.id.about_tier_2_price_text_view);
-            priceView.setText(tierTwoPrice);
-
-            priceView = (TextView) getView().findViewById(R.id.about_tier_3_price_text_view);
-            priceView.setText(tierThreePrice);
-
-            priceView = (TextView) getView().findViewById(R.id.about_tier_4_price_text_view);
-            priceView.setText(tierFourPrice);
-
-            userInventory = inventory;
-            inventoryLoaded = true;
-        }
-    };
-
-    public void checkIfUnconsumedProducts() {
-        String[] tiersArrayStrings = new String[] {"tier_one_donation", "tier_two_donation", "tier_three_donation", "tier_four_donation"};
-        for (String tierString : tiersArrayStrings) {
-            if (userInventory.hasPurchase(tierString)) {
-                try {
-                    if (mHelper != null) mHelper.flagEndAsync();
-                    mHelper.consumeAsync(userInventory.getPurchase(tierString), mConsumeFinishedListener);
-                } catch (Exception e) {
-                    //TODO remove this toast
-                    Toast.makeText(getActivity().getApplicationContext(), "Failed to consume:\n"+e.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            }
-        }
+        priceView = (TextView) view.findViewById(R.id.about_tier_4_price_text_view);
+        priceView.setText(tierFourPrice);
     }
 
-    public void refreshInventory() {
-        try {
-            if (mHelper != null) mHelper.flagEndAsync();
-            mHelper.queryInventoryAsync(true, additionalSkuList, null, mQueryGetInventoryListener);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void handlePurchaseFinished(String sku, String token) {
+        IABHelper.onSuccessfulPurchase(sku, token);
     }
 
-    public static boolean handleOnActivityResult(int requestCode, int resultCode, Intent data) {
-        return mHelper.handleActivityResult(requestCode, resultCode, data);
-    }
-
-    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener
-            = new IabHelper.OnIabPurchaseFinishedListener() {
-        public void onIabPurchaseFinished(IabResult result, Purchase purchase)
-        {
-            if (result.isFailure()) {
-                //if user cancelled the purchase by tapped away from it, don't show an error message. This is expected behavior, not an error
-                if (result.getMessage().contains("-1005")) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Error occurred during the purchase, you will not be charged\n" + result.getMessage(), Toast.LENGTH_LONG).show();
-                }
-                return;
-            } else if (purchase.getSku().equals("tier_one_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser("bronze");
-                Toast.makeText(getActivity().getApplicationContext(), "You successfully donated " + userInventory.getSkuDetails("tier_one_donation").getPrice() +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
-            } else if (purchase.getSku().equals("tier_two_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser("silver");
-                Toast.makeText(getActivity().getApplicationContext(), "You successfully donated " + userInventory.getSkuDetails("tier_two_donation").getPrice() +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
-            } else if (purchase.getSku().equals("tier_three_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser("gold");
-                Toast.makeText(getActivity().getApplicationContext(), "You successfully donated " + userInventory.getSkuDetails("tier_three_donation").getPrice() +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
-            } else if (purchase.getSku().equals("tier_four_donation")) {
-                FirebaseHelper.getInstance().updateStarStatusOfUser("shooting");
-                Toast.makeText(getActivity().getApplicationContext(), "You successfully donated " + userInventory.getSkuDetails("tier_four_donation").getPrice() +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "No error occurred during purchase, but unknown SKU was provided:" + purchase.getSku(), Toast.LENGTH_LONG).show();
-            }
-
-            Toast.makeText(getActivity().getApplicationContext(), "Purchase finished for:\n"+purchase.getSku() + "\n" + result.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    };
-
-    IabHelper.OnConsumeFinishedListener mConsumeFinishedListener =
-            new IabHelper.OnConsumeFinishedListener() {
-                public void onConsumeFinished(Purchase purchase, IabResult result) {
-                    if (result.isSuccess()) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Purchase was consumed!\n"+purchase.getSku(), Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        Toast.makeText(getActivity().getApplicationContext(), "purhcase failed to be consumed :(\n"+purchase.getSku()+"\n"+result.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            };
 }
