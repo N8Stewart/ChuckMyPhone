@@ -135,7 +135,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is successfully performed. Don't call from anywhere else
     void onSuccessfulLogin(String email, String password, String userID) {
-        CurrentUser.getInstance().assignUsername(SharedPreferencesHelper.getUsername(getApplicationContext()));
+        if (CurrentUser.getInstance().getUsername().equals("USERNAME NOT ASSIGNED")) {
+            CurrentUser.getInstance().assignUsername(FirebaseHelper.getInstance().getUsername(userID));
+        }
         CurrentUser.getInstance().loadUserBadgeData();
 
         if (!SharedPreferencesHelper.hasSharedData(getApplicationContext())) {
