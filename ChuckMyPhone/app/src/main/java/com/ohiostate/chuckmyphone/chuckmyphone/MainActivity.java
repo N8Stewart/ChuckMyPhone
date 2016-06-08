@@ -336,20 +336,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String purchaseData = data.getStringExtra("INAPP_PURCHASE_DATA");
             String dataSignature = data.getStringExtra("INAPP_DATA_SIGNATURE");
 
-            //TODO maybe implement this correctly. It doesn't work as is
-            /*
-            if (IABHelper.base64EncodedPublicKey.equals(dataSignature)) {
-                Toast.makeText(getApplicationContext(), "Signatures did match, valid response received from google play", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "Signatures did not match, possible spoof response", Toast.LENGTH_LONG).show();
-            }
-            */
-
             if (resultCode == RESULT_OK) {
                 try {
                     JSONObject jo = new JSONObject(purchaseData);
                     String sku = jo.getString("productId");
                     String token = jo.getString("purchaseToken");
+                    String developerPayload = jo.getString("developerPayload");
+
+                    String expectedPayload = IABHelper.base64EncodedPublicKey + CurrentUser.getInstance().getUserId();
+                    if (expectedPayload.equals(developerPayload)) {
+                        Toast.makeText(getApplicationContext(), "Payloads did match, valid response received from google play", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Payloads did not match, possible spoof response", Toast.LENGTH_LONG).show();
+                    }
+
                     AboutFragment.handlePurchaseFinished(sku, token);
                 }
                 catch (JSONException e) {

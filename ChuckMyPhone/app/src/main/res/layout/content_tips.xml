@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="For better spin scores, try to flip your phone across all axis of orientation\n" />
+        android:text="For better spin scores, try to flip your phone across all axes of orientation\n" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -443,8 +443,8 @@ public class FirebaseHelper {
             ArrayList<CompeteRecord> chuckRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
-                double latitude = (double) subSnapshot.child("latitude").getValue();
-                double longitude = (double) subSnapshot.child("longitude").getValue();
+                double latitude = MiscHelperMethods.getDoubleValue(subSnapshot.child("latitude").getValue());
+                double longitude = MiscHelperMethods.getDoubleValue(subSnapshot.child("longitude").getValue());
                 String username = subSnapshot.child("username").getValue().toString();
                 chuckRecords.add(new CompeteRecord(username, score, latitude, longitude));
             }
@@ -484,8 +484,8 @@ public class FirebaseHelper {
             ArrayList<CompeteRecord> dropRecords = new ArrayList<>();
             for (DataSnapshot subSnapshot : querySnapshot.getChildren()) {
                 long score = (long) subSnapshot.child("score").getValue();
-                double latitude = (double) subSnapshot.child("latitude").getValue();
-                double longitude = (double) subSnapshot.child("longitude").getValue();
+                double latitude = MiscHelperMethods.getDoubleValue(subSnapshot.child("latitude").getValue());
+                double longitude = MiscHelperMethods.getDoubleValue(subSnapshot.child("longitude").getValue());
                 String username = subSnapshot.child("username").getValue().toString();
                 dropRecords.add(new CompeteRecord(username, score, latitude, longitude));
             }
