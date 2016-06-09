@@ -74,6 +74,6 @@
     <string name="badge_one_percent">The 1%</string>
     <string name="terms_of_service">https://github.com/timtaylorosu16/ChuckMyPhone/blob/master/README.md#terms-of-service</string>
     <string name="title_activity_tips">TipsActivity</string>
-    <string name="settings_change_username_button_locked">Change Username\n(Locked Feature)</string>
-    <string name="settings_change_username_button_unlocked">Change Username</string>
+    <string name="settings_change_username_button_locked">New Username\n(Locked Feature)</string>
+    <string name="settings_change_username_button_unlocked">New Username</string>
 </resources>

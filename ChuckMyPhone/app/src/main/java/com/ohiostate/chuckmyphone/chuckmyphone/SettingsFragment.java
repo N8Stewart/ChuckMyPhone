@@ -97,7 +97,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         }
 
         if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_hidden))) {
-            goofySoundEnabledCheckbox.setVisibility(View.INVISIBLE);
+            ViewGroup viewGroup = (ViewGroup) view;
+            viewGroup.removeView(view.findViewById(R.id.settings_goofy_sounds_checkbox));
         }
 
         noStarIconButton = (Button) view.findViewById(R.id.settings_no_star_image_button);

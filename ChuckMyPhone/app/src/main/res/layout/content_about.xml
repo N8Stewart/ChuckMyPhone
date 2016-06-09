@@ -18,7 +18,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="This app was created for entertainment purposes only. No data about our users is being sold or shared with anyone else\n" />
+        android:text="This app was made for entertainment purposes only. No data about users is being sold or shared.\n" />
 
     <TextView
         android:layout_width="match_parent"
@@ -28,18 +28,25 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="If you donate, you receive in-app benefits:\n" />
+        android:text="If you donate, you receive in-app benefits:"
+        android:layout_marginBottom="5dp"/>
 
     <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#bebebe" />
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 1 - "/>
+                android:text="Tier 1: "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -48,20 +55,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" - " />
+                android:text="  " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Bronze star by name on leaderboard"
+                android:text="Bronze star on leaderboard rows"
                 android:layout_weight="1"/>
         </TableRow>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#bebebe" />
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 2 - "/>
+                android:text="Tier 2: "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,20 +83,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" - " />
+                android:text="  " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Silver star by name on leaderboard"
+                android:text="Silver star on leaderboard rows"
                 android:layout_weight="1"/>
         </TableRow>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#bebebe" />
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 3 - "/>
+                android:text="Tier 3: "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -92,20 +111,26 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" - " />
+                android:text="  " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gold star by name, change username freely"
+                android:text="Gold star on leaderboard rows\nChange username freely"
                 android:layout_weight="1"/>
         </TableRow>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#bebebe" />
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tier 4 - "/>
+                android:text="Tier 4: "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -114,13 +139,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" - " />
+                android:text="  " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rainbow shooting star by name, change username freely, can use special characters in username"
+                android:text="Shooting star on leaderboard rows\nChange username freely\nMay use any characters in username"
                 android:layout_weight="1"/>
         </TableRow>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_horizontal"
+            android:background="#bebebe" />
 
     </TableLayout>
 
