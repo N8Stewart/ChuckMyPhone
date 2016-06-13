@@ -241,13 +241,13 @@ public class LeaderboardsFragment extends Fragment {
 
         TextView leaderboardName = new TextView(getActivity());
         leaderboardName.setText(name);
-        leaderboardName.setGravity(Gravity.LEFT);
+        leaderboardName.setGravity(Gravity.START);
         leaderboardName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
         leaderboardName.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
         TextView leaderboardScore = new TextView(getActivity());
         leaderboardScore.setText(score);
-        leaderboardScore.setGravity(Gravity.RIGHT);
+        leaderboardScore.setGravity(Gravity.END);
         leaderboardScore.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
         leaderboardScore.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
@@ -297,13 +297,13 @@ public class LeaderboardsFragment extends Fragment {
 
         TextView leaderboardName = new TextView(getActivity());
         leaderboardName.setText(name);
-        leaderboardName.setGravity(Gravity.LEFT);
+        leaderboardName.setGravity(Gravity.START);
         leaderboardName.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
         leaderboardName.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 
         TextView leaderboardScore = new TextView(getActivity());
         leaderboardScore.setText(String.valueOf(score));
-        leaderboardScore.setGravity(Gravity.RIGHT);
+        leaderboardScore.setGravity(Gravity.END);
         leaderboardScore.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1));
         leaderboardScore.setTextAppearance(getContext(), android.R.style.TextAppearance_Large);
 

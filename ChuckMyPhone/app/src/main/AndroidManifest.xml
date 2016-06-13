@@ -18,18 +18,22 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".NewUserActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_new_user"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main_activity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity

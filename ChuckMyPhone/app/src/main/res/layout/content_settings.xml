@@ -12,7 +12,8 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.ohiostate.chuckmyphone.chuckmyphone.SettingsFragment"
     android:weightSum="1"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:windowSoftInputMode="adjustPan">
 
     <ScrollView
         android:layout_width="match_parent"
