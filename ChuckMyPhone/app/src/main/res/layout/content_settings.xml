@@ -24,102 +24,52 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="General settings:"
-                android:textColor="@color/colorAccent"
-
-                android:layout_marginBottom="10dp"/>
-
-            <CheckBox
-                android:id="@+id/settings_sound_enabled_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/sound_enabled" />
-
-            <CheckBox
-                android:id="@+id/settings_tutorial_messages_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/tutorial" />
-
-            <CheckBox
-                android:id="@+id/settings_badge_unlock_notifications_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="Show badge unlock notifications" />
-
-            <CheckBox
-                android:id="@+id/settings_goofy_sounds_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="Use goofy sounds"
-                android:visibility="visible" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"
-                android:background="#bebebe" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_gravity="center_horizontal"
-                android:text="Leaderboard icon:"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/colorAccent"/>
-
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="General settings:"
+                    android:textColor="@color/colorAccent"
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/settings_no_star_image_button"
-                    android:text="no icon"
-                    android:layout_weight="1"/>
+                    android:layout_marginBottom="10dp"/>
 
-                <ImageButton
+                <CheckBox
+                    android:id="@+id/settings_sound_enabled_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/settings_bronze_star_image_button"
-                    android:src="@drawable/bronze_star_icon"
-                    android:layout_weight="1"/>
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/sound_enabled" />
 
-                <ImageButton
+                <CheckBox
+                    android:id="@+id/settings_tutorial_messages_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/settings_silver_star_image_button"
-                    android:src="@drawable/silver_star_icon"
-                    android:layout_weight="1"/>
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/tutorial" />
 
-                <ImageButton
+                <CheckBox
+                    android:id="@+id/settings_badge_unlock_notifications_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/settings_gold_star_image_button"
-                    android:src="@drawable/gold_star_icon"
-                    android:layout_weight="1"/>
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Show badge unlock notifications" />
 
-                <ImageButton
+                <CheckBox
+                    android:id="@+id/settings_goofy_sounds_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/settings_shooting_star_image_button"
-                    android:src="@drawable/shooting_star_icon"
-                    android:layout_weight="1"/>
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Use goofy sounds"
+                    android:visibility="visible" />
+
             </LinearLayout>
 
+
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -127,23 +77,96 @@
                 android:layout_gravity="center_horizontal"
                 android:background="#bebebe" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Leaderboard icon:"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorAccent"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/settings_no_star_image_button"
+                        android:text="no icon"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/settings_bronze_star_image_button"
+                        android:src="@drawable/bronze_star_icon"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/settings_silver_star_image_button"
+                        android:src="@drawable/silver_star_icon"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/settings_gold_star_image_button"
+                        android:src="@drawable/gold_star_icon"
+                        android:layout_weight="1"/>
+
+                    <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/settings_shooting_star_image_button"
+                        android:src="@drawable/shooting_star_icon"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
+
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="1dp"
                 android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal"
-                android:text="Change username:"
+                android:background="#bebebe" />
 
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/colorAccent"/>
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/settings_change_username_edit_text"
-                android:hint="New Username (locked feature)"
-                android:imeOptions="actionDone"
-                android:singleLine="true"/>
+            <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center_horizontal"
+                    android:text="Change username:"
+
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorAccent"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/settings_change_username_edit_text"
+                    android:hint="New Username (locked feature)"
+                    android:windowSoftInputMode="adjustPan"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"/>
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

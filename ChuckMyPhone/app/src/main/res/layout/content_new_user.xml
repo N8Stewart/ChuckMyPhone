@@ -32,12 +32,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Username"
+        android:windowSoftInputMode="adjustPan"
         android:singleLine="true"/>
 
     <EditText
         android:id="@+id/new_user_password_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:windowSoftInputMode="adjustPan"
         android:hint="Password"
         android:inputType="textPassword"
         android:imeOptions="actionNext"/>
@@ -46,6 +48,7 @@
         android:id="@+id/new_user_password_confirmation_edit_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:windowSoftInputMode="adjustPan"
         android:hint="Password Confirmation"
         android:inputType="textPassword"
         android:imeOptions="actionNext"/>
@@ -54,6 +57,7 @@
         android:id="@+id/new_user_email_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:windowSoftInputMode="adjustPan"
         android:hint="Email"
         android:singleLine="true"/>
 
