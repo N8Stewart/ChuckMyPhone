@@ -4,21 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.text.Html;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
 final class MiscHelperMethods {
     private MiscHelperMethods () { }
@@ -49,7 +40,7 @@ final class MiscHelperMethods {
     }
 
     //used to hide the keyboard whenever user clicks on something that should hide it, but android is too dumb to do so >:(
-    public static void hideSoftKeyboard(Activity activity) {
+    private static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }

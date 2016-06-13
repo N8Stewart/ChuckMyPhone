@@ -12,17 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class CompeteSpinFragment extends CompeteFragment {
     private Sensor gyroscope;
 
     private MediaPlayer spinSound;
-
-    private final int SCORE_THRESHOLD_FOR_SOUND = 2500;
     private final String TUTORIAL_TEXT = "Click the arrow, then spin your phone!";
 
     public static CompeteSpinFragment newInstance() {
-        CompeteSpinFragment fragment = new CompeteSpinFragment();
-        return fragment;
+        return new CompeteSpinFragment();
     }
 
     @Override
@@ -60,7 +59,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //need to reinstantiate this at least once between each button press so a thread isn't run
+        //need to re-instantiate this at least once between each button press so a thread isn't run
         //while it is already running. This is a convenient spot that happens at least once
         //between button presses. May need to put in a delay if performance suffers (note, thread isn't run until later)
         updateViewRunnableThread = new Thread(updateViewRunnable);
@@ -72,7 +71,7 @@ public class CompeteSpinFragment extends CompeteFragment {
 
             long currTime = System.currentTimeMillis();
 
-            if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
+            if (score > getResources().getInteger(R.integer.score_threshold_for_sound_spin) && CurrentUser.getInstance().getSoundEnabled()) {
                 if (spinSound != null) {
                     spinSound.start();
                 }
@@ -133,14 +132,14 @@ public class CompeteSpinFragment extends CompeteFragment {
             @Override
             public void run() {
                 if(isRecording)
-                    currentScoreTextView.setText(String.format("%d", score));
+                    currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", score));
                 else
-                    currentScoreTextView.setText(String.format("%d", runHighScore));
+                    currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", runHighScore));
 
                 if (currentUser.getSpinScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getSpinScore()));
+                    yourBestScoreTextView.setText(String.format(Locale.ENGLISH, "Your best: %d", currentUser.getSpinScore()));
                 }
             }
         };

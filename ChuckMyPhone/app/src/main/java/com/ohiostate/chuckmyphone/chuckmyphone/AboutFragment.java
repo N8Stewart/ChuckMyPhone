@@ -16,8 +16,6 @@ import android.widget.Toast;
 public class AboutFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
-    private final String CREDITS_MESSAGE = "Thank you so much for playing our game!\n\n Tim Taylor - Idea creator, Software Eng.\n\n" +
-            "Nate Stewart - Software Engineer\n\nJoao Magalhaes - Software Engineer";
 
     private OnFragmentInteractionListener mListener;
 
@@ -134,7 +132,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                     FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
                     MiscHelperMethods.initiatePopupWindow(getString(R.string.badge_hidden), this);
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), CREDITS_MESSAGE, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.about_credits_message), Toast.LENGTH_LONG).show();
                 }
 
                 //TODO remove this later

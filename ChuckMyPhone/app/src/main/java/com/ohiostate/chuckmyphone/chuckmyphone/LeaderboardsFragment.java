@@ -20,7 +20,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class LeaderboardsFragment extends Fragment {
 
@@ -43,8 +42,7 @@ public class LeaderboardsFragment extends Fragment {
     private TableLayout leaderboardTable;
 
     public static LeaderboardsFragment newInstance() {
-        LeaderboardsFragment fragment = new LeaderboardsFragment();
-        return fragment;
+        return new LeaderboardsFragment();
     }
 
     @Override

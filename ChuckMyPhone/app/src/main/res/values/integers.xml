@@ -2,4 +2,6 @@
 <resources>
     <integer name="progress_bar_max">100</integer>
     <integer name="progress_bar_default">99</integer>
+    <integer name="score_threshold_for_sound_chuck">1500</integer>
+    <integer name="score_threshold_for_sound_spin">2500</integer>
 </resources>

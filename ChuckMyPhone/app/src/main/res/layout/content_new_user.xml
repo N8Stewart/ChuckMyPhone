@@ -59,6 +59,7 @@
         android:layout_height="wrap_content"
         android:windowSoftInputMode="adjustPan"
         android:hint="Email"
+        android:inputType="textEmailAddress"
         android:singleLine="true"/>
 
     <LinearLayout

@@ -38,14 +38,14 @@ class SharedPreferencesHelper {
         // base method to be called when wanting to store booleans values
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
-        editor.putBoolean(key, value).commit();
+        editor.putBoolean(key, value).apply();
     }
 
     private static void setStringValue(Context context, String key, String value){
         // base method to be called when wanting to store string values
         SharedPreferences sharedData = context.getSharedPreferences(PREFS_USER, Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedData.edit();
-        editor.putString(key, value).commit();
+        editor.putString(key, value).apply();
     }
 
     private static void setEmail(Context context, String email){

@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -179,7 +177,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             messageToUser = "Incorrect email, please try a different one";
         }
 
-        Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + messageToUser, Toast.LENGTH_LONG).show();
     }
 
 

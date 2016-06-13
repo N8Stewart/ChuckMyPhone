@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class CompeteDropFragment extends CompeteFragment {
     private final float FALLING_MAX_ACCELERATION = 4.0f;
 
@@ -28,8 +30,7 @@ public class CompeteDropFragment extends CompeteFragment {
     private MediaPlayer dropSound;
 
     public static CompeteDropFragment newInstance() {
-        CompeteDropFragment fragment = new CompeteDropFragment();
-        return fragment;
+        return new CompeteDropFragment();
     }
 
     @Override
@@ -69,7 +70,7 @@ public class CompeteDropFragment extends CompeteFragment {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //need to reinstantiate this at least once between each button press so a thread isn't run
+        //need to re-instantiate this at least once between each button press so a thread isn't run
         //while it is already running. This is a convenient spot that happens at least once
         //between button presses. May need to put in a delay if performance suffers (note, thread isn't run until later)
         updateViewRunnableThread = new Thread(updateViewRunnable);
@@ -154,14 +155,14 @@ public class CompeteDropFragment extends CompeteFragment {
             @Override
             public void run() {
                 if(isRecording)
-                    currentScoreTextView.setText(String.format("%d", score));
+                    currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", score));
                 else
-                    currentScoreTextView.setText(String.format("%d", runHighScore));
+                    currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", runHighScore));
 
                 if (currentUser.getDropScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getDropScore()));
+                    yourBestScoreTextView.setText(String.format(Locale.ENGLISH, "Your best: %d", currentUser.getDropScore()));
                 }
             }
         };

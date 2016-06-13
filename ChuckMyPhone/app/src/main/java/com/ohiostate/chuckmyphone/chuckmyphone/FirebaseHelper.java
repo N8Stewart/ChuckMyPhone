@@ -14,9 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.*;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.Date;
 
 public class FirebaseHelper {
@@ -310,7 +308,6 @@ public class FirebaseHelper {
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
     private void addScoreToLeaderboard(long score, double latitude, double longitude, DatabaseReference firebaseDatabaseReferenceSpot) {
-        String userID = currentUser.getUserId();
         firebaseDatabaseReferenceSpot.child("username").setValue(currentUser.getUsername());
         firebaseDatabaseReferenceSpot.child("score").setValue(score);
         firebaseDatabaseReferenceSpot.child("latitude").setValue(latitude);
@@ -321,10 +318,10 @@ public class FirebaseHelper {
         String userID = currentUser.getUserId();
         for (int i = 0; i < 11; i++) {
             if (dataSnapshot.hasChild("users/" + userID + "/badgeList/"+i) && dataSnapshot.child("users/" + userID + "/badgeList/"+i+"/name").getValue().equals(badgeName)) {
-                DateFormat df = new SimpleDateFormat("MM/dd/yy");
+                DateFormat df = DateFormat.getDateInstance();
                 Date dateobj = new Date();
                 firebaseDatabaseRef.child("users/" + userID + "/badgeList/" + i + "/unlockDate").setValue(df.format(dateobj));
-                i = 20; //end this loop
+                break;
             }
         }
     }
@@ -384,14 +381,12 @@ public class FirebaseHelper {
     }
 
     public void updateStarStatusOfUser(String starIconName) {
-        String iconName = "none";
         String userID = currentUser.getUserId();
 
         firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue(starIconName);
     }
 
     public void updateHighestStarEarnedOfUser(String starIconName) {
-        String iconName = "none";
         String userID = currentUser.getUserId();
 
         firebaseDatabaseRef.child("users/" + userID + "/highestStarIconEarned").setValue(starIconName);

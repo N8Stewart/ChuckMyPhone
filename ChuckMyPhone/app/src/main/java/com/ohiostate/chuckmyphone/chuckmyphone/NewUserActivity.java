@@ -13,10 +13,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class NewUserActivity extends AppCompatActivity implements View.OnClickListener{
 
     public static final int USERNAME_LENGTH_MIN = 3;
-    public static int USERNAME_LENGTH_MAX = 13;
+    public static final int USERNAME_LENGTH_MAX = 13;
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -33,7 +35,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
     private EditText passwordConfirmationEditText;
     private EditText emailEditText;
 
-    ProgressDialog creatingAccountLoadingDialog;
+    private ProgressDialog creatingAccountLoadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +109,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
 
         // Ensure username length is restricted
         if (username.length() < USERNAME_LENGTH_MIN || username.length() > USERNAME_LENGTH_MAX) {
-            Toast.makeText(this.getApplicationContext(), String.format("Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_LENGTH_MAX), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.getApplicationContext(), String.format(Locale.ENGLISH, "Username must be between %d and %d characters.", USERNAME_LENGTH_MIN, USERNAME_LENGTH_MAX), Toast.LENGTH_SHORT).show();
         } else if (!isValidUsername(username)) {
             Toast.makeText(this.getApplicationContext(), "Only digits and letters are allowed in a username", Toast.LENGTH_SHORT).show();
         } else if (password.isEmpty()) {

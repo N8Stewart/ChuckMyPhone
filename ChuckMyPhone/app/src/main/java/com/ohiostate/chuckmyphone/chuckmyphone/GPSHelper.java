@@ -22,7 +22,7 @@ class GPSHelper {
     // random number to represent permission for fine location access
     private final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 5;
 
-    // minimum time in miliseconds between listening to location changes
+    // minimum time in milliseconds between listening to location changes
     private final long MINIMUM_TIME = 100;
     // minimum distance in meters to consider changes in location
     private final float MINIMUM_DISTANCE = 10;

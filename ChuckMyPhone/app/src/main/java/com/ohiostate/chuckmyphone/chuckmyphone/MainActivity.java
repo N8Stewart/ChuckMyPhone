@@ -20,9 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -115,11 +112,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        String nextFragmentTag = "";
+        String nextFragmentTag;
 
-        Fragment fragment = null;
+        Fragment fragment;
 
-        Class fragmentClass = null;
+        Class fragmentClass;
 
         //null object ref on int?
         if((int)NavigationHelper.getInstance().lastFragmentIDChoice() != id) {
@@ -174,11 +171,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        String nextFragmentTag = "";
+        String nextFragmentTag;
 
-        Fragment fragment = null;
+        Fragment fragment;
 
-        Class fragmentClass = null;
+        Class fragmentClass;
 
         if((int)NavigationHelper.getInstance().lastFragmentIDChoice()!=id) {
             //don't let pop ups from previous fragment appear in new fragment

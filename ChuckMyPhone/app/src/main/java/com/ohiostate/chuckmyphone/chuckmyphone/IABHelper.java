@@ -9,26 +9,17 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.android.vending.billing.IInAppBillingService;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.IabException;
 import com.ohiostate.chuckmyphone.chuckmyphone.util.IabHelper;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.Inventory;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.Purchase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
-/**
- * Created by Tim on 6/2/2016.
- */
 public class IABHelper extends Binder {
     private ArrayList skuList;
     private static ArrayList<String> tokenList;

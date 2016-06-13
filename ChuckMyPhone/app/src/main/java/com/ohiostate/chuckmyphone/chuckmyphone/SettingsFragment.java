@@ -16,9 +16,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = this.getClass().getSimpleName();
@@ -120,7 +117,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         highlightLockedIcons();
     }
 
-    public void highlightCurrentStarStatusIcon() {
+    private void highlightCurrentStarStatusIcon() {
         //set up screen such that their current star status has its button highlighted
         userStarStatus = FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername());
 
@@ -142,7 +139,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void highlightLockedIcons() {
+    private void highlightLockedIcons() {
         //set up screen such that all options that user hasn't unlocked are shaded red to indicate that
         String highestStarStatusLevel = FirebaseHelper.getInstance().getHighestStarStatusOfUser(CurrentUser.getInstance().getUsername());
         switch(highestStarStatusLevel) {
@@ -321,7 +318,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     //return true if username was changed
-    public boolean attemptToChangeUsername(String proposedUsername) {
+    private boolean attemptToChangeUsername(String proposedUsername) {
         if (hasUnlockedUsernameChange) {
             if (!proposedUsername.equals("")) {
                 if (!proposedUsername.equals(CurrentUser.getInstance().getUsername())) {

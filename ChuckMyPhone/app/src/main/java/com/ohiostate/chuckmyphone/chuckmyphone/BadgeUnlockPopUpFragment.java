@@ -2,22 +2,15 @@ package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 
 public class BadgeUnlockPopUpFragment extends DialogFragment {
 
-    String badgeName;
+    private String badgeName;
 
     public void setBadgeName(String bName) {
         badgeName = bName;

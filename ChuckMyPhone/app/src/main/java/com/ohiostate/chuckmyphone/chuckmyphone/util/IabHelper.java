@@ -478,10 +478,7 @@ public class IabHelper {
             mRequestCode = requestCode;
             mPurchaseListener = listener;
             mPurchasingItemType = itemType;
-            act.startIntentSenderForResult(pendingIntent.getIntentSender(),
-                    requestCode, new Intent(),
-                    Integer.valueOf(0), Integer.valueOf(0),
-                    Integer.valueOf(0));
+            act.startIntentSenderForResult(pendingIntent.getIntentSender(), requestCode, new Intent(),0, 0,0);
         }
         catch (SendIntentException e) {
             logError("SendIntentException while launching purchase flow for sku " + sku);
@@ -550,7 +547,7 @@ public class IabHelper {
                 return true;
             }
 
-            Purchase purchase = null;
+            Purchase purchase;
             try {
                 purchase = new Purchase(mPurchasingItemType, purchaseData, dataSignature);
                 String sku = purchase.getSku();

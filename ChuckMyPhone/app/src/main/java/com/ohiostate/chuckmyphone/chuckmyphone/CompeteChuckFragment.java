@@ -12,16 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class CompeteChuckFragment extends CompeteFragment {
     private final String TUTORIAL_TEXT = "Click the arrow, then chuck your phone!";
-    private final int SCORE_THRESHOLD_FOR_SOUND = 1500;
 
     private MediaPlayer chuckSound;
     private Sensor linearAccelerometer;
 
     public static CompeteFragment newInstance() {
-        CompeteFragment fragment = new CompeteChuckFragment();
-        return fragment;
+        return new CompeteChuckFragment();
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CompeteChuckFragment extends CompeteFragment {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //need to reinstantiate this at least once between each button press so a thread isn't run
+        //need to re-instantiate this at least once between each button press so a thread isn't run
         //while it is already running. This is a convenient spot that happens at least once
         //between button presses. May need to put in a delay if performance suffers (note, thread isn't run until later)
         updateViewRunnableThread = new Thread(updateViewRunnable);
@@ -73,7 +73,7 @@ public class CompeteChuckFragment extends CompeteFragment {
                 double az = event.values[2];
                 score = (long)(Math.sqrt(ax * ax + ay * ay + az * az) * 100);
 
-                if (score > SCORE_THRESHOLD_FOR_SOUND && CurrentUser.getInstance().getSoundEnabled()) {
+                if (score > getResources().getInteger(R.integer.score_threshold_for_sound_chuck) && CurrentUser.getInstance().getSoundEnabled()) {
                     if (chuckSound != null) {
                         chuckSound.start();
                     }
@@ -125,14 +125,14 @@ public class CompeteChuckFragment extends CompeteFragment {
             @Override
             public void run() {
                 if(isRecording)
-                    currentScoreTextView.setText(String.format("%d", score));
+                    currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", score));
                 else
-                    currentScoreTextView.setText(String.format("%d", runHighScore));
+                    currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", runHighScore));
 
                 if (currentUser.getChuckScore() == 0) {
                     yourBestScoreTextView.setText(TUTORIAL_TEXT);
                 } else{
-                    yourBestScoreTextView.setText(String.format("Your best: %d", currentUser.getChuckScore()));
+                    yourBestScoreTextView.setText(String.format(Locale.ENGLISH, "Your best: %d", currentUser.getChuckScore()));
                 }
             }
         };

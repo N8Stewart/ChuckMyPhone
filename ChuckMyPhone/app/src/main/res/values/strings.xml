@@ -73,7 +73,6 @@
     <string name="badge_hidden">The Kindness Badge</string>
     <string name="badge_one_percent">The 1%</string>
     <string name="terms_of_service">https://github.com/timtaylorosu16/ChuckMyPhone/blob/master/README.md#terms-of-service</string>
-    <string name="title_activity_tips">TipsActivity</string>
-    <string name="settings_change_username_button_locked">New Username\n(Locked Feature)</string>
     <string name="settings_change_username_button_unlocked">New Username</string>
+    <string name="about_credits_message">Thank you so much for playing our game!\n\n Tim Taylor - Idea creator, Software Eng.\n\n Nate Stewart - Software Engineer\n\n Joao Magalhaes - Software Engineer</string>
 </resources>

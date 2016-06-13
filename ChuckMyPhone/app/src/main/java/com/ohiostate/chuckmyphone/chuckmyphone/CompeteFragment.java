@@ -18,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public abstract class CompeteFragment extends Fragment implements SensorEventListener {
 
@@ -88,7 +89,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         progressBarAnimation.setFillAfter(true);
         progressBar.startAnimation(progressBarAnimation);
 
-        currentScoreTextView.setText(String.format("%d", score));
+        currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", score));
     }
 
     @Override
