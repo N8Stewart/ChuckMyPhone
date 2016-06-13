@@ -81,14 +81,14 @@ public class LeaderboardsFragment extends Fragment {
 
     private void initializeViews(View view) {
         competitionSpinner = (Spinner) view.findViewById(R.id.leaderboards_competition_filter_dropdown);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.Competition_spinner_labels, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        competitionSpinner.setAdapter(adapter);
+        ArrayAdapter<CharSequence> competitionSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Competition_spinner_labels, android.R.layout.simple_spinner_item);
+        competitionSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        competitionSpinner.setAdapter(competitionSpinnerAdapter);
 
         distanceSpinner = (Spinner) view.findViewById(R.id.leaderboards_distance_filter_dropdown);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(getActivity(), R.array.Radius_spinner_labels, android.R.layout.simple_spinner_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        distanceSpinner.setAdapter(adapter2);
+        ArrayAdapter<CharSequence> radiusSpinnerAdapter = ArrayAdapter.createFromResource(getActivity(), R.array.Radius_spinner_labels, android.R.layout.simple_spinner_item);
+        radiusSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        distanceSpinner.setAdapter(radiusSpinnerAdapter);
 
         //needs a final declaration to be used in listener
         final View v = view;
