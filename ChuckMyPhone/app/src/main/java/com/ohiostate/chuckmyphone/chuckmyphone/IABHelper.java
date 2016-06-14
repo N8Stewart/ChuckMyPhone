@@ -11,13 +11,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.Toast;
-
 import com.android.vending.billing.IInAppBillingService;
-import com.ohiostate.chuckmyphone.chuckmyphone.util.IabHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class IABHelper extends Binder {
@@ -25,8 +21,6 @@ public class IABHelper extends Binder {
     private static ArrayList<String> tokenList;
 
     private static View view;
-
-    private static IabHelper mHelper;
 
     static String base64EncodedPublicKey;
     private Bundle ownedItems;

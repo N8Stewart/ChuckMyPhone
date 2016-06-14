@@ -342,12 +342,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     String expectedPayload = IABHelper.base64EncodedPublicKey + CurrentUser.getInstance().getUserId();
                     if (expectedPayload.equals(developerPayload)) {
-                        Toast.makeText(getApplicationContext(), "Payloads did match, valid response received from google play", Toast.LENGTH_LONG).show();
+                        //Payloads did match, valid response received from google play
+                        AboutFragment.handlePurchaseFinished(sku, token);
                     } else {
-                        Toast.makeText(getApplicationContext(), "Payloads did not match, possible spoof response", Toast.LENGTH_LONG).show();
+                        //erroneous signal received, do nothing
                     }
 
-                    AboutFragment.handlePurchaseFinished(sku, token);
                 }
                 catch (JSONException e) {
                     e.printStackTrace();

@@ -15,7 +15,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="322dp"
+        android:layout_height="275dp"
         android:id="@+id/leaderboards_table_records_scroll_view" >
 
         <TableLayout
@@ -55,7 +55,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="20dp"
         android:text="Filter on:"
         android:textColor="@color/colorAccent"
         />
