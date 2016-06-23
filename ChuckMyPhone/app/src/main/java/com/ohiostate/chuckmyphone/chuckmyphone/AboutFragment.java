@@ -103,28 +103,41 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 if (iabHelper.isLoaded()) {
                     iabHelper.makePurchase("tier_one_donation", getActivity());
                 } else {
-                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
-                }
+                    if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
+                        Toast.makeText(view.getContext(), "You have no internet\nThis action requires internet", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                    }                }
                 break;
             case R.id.about_donate_tier_2:
                 if (iabHelper.isLoaded()) {
                     iabHelper.makePurchase("tier_two_donation", getActivity());
                 } else {
-                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
-                }
+                    if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
+                        Toast.makeText(view.getContext(), "You have no internet\nThis action requires internet", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                    }                }
                 break;
             case R.id.about_donate_tier_3:
                 if (iabHelper.isLoaded()) {
                     iabHelper.makePurchase("tier_three_donation", getActivity());
                 } else {
-                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
-                }
+                    if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
+                        Toast.makeText(view.getContext(), "You have no internet\nThis action requires internet", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                    }                }
                 break;
             case R.id.about_donate_tier_4:
                 if (iabHelper.isLoaded()) {
                     iabHelper.makePurchase("tier_four_donation", getActivity());
                 } else {
-                    Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                    if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
+                        Toast.makeText(view.getContext(), "You have no internet\nThis action requires internet", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(view.getContext(), "Google play store is still loading, please wait...", Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
             default:
@@ -134,9 +147,6 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.about_credits_message), Toast.LENGTH_LONG).show();
                 }
-
-                //TODO remove this later
-                //iabHelper.consumeAllPurchasesAdmin();
                 break;
         }
     }

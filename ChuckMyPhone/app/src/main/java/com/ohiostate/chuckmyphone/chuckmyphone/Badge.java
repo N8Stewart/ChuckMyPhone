@@ -26,7 +26,7 @@ class Badge {
         badgeNameToDescriptionMap.put(c.getString(R.string.badge_spin_level_three), "Unlock this by getting a score of " + BADGE_SPIN_LEVEL_3_SCORE + " or more in a spin trial");
 
         badgeNameToDescriptionMap.put(c.getString(R.string.badge_one_percent), "Unlock this by getting in the top 10 for any leaderboard category (Minimum of 100 participants)");
-        badgeNameToDescriptionMap.put(c.getString(R.string.badge_hidden), "Unlocked by viewing the credits, Thank you so much for playing our game! \n    - Tim, Nate, Joao");
+        badgeNameToDescriptionMap.put(c.getString(R.string.badge_hidden), "Unlocked by viewing the credits\n\nThank you so much for playing our game!\n    - Tim, Nate, Joao");
     }
 
     public void initializeDrawableMappings(Context c) {

@@ -96,6 +96,10 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
 
     public void onPasswordUnsuccessfullyReset(Exception e) {
         actionPending = false;
+        String message = e.getMessage();
+        if (message.contains("There is no user record")) {
+            message = "That email is not associated to any account, please try another";
+        }
         Toast.makeText(this.getApplicationContext(), "Password reset email was not sent: "+ e.getMessage(), Toast.LENGTH_LONG).show();
     }
 }

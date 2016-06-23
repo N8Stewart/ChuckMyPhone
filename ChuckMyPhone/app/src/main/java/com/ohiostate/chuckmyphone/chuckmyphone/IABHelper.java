@@ -25,10 +25,10 @@ public class IABHelper extends Binder {
     static String base64EncodedPublicKey;
     private Bundle ownedItems;
 
-    static String tierOnePrice = "NULL";
-    static String tierTwoPrice = "NULL";
-    static String tierThreePrice = "NULL";
-    static String tierFourPrice = "NULL";
+    static String tierOnePrice = "";
+    static String tierTwoPrice = "";
+    static String tierThreePrice = "";
+    static String tierFourPrice = "";
 
     public IABHelper(View v) {
         tokenList = new ArrayList<String>();

@@ -98,7 +98,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         View view = inflater.inflate(R.layout.content_compete, container, false);
 
         if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
-            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nScores will only be saved locally until an internet connection is re-established", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection\nPlease get an internet connection to save scores", Toast.LENGTH_LONG).show();
         }
 
         return view;

@@ -71,7 +71,7 @@ public class LeaderboardsFragment extends Fragment {
         dropRecords = CurrentUser.getInstance().getDropLeaderboard();
 
         if (!MiscHelperMethods.isNetworkAvailable(getActivity())) {
-            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection currently\nThis leaderboard may be out of date", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "You have no internet connection\nThis leaderboard may be out of date", Toast.LENGTH_LONG).show();
         }
 
         return view;
