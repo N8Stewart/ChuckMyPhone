@@ -91,8 +91,7 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.new_user_terms_of_service_text :
-                android.support.v4.app.FragmentManager fragMan = getSupportFragmentManager();
-                MiscHelperMethods.initiateTOSPopUpWindow(fragMan);
+                MiscHelperMethods.initiateTOSPopUpWindow(getSupportFragmentManager());
             default:
                 break;
         }

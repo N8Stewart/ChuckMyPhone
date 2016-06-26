@@ -1,9 +1,9 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -191,8 +191,8 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
         priceView.setText(tierFourPrice);
     }
 
-    public static void handlePurchaseFinished(String sku, String token) {
-        IABHelper.onSuccessfulPurchase(sku, token);
+    public static boolean handlePurchaseFinished(String sku, String token) {
+        return IABHelper.onSuccessfulPurchase(sku, token);
     }
 
 }

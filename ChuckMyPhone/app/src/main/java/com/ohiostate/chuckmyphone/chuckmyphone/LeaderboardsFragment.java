@@ -157,7 +157,7 @@ public class LeaderboardsFragment extends Fragment {
                             if (distance < targetDistance) {
                                 i++;
                                 String starName = FirebaseHelper.getInstance().getStarStatusOfUser(record.username);
-                                String userUnusualStarString = FirebaseHelper.getInstance().getUnusualStarStatusOfUser(records.get(i).username);
+                                String userUnusualStarString = FirebaseHelper.getInstance().getUnusualStarStatusOfUser(record.username);
                                 addEntryToLeaderboard(i, record.username, record.score, v, starName, userUnusualStarString);
                             }
                             if (CurrentUser.getInstance().getUsername().equals(record.username)) {

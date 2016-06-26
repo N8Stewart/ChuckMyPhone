@@ -153,7 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="All donations have a 5% chance at getting a special version of that leaderboard icon!"/>
+        android:text="All donations have a chance at getting a special version of that leaderboard icon!"/>
 
     <LinearLayout
         android:orientation="horizontal"

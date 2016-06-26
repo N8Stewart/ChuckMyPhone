@@ -163,7 +163,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
     private void triggerPopUp(String badgeName) {
         Fragment f = this;
-        MiscHelperMethods.initiateBadgePopUpWindow(badgeName, f);
+        MiscHelperMethods.initiateBadgePopUpWindow(badgeName, this);
     }
 
     //create a updateViewRunnable thread to run to listen for and update current rotationSpeed

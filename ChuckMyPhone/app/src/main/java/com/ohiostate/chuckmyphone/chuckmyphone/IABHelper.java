@@ -122,10 +122,11 @@ public class IABHelper extends Binder {
         }
     }
 
-    public static void onSuccessfulPurchase(String sku, String token) {
+    //return true if user unlocked an unusual
+    public static boolean onSuccessfulPurchase(String sku, String token) {
         String username = CurrentUser.getInstance().getUsername();
         String highestStarStatus = FirebaseHelper.getInstance().getHighestStarStatusOfUser(username);
-
+        boolean unusualUnlocked = false;
         Random r = new Random();
         r.setSeed(System.currentTimeMillis());
         int unusualChanceRoll = r.nextInt(100);
@@ -139,6 +140,7 @@ public class IABHelper extends Binder {
                 FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("bronze");
                 if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
                     FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(1);
+                    unusualUnlocked = true;
                 }
             }
         } else if (sku.equals("tier_two_donation")) {
@@ -148,6 +150,7 @@ public class IABHelper extends Binder {
                 FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("silver");
                 if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
                     FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(2);
+                    unusualUnlocked = true;
                 }
             }
         } else if (sku.equals("tier_three_donation")) {
@@ -157,6 +160,7 @@ public class IABHelper extends Binder {
                 FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("gold");
                 if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
                     FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(3);
+                    unusualUnlocked = true;
                 }
             }
         } else if (sku.equals("tier_four_donation")) {
@@ -165,7 +169,7 @@ public class IABHelper extends Binder {
             FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("shooting");
             if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
                 FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(4);
-                //TODO make pop up occur?
+                unusualUnlocked = true;
             }
         } else {
             Toast.makeText(view.getContext(), "No error occurred during purchase, but unknown SKU was provided:" + sku, Toast.LENGTH_LONG).show();
@@ -173,6 +177,8 @@ public class IABHelper extends Binder {
 
         //add purchase token to list of tokens to consume later
         tokenList.add(token);
+
+        return unusualUnlocked;
     }
 
     public void checkPurchases() {

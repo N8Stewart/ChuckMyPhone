@@ -1,5 +1,7 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
@@ -8,8 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
-import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // Views
     private DrawerLayout mDrawerLayout;
-
     private NavigationView mNavigationView;
 
     @Override
@@ -68,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationHelper.getInstance().addNextFragmentTag("Chuck My Phone");
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment(), "Chuck My Phone").commit();
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_fragment_content, new CompeteChuckFragment(), "Chuck My Phone").commit();
         mNavigationView.setCheckedItem(R.id.menu_hamburger_item_chuck);
 
         getSupportActionBar().setTitle("Chuck My Phone");
@@ -93,10 +91,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(TAG, "onStop() called");
-        mGPSHelper.stopGPS(this);
-        SharedPreferencesHelper.setLatitude(getApplicationContext(), CurrentUser.getInstance().getLatitude());
-        SharedPreferencesHelper.setLongitude(getApplicationContext(), CurrentUser.getInstance().getLongitude());
     }
 
     @Override
@@ -119,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Class fragmentClass;
 
         //null object ref on int?
-        if((int)NavigationHelper.getInstance().lastFragmentIDChoice() != id) {
+        if ((int) NavigationHelper.getInstance().lastFragmentIDChoice() != id) {
             switch (id) {
                 case R.id.menu_dot_item_about:
                     fragmentClass = AboutFragment.class;
@@ -153,10 +147,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             try {
                 fragment = (Fragment) fragmentClass.newInstance();
-                FragmentManager fragmentManager = getSupportFragmentManager();
                 NavigationHelper.getInstance().addNextFragmentTag(nextFragmentTag);
-                fragmentManager.beginTransaction().
-                        replace(R.id.activity_main_fragment_content, fragment).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.activity_main_fragment_content, fragment).commit();
                 unmarkAllItemsOnMenu();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -177,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Class fragmentClass;
 
-        if((int)NavigationHelper.getInstance().lastFragmentIDChoice()!=id) {
+        if ((int) NavigationHelper.getInstance().lastFragmentIDChoice() != id) {
             //don't let pop ups from previous fragment appear in new fragment
             MiscHelperMethods.setUserNavigatedAway(true);
 
@@ -231,10 +223,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if(!NavigationHelper.getInstance().noFragmentsLeft()) {
+            if (!NavigationHelper.getInstance().noFragmentsLeft()) {
                 String previousTag = NavigationHelper.getInstance().previousFragmentTag();
-                if (previousTag != null){
-                    if (previousTag.equals("'s Profile")) getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
+                if (previousTag != null) {
+                    if (previousTag.equals("'s Profile"))
+                        getSupportActionBar().setTitle(CurrentUser.getInstance().getUsername() + previousTag);
                     else getSupportActionBar().setTitle(previousTag);
                     Fragment fragment = NavigationHelper.getInstance().translateTagToFragment(previousTag);
                     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -244,27 +237,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
 
-            if(NavigationHelper.getInstance().noFragmentsLeft()) super.onBackPressed();
+            if (NavigationHelper.getInstance().noFragmentsLeft()) super.onBackPressed();
         }
     }
 
-    private void markHamburgerMenu(){
+    private void markHamburgerMenu() {
         // method to highlight the correct item in the hamburger menu
         unmarkAllItemsOnMenu();
         Object choice = NavigationHelper.getInstance().lastMenuChoice();
-        if(choice!=null){
+        if (choice != null) {
             int c = (Integer) choice;
-            if(c < 2){
+            if (c < 2) {
                 // to mark first part of menu
                 mNavigationView.getMenu().getItem(c).setChecked(true);
-            } else if(c < 5) {
+            } else if (c < 5) {
                 // to mark second part of menu (competitions)
                 mNavigationView.getMenu().getItem(2).getSubMenu().getItem(NavigationHelper.translateMenuIDToSubMenuID(c)).setChecked(true);
             }
         }
     }
 
-    private void unmarkAllItemsOnMenu(){
+    private void unmarkAllItemsOnMenu() {
         // method to undo the highlighting of all items in the hamburger menu
         mNavigationView.getMenu().getItem(0).setChecked(false);
         mNavigationView.getMenu().getItem(1).setChecked(false);
@@ -306,7 +299,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
     public void onProviderEnabled(String provider) {
@@ -324,7 +318,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {}
+    public void onFragmentInteraction(Uri uri) {
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -343,16 +338,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String expectedPayload = IABHelper.base64EncodedPublicKey + CurrentUser.getInstance().getUserId();
                     if (expectedPayload.equals(developerPayload)) {
                         //Payloads did match, valid response received from google play
-                        AboutFragment.handlePurchaseFinished(sku, token);
+                        boolean unusualUnlocked = AboutFragment.handlePurchaseFinished(sku, token);
+
+                        if (unusualUnlocked) {
+                            MiscHelperMethods.initiateUnusualUnlockPopUpWindow(getSupportFragmentManager());
+                        }
                     } else {
                         //erroneous signal received, do nothing
                     }
 
-                }
-                catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }

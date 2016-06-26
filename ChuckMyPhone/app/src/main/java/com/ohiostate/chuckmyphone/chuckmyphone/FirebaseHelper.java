@@ -304,10 +304,6 @@ public class FirebaseHelper {
         int latitude = 0;
         double longitude = 0;
         firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
-
-        firebaseDatabaseRef.child("users/" + userID).setValue(new User(userID, c));
-        firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue("shooting");
-        firebaseDatabaseRef.child("users/" + userID + "/unusualStarTiersEarned").setValue("1234");
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier

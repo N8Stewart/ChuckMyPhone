@@ -1,11 +1,11 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +27,18 @@ final class MiscHelperMethods {
         if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
             BadgeUnlockPopUpFragment popUpFragment = new BadgeUnlockPopUpFragment();
             popUpFragment.setBadgeName(badgeName);
-            popUpFragment.show(fragment.getActivity().getFragmentManager(), "PopUp");
+            popUpFragment.show(fragment.getFragmentManager(), "PopUp");
         }
     }
 
     static void initiateTOSPopUpWindow(FragmentManager fragmentMan) {
         TermsOfServicePopUpFragment termsOfServicePopUp = new TermsOfServicePopUpFragment();
         termsOfServicePopUp.show(fragmentMan, "popup");
+    }
+
+    static void initiateUnusualUnlockPopUpWindow(FragmentManager fragmentMan) {
+        UnusualUnlockPopUpFragment unusualUnlockPopUp = new UnusualUnlockPopUpFragment();
+        unusualUnlockPopUp.show(fragmentMan, "popup");
     }
 
     public static void setUserNavigatedAway(Boolean b) {
@@ -74,7 +79,7 @@ final class MiscHelperMethods {
     }
 
     static double getDoubleValue(Object value){
-        double doubleValue = -1; // whatever to state invalid!
+        double doubleValue = -1;
 
         if(value instanceof Long) {
             doubleValue = ((Long) value).doubleValue();

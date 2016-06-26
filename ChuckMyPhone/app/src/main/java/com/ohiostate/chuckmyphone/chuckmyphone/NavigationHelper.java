@@ -76,7 +76,7 @@ public class NavigationHelper {
                 resultantFragment = ProfileFragment.newInstance();
                 break;
             case 1:
-                resultantFragment =LeaderboardsFragment.newInstance();
+                resultantFragment = LeaderboardsFragment.newInstance();
                 break;
             case 2:
                 resultantFragment = CompeteSpinFragment.newInstance();
