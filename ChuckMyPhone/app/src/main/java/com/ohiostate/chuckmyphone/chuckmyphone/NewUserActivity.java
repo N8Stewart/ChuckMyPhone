@@ -1,9 +1,11 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -89,9 +91,8 @@ public class NewUserActivity extends AppCompatActivity implements View.OnClickLi
                 finish();
                 break;
             case R.id.new_user_terms_of_service_text :
-                Uri uri = Uri.parse(this.getApplicationContext().getString(R.string.terms_of_service));
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                android.support.v4.app.FragmentManager fragMan = getSupportFragmentManager();
+                MiscHelperMethods.initiateTOSPopUpWindow(fragMan);
             default:
                 break;
         }

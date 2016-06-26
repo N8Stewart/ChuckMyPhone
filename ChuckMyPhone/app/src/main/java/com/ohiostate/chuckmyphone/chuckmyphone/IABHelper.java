@@ -15,6 +15,7 @@ import com.android.vending.billing.IInAppBillingService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class IABHelper extends Binder {
     private ArrayList skuList;
@@ -29,6 +30,9 @@ public class IABHelper extends Binder {
     static String tierTwoPrice = "";
     static String tierThreePrice = "";
     static String tierFourPrice = "";
+
+    //5% chance at an unusual
+    private static final int UNUSUAL_CHANCE_THRESHOLD = 5;
 
     public IABHelper(View v) {
         tokenList = new ArrayList<String>();
@@ -122,30 +126,47 @@ public class IABHelper extends Binder {
         String username = CurrentUser.getInstance().getUsername();
         String highestStarStatus = FirebaseHelper.getInstance().getHighestStarStatusOfUser(username);
 
+        Random r = new Random();
+        r.setSeed(System.currentTimeMillis());
+        int unusualChanceRoll = r.nextInt(100);
+
         //update database to reflect what user bought, giving them a new star status
         if (sku.equals("tier_one_donation")) {
             //if this is a new highest single donation, update star status of user
             if (highestStarStatus.equals("none")) {
+                Toast.makeText(view.getContext(), "You successfully donated " + tierOnePrice +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
                 FirebaseHelper.getInstance().updateStarStatusOfUser("bronze");
                 FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("bronze");
+                if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
+                    FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(1);
+                }
             }
-            Toast.makeText(view.getContext(), "You successfully donated " + tierOnePrice +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
         } else if (sku.equals("tier_two_donation")) {
+            Toast.makeText(view.getContext(), "You successfully donated " + tierTwoPrice + "!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
             if (highestStarStatus.equals("none") || highestStarStatus.equals("bronze")) {
                 FirebaseHelper.getInstance().updateStarStatusOfUser("silver");
                 FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("silver");
+                if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
+                    FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(2);
+                }
             }
-            Toast.makeText(view.getContext(), "You successfully donated " + tierTwoPrice + "!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
         } else if (sku.equals("tier_three_donation")) {
+            Toast.makeText(view.getContext(), "You successfully donated " + tierThreePrice +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
             if (highestStarStatus.equals("none") || highestStarStatus.equals("bronze") || highestStarStatus.equals("silver")) {
                 FirebaseHelper.getInstance().updateStarStatusOfUser("gold");
                 FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("gold");
+                if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
+                    FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(3);
+                }
             }
-            Toast.makeText(view.getContext(), "You successfully donated " + tierThreePrice +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
         } else if (sku.equals("tier_four_donation")) {
+            Toast.makeText(view.getContext(), "You successfully donated " + tierFourPrice +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
             FirebaseHelper.getInstance().updateStarStatusOfUser("shooting");
             FirebaseHelper.getInstance().updateHighestStarEarnedOfUser("shooting");
-            Toast.makeText(view.getContext(), "You successfully donated " + tierFourPrice +"!\nThank you so much for your donation!", Toast.LENGTH_LONG).show();
+            if (unusualChanceRoll < UNUSUAL_CHANCE_THRESHOLD) {
+                FirebaseHelper.getInstance().updateUnusualStarTiersEarnedOfUser(4);
+                //TODO make pop up occur?
+            }
         } else {
             Toast.makeText(view.getContext(), "No error occurred during purchase, but unknown SKU was provided:" + sku, Toast.LENGTH_LONG).show();
         }

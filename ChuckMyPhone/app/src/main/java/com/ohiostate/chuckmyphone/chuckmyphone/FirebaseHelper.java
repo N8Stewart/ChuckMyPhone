@@ -296,7 +296,7 @@ public class FirebaseHelper {
         addScoreToLeaderboard(score, latitude, longitude, ref);
     }
 
-    protected void addFakeChuckScoresToLeaderboard(String userID, int score) {
+    protected void addFakeChuckScoresToLeaderboard(String userID, int score, Context c) {
         //String userID = "1";
         //String username = "bob";
         //int score = 600;
@@ -304,6 +304,10 @@ public class FirebaseHelper {
         int latitude = 0;
         double longitude = 0;
         firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
+
+        firebaseDatabaseRef.child("users/" + userID).setValue(new User(userID, c));
+        firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue("shooting");
+        firebaseDatabaseRef.child("users/" + userID + "/unusualStarTiersEarned").setValue("1234");
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
@@ -370,6 +374,22 @@ public class FirebaseHelper {
         return iconName;
     }
 
+    public String getUnusualStarStatusOfUser(String username) {
+        // this string, if empty, says user has no unusuals. If it contains a 1, they have a tier one unusual, and so on
+        String unusualStarTiersEarnedString = "";
+        if (dataSnapshot != null) {
+            for (DataSnapshot userSnapshot : dataSnapshot.child("users").getChildren()) {
+                if (userSnapshot.child("username").getValue().equals(username)) {
+                    if (userSnapshot.hasChild("unusualStarTiersEarned")) {
+                        unusualStarTiersEarnedString = userSnapshot.child("unusualStarTiersEarned").getValue().toString();
+                    }
+                    break;
+                }
+            }
+        }
+        return unusualStarTiersEarnedString;
+    }
+
     public boolean hasUnlockedChangingUsername() {
         String starStatus = getHighestStarStatusOfUser(currentUser.getUsername());
         return (starStatus.equals("gold") || starStatus.equals("shooting"));
@@ -382,14 +402,19 @@ public class FirebaseHelper {
 
     public void updateStarStatusOfUser(String starIconName) {
         String userID = currentUser.getUserId();
-
         firebaseDatabaseRef.child("users/" + userID + "/starIconName").setValue(starIconName);
     }
 
     public void updateHighestStarEarnedOfUser(String starIconName) {
         String userID = currentUser.getUserId();
-
         firebaseDatabaseRef.child("users/" + userID + "/highestStarIconEarned").setValue(starIconName);
+    }
+
+    public void updateUnusualStarTiersEarnedOfUser(int starTierNumber) {
+        String userID = currentUser.getUserId();
+        //append new earned tier number to existing, do not overwrite
+        String unusualStarTiersEarnedString = getUnusualStarStatusOfUser(currentUser.getUsername()) + starTierNumber;
+        firebaseDatabaseRef.child("users/" + userID + "/unusualStarTiersEarned").setValue(unusualStarTiersEarnedString);
     }
 
     String getPublicKey() {

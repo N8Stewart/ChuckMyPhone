@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.MotionEvent;
 import android.view.View;
-import android.support.v4.app.Fragment;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -22,13 +23,17 @@ final class MiscHelperMethods {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    //private static PopupWindow pw;
-    static void initiatePopupWindow(String badgeName, Fragment fragment) {
+    static void initiateBadgePopUpWindow(String badgeName, Fragment fragment) {
         if (CurrentUser.getInstance().getBadgeNotificationsEnabled()) {
             BadgeUnlockPopUpFragment popUpFragment = new BadgeUnlockPopUpFragment();
             popUpFragment.setBadgeName(badgeName);
             popUpFragment.show(fragment.getActivity().getFragmentManager(), "PopUp");
         }
+    }
+
+    static void initiateTOSPopUpWindow(FragmentManager fragmentMan) {
+        TermsOfServicePopUpFragment termsOfServicePopUp = new TermsOfServicePopUpFragment();
+        termsOfServicePopUp.show(fragmentMan, "popup");
     }
 
     public static void setUserNavigatedAway(Boolean b) {

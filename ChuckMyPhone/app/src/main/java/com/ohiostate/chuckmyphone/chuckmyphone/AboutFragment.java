@@ -1,7 +1,6 @@
 package com.ohiostate.chuckmyphone.chuckmyphone;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -95,9 +94,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.about_terms_of_service_textview :
-                Uri uri = Uri.parse(getContext().getString(R.string.terms_of_service));
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                MiscHelperMethods.initiateTOSPopUpWindow(getFragmentManager());
                 break;
             case R.id.about_donate_tier_1:
                 if (iabHelper.isLoaded()) {
@@ -143,7 +140,7 @@ public class AboutFragment extends Fragment implements View.OnClickListener {
             default:
                 if (!FirebaseHelper.getInstance().hasBadge(getContext().getString(R.string.badge_hidden))) {
                     FirebaseHelper.getInstance().unlockBadge(getContext().getString(R.string.badge_hidden));
-                    MiscHelperMethods.initiatePopupWindow(getString(R.string.badge_hidden), this);
+                    MiscHelperMethods.initiateBadgePopUpWindow(getString(R.string.badge_hidden), this);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.about_credits_message), Toast.LENGTH_LONG).show();
                 }
