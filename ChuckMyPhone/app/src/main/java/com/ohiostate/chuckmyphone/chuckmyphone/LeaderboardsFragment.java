@@ -19,6 +19,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class LeaderboardsFragment extends Fragment {
@@ -128,8 +129,9 @@ public class LeaderboardsFragment extends Fragment {
                             }
 
                             String starName = FirebaseHelper.getInstance().getStarStatusOfUser(records.get(i).username);
+                            String userUnusualStarString = FirebaseHelper.getInstance().getUnusualStarStatusOfUser(records.get(i).username);
 
-                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v,starName);
+                            addEntryToLeaderboard(i + 1, records.get(i).username, records.get(i).score, v,starName, userUnusualStarString);
                             if (CurrentUser.getInstance().getUsername().equals(records.get(i).username)) {
                                 rank = i + 1;
                                 score = records.get(i).score;
@@ -154,7 +156,9 @@ public class LeaderboardsFragment extends Fragment {
                             // If distance is within our target distance, display the record
                             if (distance < targetDistance) {
                                 i++;
-                                addEntryToLeaderboard(i, record.username, record.score, v, FirebaseHelper.getInstance().getStarStatusOfUser(record.username));
+                                String starName = FirebaseHelper.getInstance().getStarStatusOfUser(record.username);
+                                String userUnusualStarString = FirebaseHelper.getInstance().getUnusualStarStatusOfUser(records.get(i).username);
+                                addEntryToLeaderboard(i, record.username, record.score, v, starName, userUnusualStarString);
                             }
                             if (CurrentUser.getInstance().getUsername().equals(record.username)) {
                                 rank = i;
@@ -167,10 +171,12 @@ public class LeaderboardsFragment extends Fragment {
                         }
 
                     }
+                    String starName = FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername());
+                    String userUnusualStarString = FirebaseHelper.getInstance().getUnusualStarStatusOfUser(CurrentUser.getInstance().getUsername());
                     if (rank == -1) {
-                        addUserStaticRankToLeaderboard("N/A", CurrentUser.getInstance().getUsername(), 0 + "", v, FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername()));
+                        addUserStaticRankToLeaderboard("N/A", CurrentUser.getInstance().getUsername(), 0 + "", v, starName, userUnusualStarString);
                     } else {
-                        addUserStaticRankToLeaderboard(rank + "", CurrentUser.getInstance().getUsername(), score + "", v, FirebaseHelper.getInstance().getStarStatusOfUser(CurrentUser.getInstance().getUsername()));
+                        addUserStaticRankToLeaderboard(rank + "", CurrentUser.getInstance().getUsername(), score + "", v, starName, userUnusualStarString);
                     }
 
                     checkToUnlockOnePercentBadge(rank);
@@ -223,7 +229,7 @@ public class LeaderboardsFragment extends Fragment {
         return d * conversion;
     }
 
-    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view, String star_name) {
+    private void addUserStaticRankToLeaderboard(String rank, String name, String score, View view, String star_name, String userUnusualStarString) {
         TableLayout leaderboardUserRecordTable = (TableLayout) view.findViewById(R.id.leaderboards_user_record);
 
         TableRow userRow = new TableRow(getActivity());
@@ -254,20 +260,49 @@ public class LeaderboardsFragment extends Fragment {
         userRow.addView(leaderboardRank);
         userRow.addView(leaderboardName);
 
+        boolean isUnusual = false;
+        int iconID = R.drawable.unusual_rainbow_86;
         if (!star_name.equals("none")) {
-            int iconID;
             if (star_name.equals("bronze")) {
-                iconID = R.drawable.bronze_star_icon;
+                //if user has unlocked the unusual version
+                if (userUnusualStarString.contains("1")) {
+                    iconID = R.drawable.unusual_bronze_86;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.bronze_star_icon;
+                }
             } else if (star_name.equals("silver")) {
-                iconID = R.drawable.silver_star_icon;
+                if (userUnusualStarString.contains("2")) {
+                    iconID = R.drawable.unusual_silver_86;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.silver_star_icon;
+                }
             } else if (star_name.equals("gold")) {
-                iconID = R.drawable.gold_star_icon;
+                if (userUnusualStarString.contains("3")) {
+                    iconID = R.drawable.unusual_gold_86_v2;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.gold_star_icon;
+                }
             } else { //shooting star
-                iconID = R.drawable.shooting_star_icon;
+                if (userUnusualStarString.contains("4")) {
+                    iconID = R.drawable.unusual_rainbow_86;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.shooting_star_icon;
+                }
             }
+        }
+
+        //add either the gif or the icon to the row
+        if (isUnusual) {
+            PlayGifView unusualStarGifView = new PlayGifView(getContext(), null);
+            unusualStarGifView.setImageResource(iconID);
+            userRow.addView(unusualStarGifView);
+        } else {
             ImageView starImageView = new ImageView(getActivity());
             starImageView.setImageResource(iconID);
-
             userRow.addView(starImageView);
         }
 
@@ -279,7 +314,7 @@ public class LeaderboardsFragment extends Fragment {
 
     //TODO factor out repeated code from above and below
 
-    private void addEntryToLeaderboard(int rank, String name, long score, View view, String star_name) {
+    private void addEntryToLeaderboard(int rank, String name, long score, View view, String star_name, String userUnusualStarString) {
         leaderboardTable = (TableLayout) view.findViewById(R.id.leaderboards_table_layout);
 
         TableRow leaderboardRow = new TableRow(getActivity());
@@ -310,21 +345,50 @@ public class LeaderboardsFragment extends Fragment {
         leaderboardRow.addView(leaderboardRank);
         leaderboardRow.addView(leaderboardName);
 
+        boolean isUnusual = false;
         if (!star_name.equals("none")) {
             int iconID;
             if (star_name.equals("bronze")) {
-                iconID = R.drawable.bronze_star_icon;
+                //if user has unlocked the unusual version
+                if (userUnusualStarString.contains("1")) {
+                    iconID = R.drawable.unusual_bronze_86;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.bronze_star_icon;
+                }
             } else if (star_name.equals("silver")) {
-                iconID = R.drawable.silver_star_icon;
+                if (userUnusualStarString.contains("2")) {
+                    iconID = R.drawable.unusual_silver_86;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.silver_star_icon;
+                }
             } else if (star_name.equals("gold")) {
-                iconID = R.drawable.gold_star_icon;
+                if (userUnusualStarString.contains("3")) {
+                    iconID = R.drawable.unusual_gold_86_v2;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.gold_star_icon;
+                }
             } else { //shooting star
-                iconID = R.drawable.shooting_star_icon;
+                if (userUnusualStarString.contains("4")) {
+                    iconID = R.drawable.unusual_rainbow_86;
+                    isUnusual = true;
+                } else {
+                    iconID = R.drawable.shooting_star_icon;
+                }
             }
-            ImageView starImageView = new ImageView(getActivity());
-            starImageView.setImageResource(iconID);
 
-            leaderboardRow.addView(starImageView);
+            //add either the gif or the icon to the row
+            if (isUnusual) {
+                PlayGifView unusualStarGifView = new PlayGifView(getContext(), null);
+                unusualStarGifView.setImageResource(iconID);
+                leaderboardRow.addView(unusualStarGifView);
+            } else {
+                ImageView starImageView = new ImageView(getActivity());
+                starImageView.setImageResource(iconID);
+                leaderboardRow.addView(starImageView);
+            }
         }
         leaderboardRow.addView(leaderboardScore);
 
