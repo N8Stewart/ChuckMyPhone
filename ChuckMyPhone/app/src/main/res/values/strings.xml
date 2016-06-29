@@ -48,7 +48,6 @@
     <string name="action_chuck">Chuck my phone</string>
     <string name="action_leaderboards">Leaderboards</string>
     <string name="action_profile">Profile</string>
-    <string name="save">Save</string>
     <string name="sound_enabled">Sound enabled</string>
     <string name="title_activity_main_activity">MainActivity</string>
     <string name="forgot_password">Forgot Password?</string>
@@ -72,7 +71,6 @@
 
     <string name="badge_hidden">The Kindness Badge</string>
     <string name="badge_one_percent">The 1%</string>
-    <string name="terms_of_service">https://github.com/timtaylorosu16/ChuckMyPhone/blob/master/README.md#terms-of-service</string>
     <string name="settings_change_username_button_unlocked">New Username</string>
     <string name="about_credits_message">Thank you so much for playing our game!\n\n Tim Taylor - Idea creator, Software Eng.\n\n Nate Stewart - Software Engineer\n\n Joao Magalhaes - Software Engineer</string>
 </resources>

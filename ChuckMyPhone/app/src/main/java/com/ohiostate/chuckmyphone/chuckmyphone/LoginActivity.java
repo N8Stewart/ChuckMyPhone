@@ -75,18 +75,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-
-    @Override
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
@@ -113,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (MiscHelperMethods.isNetworkAvailable(this)) {
             if (!email.equals("")) {
                 if (!password.equals("")) {
-                    loggingInDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in, please wait...\nIf this takes a while, check your internet connection", true);
+                    loggingInDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in, please wait...\nIf this takes a while, check your internet connection and try again", true);
 
                     boolean firebaseWasLoaded = FirebaseHelper.getInstance().login(email, password, this);
                     if (!firebaseWasLoaded) {
@@ -158,7 +146,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (!loggingInWasCancelled) {
-            Log.d("onUserLeaveHint","user finished logging in!!!!!!!!!!!!!");
             this.startActivity(new Intent(this.getApplication(), MainActivity.class));
             finish();
         }
@@ -166,18 +153,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //called by firebase when login is not successfully performed. Don't call from anywhere else
     void onUnsuccessfulLogin(Exception e) {
-        loggingInDialog.cancel();
-        SharedPreferencesHelper.clearSharedData(getApplicationContext());
 
-        String messageToUser = e.getMessage();
+        if (e.getMessage().equals("DataSnapshot was not loaded yet")) {
+            //we want to try again to login without user realizing it
+            Log.d("tag", "relogging in after failure tied to firebase taking too long");
+            FirebaseHelper.getInstance().login(emailEditText.getText().toString(), passwordEditText.getText().toString(), this);
+        } else {
+            loggingInDialog.cancel();
+            SharedPreferencesHelper.clearSharedData(getApplicationContext());
 
-        if (e.getMessage().contains("the password is invalid")) {
-            messageToUser = "Incorrect password, please try a different one";
-        } else if (e.getMessage().contains("There is no user record corresponding to this identifier")) {
-            messageToUser = "Incorrect email, please try a different one";
+            String messageToUser = e.getMessage();
+
+            if (e.getMessage().contains("the password is invalid")) {
+                messageToUser = "Incorrect password, please try a different one";
+            } else if (e.getMessage().contains("There is no user record corresponding to this identifier")) {
+                messageToUser = "Incorrect email, please try a different one";
+            }
+
+            Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + messageToUser, Toast.LENGTH_LONG).show();
         }
-
-        Toast.makeText(this.getApplicationContext(), "Login Unsuccessful: " + messageToUser, Toast.LENGTH_LONG).show();
     }
 
 

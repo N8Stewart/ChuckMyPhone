@@ -83,17 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_dot, menu);
         return true;
@@ -135,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //wipe shared preferences so it doesn't auto login on this account anymore
                     SharedPreferencesHelper.clearSharedData(getApplicationContext());
                     FirebaseHelper.getInstance().logout();
+                    CurrentUser.getInstance().logout();
 
                     //go back to login screen
                     Intent intent = new Intent(this, LoginActivity.class);
@@ -352,10 +342,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 }

@@ -5,15 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.text.Html;
 
 
 public class TermsOfServicePopUpFragment extends DialogFragment {
-    private String badgeName;
-
-    public void setBadgeName(String bName) {
-        badgeName = bName;
-    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

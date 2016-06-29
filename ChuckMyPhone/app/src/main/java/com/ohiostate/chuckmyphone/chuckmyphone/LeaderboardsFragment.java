@@ -47,12 +47,6 @@ public class LeaderboardsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate() called");
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_leaderboards, container, false);
@@ -185,30 +179,12 @@ public class LeaderboardsFragment extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
+
             }
         };
 
         competitionSpinner.setOnItemSelectedListener(filterResults);
         distanceSpinner.setOnItemSelectedListener(filterResults);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
     }
 
     private void checkToUnlockOnePercentBadge(int rank) {
@@ -261,7 +237,7 @@ public class LeaderboardsFragment extends Fragment {
         userRow.addView(leaderboardName);
 
         boolean isUnusual = false;
-        int iconID = R.drawable.unusual_rainbow_86;
+        int iconID = 0;
         if (!star_name.equals("none")) {
             if (star_name.equals("bronze")) {
                 //if user has unlocked the unusual version
@@ -269,28 +245,28 @@ public class LeaderboardsFragment extends Fragment {
                     iconID = R.drawable.unusual_bronze_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.bronze_star_icon;
+                    iconID = R.drawable.star_icon_bronze;
                 }
             } else if (star_name.equals("silver")) {
                 if (userUnusualStarString.contains("2")) {
                     iconID = R.drawable.unusual_silver_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.silver_star_icon;
+                    iconID = R.drawable.star_icon_silver;
                 }
             } else if (star_name.equals("gold")) {
                 if (userUnusualStarString.contains("3")) {
-                    iconID = R.drawable.unusual_gold_86_v2;
+                    iconID = R.drawable.unusual_gold_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.gold_star_icon;
+                    iconID = R.drawable.star_icon_gold;
                 }
             } else { //shooting star
                 if (userUnusualStarString.contains("4")) {
                     iconID = R.drawable.unusual_rainbow_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.shooting_star_icon;
+                    iconID = R.drawable.star_icon_shooting;
                 }
             }
         }
@@ -301,9 +277,11 @@ public class LeaderboardsFragment extends Fragment {
             unusualStarGifView.setImageResource(iconID);
             userRow.addView(unusualStarGifView);
         } else {
-            ImageView starImageView = new ImageView(getActivity());
-            starImageView.setImageResource(iconID);
-            userRow.addView(starImageView);
+            if (iconID != 0) {
+                ImageView starImageView = new ImageView(getActivity());
+                starImageView.setImageResource(iconID);
+                userRow.addView(starImageView);
+            }
         }
 
         userRow.addView(leaderboardScore);
@@ -354,28 +332,28 @@ public class LeaderboardsFragment extends Fragment {
                     iconID = R.drawable.unusual_bronze_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.bronze_star_icon;
+                    iconID = R.drawable.star_icon_bronze;
                 }
             } else if (star_name.equals("silver")) {
                 if (userUnusualStarString.contains("2")) {
                     iconID = R.drawable.unusual_silver_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.silver_star_icon;
+                    iconID = R.drawable.star_icon_silver;
                 }
             } else if (star_name.equals("gold")) {
                 if (userUnusualStarString.contains("3")) {
-                    iconID = R.drawable.unusual_gold_86_v2;
+                    iconID = R.drawable.unusual_gold_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.gold_star_icon;
+                    iconID = R.drawable.star_icon_gold;
                 }
             } else { //shooting star
                 if (userUnusualStarString.contains("4")) {
                     iconID = R.drawable.unusual_rainbow_86;
                     isUnusual = true;
                 } else {
-                    iconID = R.drawable.shooting_star_icon;
+                    iconID = R.drawable.star_icon_shooting;
                 }
             }
 

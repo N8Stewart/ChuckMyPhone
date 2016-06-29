@@ -106,6 +106,11 @@ public class CurrentUser {
         spinScore = score;
     }
 
+    public void logout() {
+        this.username = "USERNAME NOT ASSIGNED";
+        //TODO need to do more here?
+    }
+
     public void updateTutorialMessagesEnabled(boolean value) {
         tutorialMessagesEnabled = value;
     }

@@ -103,9 +103,8 @@ public class IABHelper extends Binder {
     public void makePurchase(String sku, Activity activity) {
         Bundle buyIntentBundle = null;
         try {
-            //TODO need a dev payload? maybe do the public key?
             String developerPayload = base64EncodedPublicKey + CurrentUser.getInstance().getUserId();
-             buyIntentBundle = mService.getBuyIntent(3, view.getContext().getPackageName(), sku, "inapp", developerPayload);
+            buyIntentBundle = mService.getBuyIntent(3, view.getContext().getPackageName(), sku, "inapp", developerPayload);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(view.getContext(), "Error making purchase: "+e.getMessage(), Toast.LENGTH_LONG).show();

@@ -43,8 +43,6 @@ public class FirebaseHelper {
         public final String starIconName; // tells what the current displaying icon is
         public final String highestStarIconEarned; // tells what the highest level icon they may display is
 
-        //TODO get users location here
-
         public User() {
             badgeList = null;
             username = "";
@@ -181,12 +179,14 @@ public class FirebaseHelper {
         loginPassword = password;
         boolean firebaseWasLoaded = false;
         if (firebaseAuth != null) {
+            Log.d("tag", "Auth process beginning");
             firebaseWasLoaded = true;
             Task<AuthResult> loginResult = firebaseAuth.signInWithEmailAndPassword(email, password);
 
             loginResult.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
+                    Log.d("tag", "Auth process successful");
                     String uid = firebaseAuth.getCurrentUser().getUid();
                     if (dataSnapshot != null) {
                         if (!dataSnapshot.hasChild("users/" + uid)) {
@@ -207,6 +207,8 @@ public class FirebaseHelper {
                         activity.onSuccessfulLogin(loginEmail, loginPassword, firebaseAuth.getCurrentUser().getUid());
                     } else {
                         //do nothing, need user to try again
+                        Log.d("tag", "Auth process failed, and did nothing");
+                        activity.onUnsuccessfulLogin(new Exception("DataSnapshot was not loaded yet"));
                     }
                 }
             });
@@ -214,6 +216,7 @@ public class FirebaseHelper {
             loginResult.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
+                    Log.d("tag", "Auth process failure");
                     activity.onUnsuccessfulLogin(e);
                 }
             });
@@ -269,7 +272,7 @@ public class FirebaseHelper {
     }
 
     ArrayList<Badge> getBadges() {
-        Log.d("tag", "GETTING USERS BADGES##################");
+        Log.d("tag", "GETTING USERS BADGES");
         String userID = currentUser.getUserId();
         if (dataSnapshot.hasChild("users/" + userID+"/badgeList")) {
             DataSnapshot usersSnapshot = dataSnapshot.child("users/" + userID+"/badgeList");
@@ -294,16 +297,6 @@ public class FirebaseHelper {
         ref.setPriority(score);
 
         addScoreToLeaderboard(score, latitude, longitude, ref);
-    }
-
-    protected void addFakeChuckScoresToLeaderboard(String userID, int score, Context c) {
-        //String userID = "1";
-        //String username = "bob";
-        //int score = 600;
-
-        int latitude = 0;
-        double longitude = 0;
-        firebaseDatabaseRef.child("ChuckScores/" + userID).setValue(new CompeteRecord(currentUser.getUsername(), score, latitude, longitude), score);
     }
 
     //does a sorted insert of the users score into the list of user scores. List is sorted so that retrieval for leaderboard is easier
@@ -450,7 +443,7 @@ public class FirebaseHelper {
             return 0;
         }
 
-        return (int) (100.0*numberUsersEarned / numberUsers);
+        return (int) (100.0 * numberUsersEarned / numberUsers);
     }
 
     private final ValueEventListener chuckLeaderboardValueEventListener = new ValueEventListener() {

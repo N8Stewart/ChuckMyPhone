@@ -6,7 +6,6 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,12 +44,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate() called");
     }
 
     @Override
@@ -155,24 +148,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             case "shooting":
                 //do nothing, they have unlocked all, so don't lock any
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
     }
 
     @Override

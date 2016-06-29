@@ -44,24 +44,6 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume() called");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause() called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop() called");
-    }
-
-    @Override
     public void onClick(View v) {
         if (!actionPending) {
             switch (v.getId()) {
@@ -69,7 +51,7 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
                     if (MiscHelperMethods.isNetworkAvailable(this)) {
                         if (!emailEditText.getText().toString().equals("")) {
                             actionPending = true;
-                            Toast.makeText(this.getApplicationContext(), "Changing password, please wait", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this.getApplicationContext(), "Resetting password, please wait", Toast.LENGTH_SHORT).show();
                             FirebaseHelper.getInstance().resetPassword(emailEditText.getText().toString(), this);
                         } else {
                             Toast.makeText(this.getApplicationContext(), "Please enter your email above", Toast.LENGTH_LONG).show();
@@ -98,8 +80,10 @@ public class ForgotPasswordActivity extends AppCompatActivity implements View.On
         actionPending = false;
         String message = e.getMessage();
         if (message.contains("There is no user record")) {
-            message = "That email is not associated to any account, please try another";
+            message = "That email is not tied to any user, please try another";
+        } else if (message.contains("INVALID_EMAIL")) {
+            message = "That is not an email address, please try again";
         }
-        Toast.makeText(this.getApplicationContext(), "Password reset email was not sent\n"+ message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this.getApplicationContext(), "Password was not reset:\n"+ message, Toast.LENGTH_LONG).show();
     }
 }
