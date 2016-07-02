@@ -69,7 +69,7 @@ public class IABHelper extends Binder {
                 ArrayList<String> responseList = skuDetails.getStringArrayList("DETAILS_LIST");
 
                 for (String thisResponse : responseList) {
-                    JSONObject object = null;
+                    JSONObject object;
                     String sku = "NULL";
                     String price = "NULL";
                     try {

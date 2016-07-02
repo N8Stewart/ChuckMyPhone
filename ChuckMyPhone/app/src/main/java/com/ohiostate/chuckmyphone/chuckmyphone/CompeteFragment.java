@@ -162,7 +162,6 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
     };
 
     private void triggerPopUp(String badgeName) {
-        Fragment f = this;
         MiscHelperMethods.initiateBadgePopUpWindow(badgeName, this);
     }
 
