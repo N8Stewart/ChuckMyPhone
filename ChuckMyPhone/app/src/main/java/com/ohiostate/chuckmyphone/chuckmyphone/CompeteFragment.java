@@ -7,14 +7,19 @@ import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -88,6 +93,35 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
         progressBarAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.pivot_center);
         progressBarAnimation.setFillAfter(true);
         progressBar.startAnimation(progressBarAnimation);
+
+        //hide the navigation tip, move some things around to better use screen space
+        if (!CurrentUser.getInstance().getTutorialMessagesEnabled()) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            float logicalDensity = metrics.density;
+
+            ViewGroup viewGroup = (ViewGroup) view;
+            viewGroup.removeView(view.findViewById(R.id.compete_navigation_tip_textview));
+            ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.compete_progress_bar);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+            int px = (int) Math.ceil(25 * logicalDensity);
+            lp.setMargins(0, 0, 0, px);
+
+            px = (int) Math.ceil(200 * logicalDensity);
+            lp.width = px;
+            lp.height = px;
+            lp.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            progressBar.setLayoutParams(lp);
+
+            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            px = (int) Math.ceil(25 * logicalDensity);
+            lp2.setMargins(0, 0, 0, px);
+            lp2.gravity = Gravity.CENTER_HORIZONTAL;
+            ImageButton competeButton = (ImageButton) view.findViewById(R.id.compete_button);
+            competeButton.setLayoutParams(lp2);
+
+        }
 
         currentScoreTextView.setText(String.format(Locale.ENGLISH, "%d", score));
     }

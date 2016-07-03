@@ -13,6 +13,13 @@
     android:id="@+id/compete_linear_layout"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Use the buttons in the top corners to navigate "
+        android:id="@+id/compete_navigation_tip_textview"
+        android:layout_gravity="center"/>
+
     <RelativeLayout
         android:id="@+id/compete_top_relative_layout"
         android:layout_width="match_parent"
@@ -40,6 +47,7 @@
             android:text="0"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30sp" />
+
     </RelativeLayout>
 
     <ImageButton
@@ -47,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="20dp"
         android:background="@android:color/transparent"
         android:src="@drawable/compete_play" />
 
