@@ -293,9 +293,7 @@ public class FirebaseHelper {
         String userID = currentUser.getUserId();
         DatabaseReference ref = firebaseDatabaseRef.child(competeLabelString + "/" + userID );
 
-        //priority set as inverse of the score, should order entries automatically
-        ref.setPriority(score);
-
+        //objects are not saved in order, but are sorted when retrieved
         addScoreToLeaderboard(score, latitude, longitude, ref);
     }
 
@@ -411,9 +409,9 @@ public class FirebaseHelper {
     }
 
     private void updateLeaderboard() {
-        Query top100Chuck = firebaseDatabaseRef.child("ChuckScores").orderByPriority();//.limitToLast(100);
-        Query top100Spin = firebaseDatabaseRef.child("SpinScores").orderByPriority();//.limitToLast(100);
-        Query top100Drop = firebaseDatabaseRef.child("DropScores").orderByPriority();//.limitToLast(100);
+        Query top100Chuck = firebaseDatabaseRef.child("ChuckScores").orderByChild("score");//.limitToLast(100);
+        Query top100Spin = firebaseDatabaseRef.child("SpinScores").orderByChild("score");//.limitToLast(100);
+        Query top100Drop = firebaseDatabaseRef.child("DropScores").orderByChild("score");//.limitToLast(100);
 
         //take one look at the data, pass it to the current user, and then throw it away
         top100Chuck.addListenerForSingleValueEvent(chuckLeaderboardValueEventListener);

@@ -102,6 +102,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
             ViewGroup viewGroup = (ViewGroup) view;
             viewGroup.removeView(view.findViewById(R.id.compete_navigation_tip_textview));
+
             ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.compete_progress_bar);
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
@@ -116,7 +117,7 @@ public abstract class CompeteFragment extends Fragment implements SensorEventLis
 
             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             px = (int) Math.ceil(25 * logicalDensity);
-            lp2.setMargins(0, 0, 0, px);
+            lp2.setMargins(0, px, 0, px);
             lp2.gravity = Gravity.CENTER_HORIZONTAL;
             ImageButton competeButton = (ImageButton) view.findViewById(R.id.compete_button);
             competeButton.setLayoutParams(lp2);
