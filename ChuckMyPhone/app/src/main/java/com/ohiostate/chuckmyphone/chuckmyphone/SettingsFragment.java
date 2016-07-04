@@ -79,11 +79,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         changeUsernameEditText = (EditText) view.findViewById(R.id.settings_change_username_edit_text);
 
         hasUnlockedUsernameChange = FirebaseHelper.getInstance().hasUnlockedChangingUsername();
+        changeUsernameEditText.setOnClickListener(this);
         if (hasUnlockedUsernameChange) {
             changeUsernameEditText.setHint(getString(R.string.settings_change_username_button_unlocked));
-            changeUsernameEditText.setEnabled(true);
-        } else {
-            changeUsernameEditText.setEnabled(false);
+            changeUsernameEditText.setFocusableInTouchMode(true);
+            changeUsernameEditText.setFocusable(true);
         }
 
         if (!FirebaseHelper.getInstance().hasBadge(getString(R.string.badge_hidden))) {
@@ -107,7 +107,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         shootingStarIconButton.setOnClickListener(this);
 
         highlightCurrentStarStatusIcon();
-        highlightLockedIcons();
+        //highlightLockedIcons();
     }
 
     private void highlightCurrentStarStatusIcon() {
@@ -170,7 +170,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             case R.id.settings_no_star_image_button:
                 //highlight only the no star button
                 clearAllFiltersOnButtons();
-                highlightLockedIcons();
+                //highlightLockedIcons();
                 noStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
                 userStarStatus = "none";
                 break;
@@ -179,7 +179,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 if (!highestStarStatusLevel.equals("none")) {
                     //highlight only the bronze star button
                     clearAllFiltersOnButtons();
-                    highlightLockedIcons();
+                    //highlightLockedIcons();
                     bronzeStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
                     userStarStatus = "bronze";
                 } else {
@@ -191,7 +191,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 if (!highestStarStatusLevel.equals("none") && !highestStarStatusLevel.equals("bronze")) {
                     //highlight only the silver star button
                     clearAllFiltersOnButtons();
-                    highlightLockedIcons();
+                    //highlightLockedIcons();
                     silverStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
                     userStarStatus = "silver";
                 } else {
@@ -203,7 +203,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 if (highestStarStatusLevel.equals("gold") || highestStarStatusLevel.equals("shooting")) {
                     //highlight only the gold star button
                     clearAllFiltersOnButtons();
-                    highlightLockedIcons();
+                    //highlightLockedIcons();
                     goldStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
                     userStarStatus = "gold";
                 } else {
@@ -215,7 +215,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 if (highestStarStatusLevel.equals("shooting")) {
                     //highlight only the shooting star button
                     clearAllFiltersOnButtons();
-                    highlightLockedIcons();
+                    //highlightLockedIcons();
                     shootingStarIconButton.getBackground().setColorFilter(Color.CYAN, PorterDuff.Mode.MULTIPLY);
                     userStarStatus = "shooting";
                 } else {
@@ -223,10 +223,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
 
+            case R.id.settings_change_username_edit_text:
+                if (!hasUnlockedUsernameChange) {
+                    Toast.makeText(getActivity().getApplicationContext(), "You have not unlocked that yet. Please donate on the about page to unlock it", Toast.LENGTH_LONG).show();
+                }
+                break;
             case R.id.settings_cancel_button:
                 Toast.makeText(getActivity().getApplicationContext(), "Settings not saved", Toast.LENGTH_LONG).show();
                 getActivity().onBackPressed();
-
+                break;
             default:
                 break;
         }

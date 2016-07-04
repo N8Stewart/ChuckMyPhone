@@ -165,7 +165,9 @@
                     android:hint="New Username (locked feature)"
                     android:windowSoftInputMode="adjustPan"
                     android:imeOptions="actionDone"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    android:focusable="false"
+                    android:enabled="true"/>
             </LinearLayout>
 
         </LinearLayout>
