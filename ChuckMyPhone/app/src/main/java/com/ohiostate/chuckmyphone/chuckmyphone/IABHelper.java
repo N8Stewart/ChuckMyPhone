@@ -109,14 +109,25 @@ public class IABHelper extends Binder {
             e.printStackTrace();
             Toast.makeText(view.getContext(), "Error making purchase: "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        if (buyIntentBundle != null) {
-            PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-            try {
-                int requestCode = 1001;
-                activity.startIntentSenderForResult(pendingIntent.getIntentSender(), requestCode, new Intent(), 0, 0, 0);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(view.getContext(), "Error getting purchase result: "+e.getMessage(), Toast.LENGTH_LONG).show();
+
+        //check to make sure user doesn't already have this item purchased, and it just hasn't been consumed for some reason
+        int responseCode = (int) buyIntentBundle.get("RESPONSE_CODE");
+
+        if (responseCode == 7) {
+            //consume all purchases that the user has because one wasn't consumed
+            consumeAllPurchasesAdmin();
+            makePurchase(sku, activity);
+        } else {
+            if (buyIntentBundle != null) {
+                PendingIntent pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                try {
+                    //pending intent is null here for 4?
+                    int requestCode = 1001;
+                    activity.startIntentSenderForResult(pendingIntent.getIntentSender(), requestCode, new Intent(), 0, 0, 0);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(view.getContext(), "Error getting purchase result: "+e.getMessage() + '\n'+"response code: " + responseCode, Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
@@ -126,6 +137,8 @@ public class IABHelper extends Binder {
         String username = CurrentUser.getInstance().getUsername();
         String highestStarStatus = FirebaseHelper.getInstance().getHighestStarStatusOfUser(username);
         boolean unusualUnlocked = false;
+
+        //get random chance at unusual icon
         Random r = new Random();
         r.setSeed(System.currentTimeMillis());
         int unusualChanceRoll = r.nextInt(100);
@@ -223,6 +236,7 @@ public class IABHelper extends Binder {
         }
     }
 
+    //consumes all owned items without having to know the purchase token
     public void consumeAllPurchasesAdmin() {
         try {
             ownedItems = mService.getPurchases(3, view.getContext().getPackageName(), "inapp", null);
@@ -240,10 +254,10 @@ public class IABHelper extends Binder {
                     String purchaseData = purchaseDataList.get(i);
                     JSONObject jo = new JSONObject(purchaseData);
                     final String token = jo.getString("purchaseToken");
-                    String sku = null;
-                    if (ownedSkus != null) {
-                        sku = ownedSkus.get(i);
-                    }
+                    //String sku = null;
+                    //if (ownedSkus != null) {
+                    //    sku = ownedSkus.get(i);
+                    //}
                     try {
                         mService.consumePurchase(3, view.getContext().getPackageName(), token);
                     } catch (Exception e) {

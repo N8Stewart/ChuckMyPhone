@@ -14,8 +14,8 @@ android {
         applicationId "com.ohiostate.chuckmyphone.chuckmyphone"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 41
-        versionName "2.1.7"
+        versionCode 43
+        versionName "2.1.9"
     }
     buildTypes {
         release {
